@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity Quiz Pro</title>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-Q0HGP73J9J'); // Replace with your Measurement ID
+    </script>
+
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --success: #50c878;
+            --danger: #ff4757;
+            --background: #f8f9fa;
+            --text: #2d3436;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f2f5 0%, #e6e9ef 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--text);
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .quiz-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 12px;
+            background-color: #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, #6c5ce7 100%);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .timer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: var(--background);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .timer {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .question-container {
+            margin-bottom: 2rem;
+        }
+
+        #question {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option {
+            padding: 1.2rem;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-color: var(--primary);
+        }
+
+        .option.correct {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .option.incorrect {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
+
+        .results {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-box {
+            background: var(--background);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .result-item {
+            border: 2px solid #e9ecef;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            background: white;
+        }
+
+        .retry-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-top: 2rem;
+        }
+
+        .retry-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .analytics-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.1);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .question-stats {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: var(--background);
+            border-radius: 12px;
+        }
+
+        .question-stat-item {
+            background: white;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-percentage {
+            height: 8px;
+            background: var(--primary);
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            .quiz-container { padding: 1.5rem; }
+            #question { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Quiz Container -->
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <h1>Electricity Mastery</h1>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <span id="progress-text">0/10</span>
+            </div>
+        </div>
+        
+        <div class="question-container">
+            <div class="timer-container">
+                <div class="timer" id="timer">⏱ Total Time: 0s</div>
+                <div class="timer" id="question-timer">⏳ Current Question: 0s</div>
+            </div>
+            <h2 id="question"></h2>
+            <div class="options" id="options"></div>
+        </div>
+
+        <div class="results" id="results">
+            <div class="results-header">
+                <h2>🎉 Quiz Results</h2>
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <h3>Score</h3>
+                        <p id="score" class="score-value">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Time</h3>
+                        <p id="total-time">0s</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Accuracy</h3>
+                        <p id="accuracy">0%</p>
+                    </div>
+                </div>
+            </div>
+            <div id="result-details"></div>
+            <button class="retry-btn" onclick="trackQuizRetry(); location.reload()">🔄 Retry Quiz</button>
+        </div>
+    </div>
+
+    <!-- Analytics Panel -->
+    <div class="analytics-container" id="analytics-panel">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h1>Quiz Analytics Dashboard</h1>
+            </div>
+            <div class="stats-container">
+                <div class="stat-box">
+                    <h3>Total Attempts</h3>
+                    <p id="total-attempts">0</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Average Score</h3>
+                    <p id="average-score">0%</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Average Time</h3>
+                    <p id="average-time">0s</p>
+                </div>
+            </div>
+            <div class="question-stats">
+                <h3>Question-wise Performance</h3>
+                <div id="question-stats-container"></div>
+            </div>
+            <button class="retry-btn" onclick="toggleAnalytics(false)">Back to Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Data
+        const quizData = [
+            {
+        question: "If a 60-watt bulb operates on a 120-volt supply, the current flowing through the bulb is:",
+        options: ["0.5 A", "2 A", "1.5 A", "0.75 A"],
+        correct: 0
+    },
+    {
+        question: "What happens to the resistance of a conductor if its length is doubled, keeping the cross-sectional area the same?",
+        options: ["The resistance is halved", "The resistance remains the same", "The resistance is doubled", "The resistance is tripled"],
+        correct: 2
+    },
+    {
+        question: "In a parallel circuit, the total resistance:",
+        options: [
+            "Is greater than the smallest resistance",
+            "Is equal to the sum of all resistances",
+            "Is smaller than the smallest resistance",
+            "Is equal to the product of all resistances"
+        ],
+        correct: 2
+    },
+    {
+        question: "What is the effect of increasing the cross-sectional area of a conductor on its resistance?",
+        options: [
+            "Resistance increases",
+            "Resistance decreases",
+            "Resistance remains unchanged",
+            "Resistance becomes zero"
+        ],
+        correct: 1
+    },
+    {
+        question: "The least resistance obtained by using 2 Ω, 4 Ω, 1 Ω and 100 Ω is",
+        options: ["< 100 Ω", "< 4 Ω", "< 1 Ω", "> 2 Ω"],
+        correct: 2
+    },
+    {
+        question: "Work of 30J is done to move 3C charge between two points on a conducting wire. What is the potential difference between the two points?",
+        options: ["20 V", "10 V", "15 V", "30 V"],
+        correct: 1
+    },
+    {
+        question: "A circuit has a charge of 4C moving through it in 2 s. Which electrical component in the circuit, if present, will show the current?",
+        options: [
+            "Voltmeter will show a current of 5 A",
+            "Ammeter will show a current of 2 A",
+            "Rheostat will show a current of 2 A",
+            "Resistor will show a current of 2 A"
+        ],
+        correct: 1
+    },
+    {
+        question: "Two devices are connected between two points, say A and B, in parallel. The physical quantity that will remain the same between the two points is",
+        options: ["Current", "Voltage", "Resistance", "None of these"],
+        correct: 1
+    },
+    {
+        question: "What is the relationship between resistance and current?",
+        options: [
+            "They are directly related to each other",
+            "They are inversely related to each other",
+            "The resistance has a greater magnitude than the current",
+            "The current has a greater magnitude than the resistance"
+        ],
+        correct: 1
+    },
+    {
+        question: "How much more heat is produced if the current is doubled?",
+        options: [
+            "Twice the original amount",
+            "Thrice the original amount",
+            "Four times the original amount",
+            "Five times the original amount"
+        ],
+        correct: 2
+    }
+        ];
+
+        // Analytics data structure
+        let analyticsData = {
+            attempts: [],
+            currentAttempt: null
+        };
+
+        // Quiz variables
+        let currentQuestion = 0;
+        let score = 0;
+        let totalTime = 0;
+        let questionStartTime;
+        let answers = [];
+        let totalTimerInterval;
+        let questionTimerInterval;
+
+        // Google Analytics tracking functions
+        function trackQuizStart() {
+            gtag('event', 'quiz_start', {
+                'quiz_name': 'Electricity Quiz',
+                'quiz_version': '1.0'
+            });
+        }
+
+        function trackQuizAnswer(questionNumber, isCorrect, timeTaken) {
+            gtag('event', 'question_answered', {
+                'quiz_name': 'Electricity Quiz',
+                'question_number': questionNumber,
+                'is_correct': isCorrect,
+                'time_taken': timeTaken
+            });
+        }
+
+        function trackQuizComplete(score, totalTime) {
+            gtag('event', 'quiz_complete', {
+                'quiz_name': 'Electricity Quiz',
+                'final_score': score,
+                'total_time': totalTime,
+                'completion_rate': (score / quizData.length) * 100
+            });
+        }
+
+        function trackQuizRetry() {
+            gtag('event', 'quiz_retry', {
+                'quiz_name': 'Electricity Quiz'
+            });
+        }
+
+        // Local analytics functions
+        function loadAnalytics() {
+            const saved = localStorage.getItem('quizAnalytics');
+            if (saved) {
+                analyticsData = JSON.parse(saved);
+            }
+        }
+
+        function saveAnalytics() {
+            localStorage.setItem('quizAnalytics', JSON.stringify(analyticsData));
+        }
+
+        function startAttempt() {
+            analyticsData.currentAttempt = {
+                startTime: Date.now(),
+                answers: [],
+                score: 0,
+                totalTime: 0
+            };
+        }
+
+        function recordAnswer(questionIndex, selectedAnswer, isCorrect, timeTaken) {
+            if (analyticsData.currentAttempt) {
+                analyticsData.currentAttempt.answers.push({
+                    questionIndex,
+                    selectedAnswer,
+                    isCorrect,
+                    timeTaken
+                });
+            }
+        }
+
+        function finishAttempt(finalScore, totalTime) {
+            if (analyticsData.currentAttempt) {
+                analyticsData.currentAttempt.score = finalScore;
+                analyticsData.currentAttempt.totalTime = totalTime;
+                analyticsData.attempts.push(analyticsData.currentAttempt);
+                analyticsData.currentAttempt = null;
+                saveAnalytics();
+            }
+}
+
+        // Quiz functions
+        function startQuiz() {
+            loadAnalytics();
+            startAttempt();
+            trackQuizStart();
+            questionStartTime = Date.now();
+            totalTimerInterval = setInterval(updateTotalTimer, 1000);
+            startQuestionTimer();
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = quizData[currentQuestion];
+            document.getElementById('question').textContent = question.question;
+            
+            const optionsHtml = question.options.map((option, index) => `
+                <div class="option" onclick="selectAnswer(${index})" 
+                     data-index="${index}">
+                    <span class="option-number">${String.fromCharCode(65 + index)}.</span>
+                    ${option}
+                </div>
+            `).join('');
+            
+            document.getElementById('options').innerHTML = optionsHtml;
+            updateProgress();
+            startQuestionTimer();
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion) / quizData.length) * 100;
+            document.getElementById('progress').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = 
+                `${currentQuestion}/${quizData.length}`;
+        }
+
+        function updateTotalTimer() {
+            totalTime = Math.floor((Date.now() - questionStartTime) / 1000);
+            document.getElementById('timer').textContent = `⏱ Total Time: ${totalTime}s`;
+        }
+
+        function startQuestionTimer() {
+            let questionTime = 0;
+            clearInterval(questionTimerInterval);
+            questionTimerInterval = setInterval(() => {
+                questionTime++;
+                document.getElementById('question-timer').textContent = 
+                    `⏳ Current Question: ${questionTime}s`;
+            }, 1000);
+        }
+
+        function selectAnswer(selectedIndex) {
+            clearInterval(questionTimerInterval);
+            const options = document.querySelectorAll('.option');
+            const correctIndex = quizData[currentQuestion].correct;
+            const timeTaken = (Date.now() - questionStartTime) / 1000;
+
+            // Track answer in analytics
+            trackQuizAnswer(currentQuestion + 1, selectedIndex === correctIndex, timeTaken);
+            recordAnswer(currentQuestion, selectedIndex, selectedIndex === correctIndex, timeTaken);
+
+            options.forEach((option, index) => {
+                option.classList.remove('correct', 'incorrect');
+                if(index === correctIndex) option.classList.add('correct');
+                if(index === selectedIndex && index !== correctIndex) 
+                    option.classList.add('incorrect');
+                option.style.pointerEvents = 'none';
+            });
+
+            if(selectedIndex === correctIndex) score++;
+
+            setTimeout(() => {
+                if(currentQuestion < quizData.length - 1) {
+                    currentQuestion++;
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            }, 1500);
+        }
+
+        function showResults() {
+            clearInterval(totalTimerInterval);
+            
+            // Track completion
+            trackQuizComplete(score, totalTime);
+            finishAttempt(score, totalTime);
+
+            document.querySelector('.question-container').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            
+            const accuracy = Math.round((score / quizData.length) * 100);
+            document.getElementById('score').textContent = `${score}/${quizData.length}`;
+            document.getElementById('total-time').textContent = `${totalTime}s`;
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+
+            const resultDetails = answers.map((answer, index) => `
+                <div class="result-item">
+                    <p><strong>Q${index + 1}:</strong> ${quizData[index].question}</p>
+                    <p class="${answer.correct ? 'correct' : 'incorrect'}">
+                        Your answer: ${quizData[index].options[answer.selected]}
+                        ${answer.correct ? '✅' : '❌'}
+                    </p>
+                    ${!answer.correct ? `
+                        <p class="correct">Correct answer: ${quizData[index].options[quizData[index].correct]} ✅</p>
+                    ` : ''}
+                    <p>⏱ ${answer.time.toFixed(1)}s</p>
+                </div>
+            `).join('');
+
+            document.getElementById('result-details').innerHTML = resultDetails;
+
+            // Add analytics button
+            
+            
+            document.getElementById('results').innerHTML += analyticsButton;
+        }
+
+        function displayAnalytics() {
+            const attempts = analyticsData.attempts;
+            if (attempts.length === 0) return;
+
+            const totalAttempts = attempts.length;
+            const averageScore = attempts.reduce((acc, curr) => acc + curr.score, 0) / totalAttempts;
+            const averageTime = attempts.reduce((acc, curr) => acc + curr.totalTime, 0) / totalAttempts;
+
+            document.getElementById('total-attempts').textContent = totalAttempts;
+            document.getElementById('average-score').textContent = `${(averageScore * 10).toFixed(1)}%`;
+            document.getElementById('average-time').textContent = `${Math.round(averageTime)}s`;
+
+            const questionStats = Array(quizData.length).fill().map(() => ({
+                correct: 0,
+                total: 0
+            }));
+
+            attempts.forEach(attempt => {
+                attempt.answers.forEach(answer => {
+                    questionStats[answer.questionIndex].total++;
+                    if (answer.isCorrect) {
+                        questionStats[answer.questionIndex].correct++;
+                    }
+                });
+            });
+
+            const statsHtml = questionStats.map((stat, index) => {
+                const percentage = stat.total > 0 ? (stat.correct / stat.total * 100).toFixed(1) : 0;
+                return `
+                    <div class="question-stat-item">
+                        <p><strong>Question ${index + 1}</strong></p>
+                        <p>Success Rate: ${percentage}% (${stat.correct}/${stat.total})</p>
+                        <div class="stat-percentage" style="width: ${percentage}%"></div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('question-stats-container').innerHTML = statsHtml;
+        }
+
+        function toggleAnalytics(show) {
+            document.getElementById('analytics-panel').style.display = show ? 'flex' : 'none';
+            if (show) {
+                displayAnalytics();
+                gtag('event', 'view_analytics', {
+                    'quiz_name': 'Electricity Quiz'
+                });
+            }
+        }
+
+        // Export analytics data function
+        function exportAnalytics() {
+            const dataStr = JSON.stringify(analyticsData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'quiz-analytics.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Start the quiz when page loads
+        startQuiz();
+    </script>
+</body>
+</html>

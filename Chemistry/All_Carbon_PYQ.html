@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Questions Bank</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .question-card {
+            transition: all 0.3s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .solution {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .solution.show {
+            max-height: 1000px;
+            transition: max-height 0.5s ease-in;
+        }
+        .dark-mode {
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+        .dark-mode .question-card {
+            background-color: #2d3748;
+            color: #e2e8f0;
+        }
+        .dark-mode .filter-btn {
+            background-color: #4a5568;
+            color: #e2e8f0;
+        }
+        .dark-mode .solution {
+            border-color: white;
+        }
+.dark-mode .question-card .solution p {
+    color: white !important;
+}
+/* Logo Styles */
+    .logo-container {
+        text-align: center;
+        margin-bottom: 20px;
+        position: relative;
+        display: inline-block;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        font-size: 2.5rem;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .logo:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    .logo .simplified {
+        color: #ffd700;
+    }
+
+    .logo .minds {
+        color: #ff0000;
+    }
+
+    .home-icon {
+        font-size: 1.2rem;
+        margin-right: 10px;
+        color: #718096;
+        transition: color 0.3s ease;
+    }
+
+    .logo:hover .home-icon {
+        color: #2d3748;
+    }
+
+    .tooltip {
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #2d3748;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        white-space: nowrap;
+    }
+
+    .logo:hover .tooltip {
+        opacity: 1;
+    }
+
+    /* Learning Resources Styles */
+    .learning-resources {
+        margin-top: 30px;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .resources-title {
+        font-size: 1.5rem;
+        color: #2d3748;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .resources-buttons {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .resource-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 24px;
+        border-radius: 50px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        min-width: 200px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .whatsapp-button {
+        background-color: #25D366;
+    }
+
+    .whatsapp-button:hover {
+        background-color: #22c55e;
+    }
+
+    .video-button {
+        background-color: #FF0000;
+    }
+
+    .video-button:hover {
+        background-color: #ef4444;
+    }
+
+    .button-icon {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 10px;
+    }
+
+    .button-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .resources-buttons {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .resource-button {
+            width: 100%;
+        }
+    }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen dark:bg-gray-900">
+    <!-- Image Modal -->
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-90 hidden z-50" onclick="closeModal()">
+        <span class="absolute top-4 right-4 text-white text-3xl cursor-pointer">&times;</span>
+        <img id="modalImage" class="max-w-full max-h-full m-auto" alt="Modal Image">
+    </div>
+
+    <header class="bg-white shadow-sm dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Carbon & its Compounds</h1>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">Previous Years' Questions Bank</p>
+                </div>
+                <button id="darkModeToggle" class="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-800 dark:bg-gray-200 rounded-full transition-all duration-300 shadow-lg text-white dark:text-gray-800">
+    <span class="flex items-center gap-2">
+        🌙 Switch to Dark
+    </span>
+</button>
+            </div>
+        </div>
+    </header>
+<div class="logo-container">
+    <a href="../index.html" class="logo">
+        <span class="home-icon">🏠</span>
+        <span class="simplified">Simplified</span><span class="minds">Minds</span>
+        <span class="tooltip">Go to Homepage</span>
+    </a>
+</div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Search Bar -->
+        <div class="mb-8">
+            <input type="text" id="searchInput" placeholder="Search questions..." 
+                   class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        </div>
+
+        <!-- Filters -->
+        <div class="mb-8 space-y-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div class="w-full md:w-auto">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Filter by Marks</h2>
+                    <div class="flex flex-wrap gap-2" id="marksFilter">
+                        <button class="filter-btn marks-filter active px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600">All</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="1">1M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="2">2M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="3">3M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="4">4M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="5">5M</button>
+                    </div>
+                </div>
+                <div class="w-full md:w-auto">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Filter by Year</h2>
+                    <div class="flex flex-wrap gap-2" id="yearFilter">
+                        <button class="filter-btn year-filter active px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600">All</button>
+                        <button class="filter-btn year-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-year="2019">2019</button>
+                        <button class="filter-btn year-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-year="2020">2020</button>
+                        <button class="filter-btn year-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-year="2021">2021</button>
+                        <button class="filter-btn year-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-year="2022">2022</button>
+                        <button class="filter-btn year-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-year="2023">2023</button>
+                        <button class="filter-btn year-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-year="2024">2024</button>
+                    </div>
+                </div>
+                <button onclick="resetViewedQuestions()" 
+                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
+                    Reset Progress
+                </button>
+            </div>
+        </div>
+
+        <!-- Questions Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="questionsContainer">
+            <!-- Questions will be dynamically inserted here -->
+        </div>
+<!-- Add this right before closing the main container -->
+<div class="learning-resources">
+    <h2 class="resources-title">Learning Resources</h2>
+    <div class="resources-buttons">
+        <a href="https://www.whatsapp.com/channel/0029Vb3QDu17YSd1brABFi1d" class="resource-button whatsapp-button">
+            <span class="button-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+            </span>
+            Join WhatsApp Channel
+        </a>
+        <a href="https://www.youtube.com/@simplifiedmindssslc" class="resource-button video-button">
+            <span class="button-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 4-8 4z"/>
+                </svg>
+            </span>
+            Video Lectures
+        </a>
+    </div>
+</div>
+    </main>
+
+    <script>
+        const questions = [
+            {
+        id: 1,
+        question: "What are structural isomers? Name the first member of alkanes that shows structural isomerism.",
+        marks: 2,
+        year: 2019,
+        exam: "Main",
+        answer: "Compounds with identical molecular formula but different structures are called structural isomers<br>Butane or C4H10"
+    },
+    {
+        id: 2,
+        question: "Write the structural formulae of the following compounds:<br>(i) Cyclohexane<br>(ii) Chloroethane.",
+        marks: 2,
+        year: 2019,
+        exam: "Main",
+        answer: "See solution image",
+        solutionImage: "../2019/2019_C_Solution_1.jpg"
+    },
+    {
+        id: 3,
+        question: "(i) Write the differences between saturated and unsaturated hydrocarbons.<br>(ii) Write the molecular formula and structural formula of an alkene having five carbon atoms.",
+        marks: 3,
+        year: 2019,
+        exam: "Main",
+        answer: "(i) Saturated hydrocarbons: In carbon compounds, carbon atoms are satisfied by a single bond between them<br>These compounds are normally not very reactive.<br><br>Unsaturated hydrocarbons: In carbon compounds, carbon atoms have double or triple bonds between them<br>They are more reactive than the saturated carbon compounds.<br><br>(ii) C5H10 (molecular formula)",
+        solutionImage: "../2019/2019_C_Solution_2.jpg"
+    },
+    {
+        id: 4,
+        question: "(i) Carbon atom does not form C4- anion and C4+ cation. Why?<br>(ii) How can ethanol be converted into ethanoic acid?",
+        marks: 3,
+        year: 2019,
+        exam: "Main",
+        answer: "(i) Carbon could gain four electrons. But it would be difficult for the nucleus with six protons to hold on to ten electrons, that is four extra electrons.<br>It could lose four electrons, but it would require a large amount of energy to remove four electrons leaving behind a carbon cation with six protons in its nucleus holding on to just two electrons.<br><br>(ii) Alkaline potassium permanganate or acidified potassium dichromate is added to ethyl alcohol. When it is heated it oxidises to form ethanoic acid."
+    },
+    {
+        id: 5,
+        question: "What is a covalent bond?",
+        marks: 1,
+        year: 2019,
+        exam: "Supplementary",
+        answer: "Chemical bond which is formed by the sharing of electrons between two atoms is known as covalent bond."
+    },
+{
+        id: 6,
+        question: "Name the first member of alkynes and write its molecular formula.",
+        marks: 1,
+        year: 2019,
+        exam: "Supplementary",
+        answer: "Ethyne (or Acetylene) C2H2"
+    },
+    {
+        id: 7,
+        question: "Explain substitution reaction in hydrocarbons with an example.",
+        marks: 2,
+        year: 2019,
+        exam: "Supplementary",
+        answer: "Saturated hydrocarbons are unreactive but undergo substitution reactions in the presence of sunlight. Chlorine can replace the hydrogen atoms one by one.<br>CH4 + Cl2 → CH3Cl + HCl"
+    },
+    {
+        id: 8,
+        question: "Explain the mechanism of cleaning action of soaps.",
+        marks: 2,
+        year: 2019,
+        exam: "Supplementary",
+        answer: "(i) The ionic end of soap interacts with water while the carbon chain interacts with oil.<br>(ii) The soap molecules thus form structures called miscelles, where one end of the molecules is towards the oil droplet while the ionic end faces outside.<br>(iii) Thus, an emulsion forms in water.<br>(iv) The soap miscelles help in pulling out the dirt in water and thus cleans clothes."
+    },
+    {
+        id: 9,
+        question: "The general formula of two specific groups of saturated and unsaturated hydrocarbons is CnH2n. Write the structures of the member of each group when n = 3.",
+        marks: 2,
+        year: 2019,
+        exam: "Supplementary",
+        answer: "See solution image for Cyclopropane and Propene structures",
+        solutionImage: "../2019/2019_C_Solution_3.jpg"
+    },
+    {
+        id: 10,
+        question: "Explain the addition and substitution reaction with the help of examples. C2H6 undergoes substitution reaction but not addition reaction. Why?",
+        marks: 3,
+        year: 2020,
+        exam: "Main",
+        answer: "Unsaturated hydrocarbons combine with hydrogen atoms in the presence of catalysts to give saturated hydrocarbons.<br>Example: Hydrogenation of vegetable oil.<br>Or addition reactions of alkenes / alkynes.<br><br>In the presence of sunlight other group of atoms can replace hydrogen atoms one by one from carbon compounds.<br>Example: In the presence of sunlight<br>Chlorine replaces hydrogen atoms one by one from methane.<br>Methane + Chlorine → Chloromethane + Hydrogen chloride<br>CH4 + Cl2 → CH3Cl + HCl.<br><br>C2H6 is saturated hydrocarbon.<br>In C2H6 there will be single bond between carbon atoms / This is not an unsaturated compound. No hydrogen atoms can be added but hydrogen atoms can be substituted.",
+solutionImage: "../2020/2020_C_Solution_1.jpg"
+    },
+{
+        id: 11,
+        question: "Explain how soap cleans clothes. More amount of soap is required to clean the clothes in hard water. Why?",
+        marks: 3,
+        year: 2020,
+        exam: "Main",
+        answer: "The molecules of soap are sodium or potassium salts of long chain carboxylic acids.<br>The ionic end of soap interacts with water while the carbon chain interacts with oil.<br>The soap molecules thus form structure called micells. This forms an emulsion in water.<br><br>The soap micelles thus help in pulling out the dirt in water and we can wash our clothes clean.<br><br>The reaction of soap with calcium and magnesium salts in hard water develop scum (precipitation, insoluble substance). Hence, we need large amount of soap to clean clothes in hard water."
+    },
+    {
+        id: 12,
+        question: "What are structural isomers? Write two structures of butane molecule. How would you distinguish experimentally between an alcohol and a carboxylic acid?",
+        marks: 3,
+        year: 2020,
+        exam: "Supplementary",
+        answer: "Carbon compounds with identical molecular formula but different structures are called structural isomers.<br><br>Carboxylic acid reacts with carbonates and hydrogen carbonates to give rise to a salt, carbon dioxide and water.<br>Alcohol will not react with carbonates and hydrogen carbonates.",
+        solutionImage: "/2020/2020_C_Solution_2.jpg"
+    },
+    {
+        id: 13,
+        question: "Write the structural formula of ethene molecule.",
+        marks: 1,
+        year: 2022,
+        exam: "Main",
+        answer: "See solution image",
+        solutionImage: "../2022/2022_C_Solution_1.jpg"
+    },
+    {
+        id: 14,
+        question: "a) What are structural isomers? Write the molecular and structural formula of butane.<br>b) What is catenation? Write general formula for alkenes.",
+        marks: 4,
+        year: 2022,
+        exam: "Main",
+        answer: "a) Carbon compounds having same molecular formula but different structural formulae<br>Molecular formula of butane is C4H10<br>Structural formula of butane is shown in image<br><br>b) Carbon has unique ability to form bonds with other atoms of carbon, giving rise to large molecules.<br>General formula for alkene is CnH2n",
+        solutionImage: "../2022/2022_C_Solution_2.jpg"
+    },
+    {
+        id: 15,
+        question: "a) Write any two differences between saturated and unsaturated carbon compounds.<br>b) Write the structural formula of the following carbon compounds.<br>i) Benzene ii) Butane",
+        marks: 4,
+        year: 2022,
+        exam: "Supplementary",
+        answer: "Differences between saturated and unsaturated compounds:<br>1. Single bond exists between two consecutive carbon atoms vs Double and triple bond exists<br>2. Less reactive vs More reactive<br>3. Give clean flame when they burnt vs Give yellow/black flame<br>4. Subjected to substitution reaction vs Subjected to both addition and substitution reactions<br>5. Ex: Alkanes, cycloalkanes etc. vs Ex: Alkenes, alkynes, benzene etc.",
+        solutionImage: "../2022/2022_C_Solution_3.jpg"
+    },
+{
+        id: 16,
+        question: "The general formula of cycloalkanes is CnH2n and its first member is cyclopropane (C3H6). Write the molecular formula and structural arrangement of the fourth member of this homologous series.",
+        marks: 1,
+        year: 2023,
+        exam: "Main",
+        answer: "Molecular formula: C6H12<br>Structural formula shows a cyclic arrangement of 6 carbon atoms in a hexagonal shape with 12 hydrogen atoms attached.",
+        solutionImage: "../2023/2023_M_P_Q30.jpg"
+    },
+    {
+        id: 17,
+        question: "What is hydrogenation?",
+        marks: 1,
+        year: 2023,
+        exam: "Main",
+        answer: "Hydrogenation is the process of addition of hydrogen to unsaturated compounds in presence of catalysts like nickel or palladium to form saturated compounds."
+    },
+    {
+        id: 18,
+        question: "a) How will ethanol be oxidised?<br>c) Explain the cleaning action of soaps.",
+        marks: 4,
+        year: 2023,
+        exam: "Main",
+        answer: "a) Ethanol can be oxidised to ethanoic acid using alkaline KMnO4 or acidic K2Cr2O7 with heat<br><br>c) The molecules of soap are sodium or potassium salts of long chain carboxylic acids. The ionic end of soap interacts with water while the carbon chain interacts with oil. The soap molecules thus form structure called micells. This forms an emulsion in water. The soap micelles thus help in pulling out the dirt in water and we can wash our clothes clean."
+    },
+    {
+        id: 19,
+        question: "Why are detergents more suitable for cleansing clothes in hard water?",
+        marks: 1,
+        year: 2023,
+        exam: "Supplementary",
+        answer: "Detergents do not form insoluble precipitates (scum) with calcium and magnesium ions present in hard water, making them more effective than soaps."
+    },
+    {
+        id: 20,
+        question: "In a homologous series, the first member of hydrocarbon group has the molecular formula CH4. Then find out the molecular formula of the fourth member and write two types of structural formula of it.",
+        marks: 2,
+        year: 2023,
+        exam: "Supplementary",
+        answer: "The molecular formula of fourth member will be C4H10 (Butane)<br>Two structural formulas are shown in the solution image",
+        solutionImage: "../2023/2023_S_P_Q34.jpg"
+    },
+{
+        id: 21,
+        question: "Given below incomplete equation represents a chemical process of converting an unsaturated carbon compound to saturated carbon compound.<br>i) Complete the equation<br>ii) Name the gas 'x' and the substance 'y'<br>iii) What happens if the end products of this reaction reacts with chlorine in the presence of sunlight?",
+questionImage: "../2024/2024_C_Solution_1.jpg",
+        marks: 3,
+        year: 2024,
+        exam: "Exam 1",
+        answer: "i) Chemical equation shown in solution image<br>ii) x = Hydrogen<br>y = Nickel / Palladium<br>iii) Undergoes substitution reactions<br>Chlorine replaces hydrogen one by one",
+        solutionImage: "../2024/2024_C_Solution_2.jpg"
+    },
+    {
+        id: 22,
+        question: "a) Carbon could not form C4+ or C4- ions. Why?<br>b) Write the electron dot structure of methane.",
+        marks: 3,
+        year: 2024,
+        exam: "Exam 1",
+        answer: "a) Carbon could not form C4+ or C4- ions because:<br>- It would require too much energy to remove 4 electrons to form C4+<br>- The nucleus with 6 protons cannot effectively hold 10 electrons to form C4-<br><br>b) Electron dot structure of methane shows carbon atom with 4 dots (electrons) forming covalent bonds with 4 hydrogen atoms each with 1 dot (electron)"
+    },
+    {
+        id: 23,
+        question: "'Detergents are better cleansers than soaps.' Justify this statement.",
+        marks: 1,
+        year: 2024,
+        exam: "Exam 2",
+        answer: "They clean dirt even in hard water without forming a scum."
+    },
+    {
+        id: 24,
+        question: "a) If the molecular formula of first member of a homologous series is C2H2, then write the names and the molecular formulae of the next two members of the same series.<br>b) Generally vegetable oils are subjected to hydrogenation. Why?",
+        marks: 3,
+        year: 2024,
+        exam: "Exam 2",
+        answer: "a) → C3H4: Propyne<br>→ C4H6: Butyne<br><br>b) To increase the shelf life of vegetable oils / to prevent oxidation of oils / to prevent rancidity."
+    },
+    {
+        id: 25,
+        question: "a) Write the structures for the following carbon compounds.<br>i) Cyclohexane<br>ii) Propanoic acid<br>b) Write any two differences between saturated and unsaturated carbon compounds.",
+        marks: 4,
+        year: 2024,
+        exam: "Exam 3",
+        answer: "See solution image for structures<br><br>b) Differences between saturated and unsaturated carbon compounds:<br>1. Single bond exists between two consecutive carbon atoms vs Double and triple bond exists<br>2. Less reactive vs More reactive<br>3. Give clean flame when they burnt vs Give yellow/black flame<br>4. Subjected to substitution reaction vs Subjected to both addition and substitution reactions",
+        solutionImage: "../2024/2024_C_Solution_3.jpg"
+    }
+        ];
+
+        let viewedQuestions = new Set(JSON.parse(localStorage.getItem('viewedQuestions') || '[]'));
+        let bookmarkedQuestions = new Set(JSON.parse(localStorage.getItem('bookmarkedQuestions') || '[]'));
+
+        function createQuestionCard(question) {
+            const hasQuestionImage = question.questionImage ? true : false;
+            const hasSolutionImage = question.solutionImage ? true : false;
+            const isBookmarked = bookmarkedQuestions.has(question.id);
+
+            return `
+                <div class="question-card bg-white rounded-lg shadow p-6 question dark:bg-gray-800 dark:text-white" 
+                     data-marks="${question.marks}" 
+                     data-year="${question.year}"
+                     data-keywords="${question.question.toLowerCase()}">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-200">
+                            ${question.marks}M
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                            ${question.year} ${question.exam}
+                        </span>
+                        <button onclick="toggleBookmark(${question.id})" 
+                                class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                            ${isBookmarked ? '🔖' : '📌'}
+                        </button>
+                    </div>
+                    <h3 class="text-lg font-medium mb-4">${question.question}</h3>
+                    ${hasQuestionImage ? `
+                        <div class="mb-4">
+                            <img src="${question.questionImage}" 
+                                 alt="Question Image" 
+                                 class="question-image rounded-lg cursor-pointer"
+                                 onclick="openModal(this.src)">
+                        </div>
+                    ` : ''}
+                    <button onclick="toggleSolution(${question.id})" 
+                            id="solution-btn-${question.id}"
+                            class="solution-btn mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors w-full ${isQuestionViewed(question.id) ? 'viewed' : ''}">
+                        ${isQuestionViewed(question.id) ? 'Show Solution (Viewed)' : 'Show Solution'}
+                    </button>
+                    <div id="solution-${question.id}" class="solution mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <p class="text-gray-900 dark:text-white">${question.answer}</p>
+                        ${hasSolutionImage ? `
+                            <div class="mt-4">
+                                <img src="${question.solutionImage}" 
+                                     alt="Solution Image" 
+                                     class="solution-image rounded-lg cursor-pointer"
+                                     onclick="openModal(this.src)">
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function isQuestionViewed(id) {
+            return viewedQuestions.has(id);
+        }
+
+        function markQuestionAsViewed(id) {
+            viewedQuestions.add(id);
+            localStorage.setItem('viewedQuestions', JSON.stringify([...viewedQuestions]));
+        }
+
+        function toggleSolution(id) {
+            const solution = document.getElementById(`solution-${id}`);
+            const button = document.getElementById(`solution-btn-${id}`);
+            const isShowing = solution.classList.toggle('show');
+            
+            if (isShowing) {
+                button.classList.add('viewed');
+                markQuestionAsViewed(id);
+                button.textContent = 'Hide Solution (Viewed)';
+            } else {
+                button.textContent = 'Show Solution (Viewed)';
+            }
+        }
+
+        function toggleBookmark(id) {
+            if (bookmarkedQuestions.has(id)) {
+                bookmarkedQuestions.delete(id);
+            } else {
+                bookmarkedQuestions.add(id);
+            }
+            localStorage.setItem('bookmarkedQuestions', JSON.stringify([...bookmarkedQuestions]));
+            initializeQuestions();
+        }
+
+        function resetViewedQuestions() {
+            viewedQuestions.clear();
+            localStorage.removeItem('viewedQuestions');
+            document.querySelectorAll('.solution-btn').forEach(btn => {
+                btn.classList.remove('viewed');
+                btn.textContent = 'Show Solution';
+            });
+        }
+
+        function openModal(imgSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = "block";
+            modalImg.src = imgSrc;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
+
+        function initializeQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            questions.forEach(question => {
+                container.innerHTML += createQuestionCard(question);
+            });
+        }
+
+        function filterQuestions() {
+            const activeMarksFilter = document.querySelector('.marks-filter.active').dataset.marks || 'All';
+            const activeYearFilter = document.querySelector('.year-filter.active').dataset.year || 'All';
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            
+            document.querySelectorAll('.question').forEach(question => {
+                const matchesMarks = activeMarksFilter === 'All' || question.dataset.marks === activeMarksFilter;
+                const matchesYear = activeYearFilter === 'All' || question.dataset.year === activeYearFilter;
+                const matchesSearch = question.dataset.keywords.includes(searchQuery);
+                
+                               question.classList.toggle('hidden', !(matchesMarks && matchesYear && matchesSearch));
+            });
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.marks-filter').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.marks-filter').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                filterQuestions();
+            });
+        });
+
+        document.querySelectorAll('.year-filter').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.year-filter').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                filterQuestions();
+            });
+        });
+
+        document.getElementById('searchInput').addEventListener('input', filterQuestions);
+
+        document.getElementById('darkModeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    // Update the text based on dark mode state
+    if (document.body.classList.contains('dark-mode')) {
+        document.getElementById('darkModeToggle').innerHTML = `
+            <span class="flex items-center gap-2">
+                ☀️ Switch to Light
+            </span>`;
+    } else {
+        document.getElementById('darkModeToggle').innerHTML = `
+            <span class="flex items-center gap-2">
+                🌙 Switch to Dark
+            </span>`;
+    }
+});
+
+        // Initialize
+        initializeQuestions();
+    </script>
+</body>
+</html>

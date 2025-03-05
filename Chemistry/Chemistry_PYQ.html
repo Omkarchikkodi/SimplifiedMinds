@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon and its Compounds - Chemistry Learning</title>
+    <link rel="preconnect" href="https://www.youtube.com">
+    <link rel="dns-prefetch" href="https://www.youtube.com">
+    <style>
+        :root {
+            --primary-dark: #1F2937;
+            --primary-light: #4B5563;
+            --accent-color: #10B981;
+            --text-light: #F3F4F6;
+            --text-dark: #1F2937;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: #111827;
+            color: var(--text-light);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Molecular Background Animation */
+        .molecular-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .molecule {
+            position: absolute;
+            border: 2px solid var(--accent-color);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        .molecule::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(31, 41, 55, 0.95);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-brand {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 6rem auto 7rem;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem;
+            background: rgba(31, 41, 55, 0.6);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Video Section */
+        .video-section {
+            background: rgba(31, 41, 55, 0.6);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Cards Section */
+        .cards-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.8rem;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        .card-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+            color: var(--accent-color);
+        }
+
+        .card-info p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Resources Section */
+        .resources {
+            background: rgba(31, 41, 55, 0.6);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 2rem;
+        }
+
+        .resource-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            text-decoration: none;
+            color: var(--text-light);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.8rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .resource-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .resource-icon {
+            background: var(--accent-color);
+            padding: 0.8rem;
+            border-radius: 0.5rem;
+            margin-right: 1rem;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            padding: 0.8rem;
+            background: rgba(31, 41, 55, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .bottom-button {
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .whatsapp-btn {
+            background: linear-gradient(45deg, #25D366, #128C7E);
+        }
+
+        .youtube-btn {
+            background: linear-gradient(45deg, #FF0000, #CC0000);
+        }
+
+        .bottom-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #111827;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 3px solid transparent;
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            padding: 1rem 2rem;
+            background: rgba(31, 41, 55, 0.95);
+            color: var(--text-light);
+            border-radius: 0.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .bottom-nav {
+                width: calc(100% - 2rem);
+                bottom: 1rem;
+            }
+
+            .bottom-button {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 2rem 1rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Molecular Background -->
+    <div class="molecular-bg">
+        <div class="molecule" style="width: 100px; height: 100px; top: 20%; left: 10%;"></div>
+        <div class="molecule" style="width: 150px; height: 150px; top: 60%; left: 80%;"></div>
+        <div class="molecule" style="width: 120px; height: 120px; top: 40%; left: 50%;"></div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="../index.html" class="navbar-brand">SimplifiedMinds</a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <section class="hero">
+            <h1>Carbon and its Compounds</h1>
+            <p>Discover the fascinating world of organic chemistry through interactive learning</p>
+        </section>
+
+        <div class="content-grid">
+            <main class="video-section">
+                <h2 class="section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+                    </svg>
+                    Chapter Overview
+                </h2>
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/oQzHkkcT5Gs"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </main>
+
+            <aside>
+                <div class="cards-grid">
+                    <a href="2019_2020_Carbon.html" class="card">
+                        <div class="card-info">
+                            <h3>2019-2020 Questions</h3>
+                            <p>Complete solved paper with detailed solutions</p>
+                        </div>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                    </a>
+
+                    <a href="#" class="card" data-coming-soon>
+                        <div class="card-info">
+                            <h3>2021-2022 Questions</h3>
+                            <p>Solutions coming soon</p>
+                        </div>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                    </a>
+
+                    <a href="#" class="card" data-coming-soon>
+                        <div class="card-info">
+                            <h3>2023-2024 Questions</h3>
+                            <p>Latest paper solutions</p>
+                        </div>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <section class="resources">
+                    <h2 class="section-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                        Study Resources
+                    </h2>
+                    <a href="https://drive.google.com/file/d/19XC3FyBR6MJcVxlMyR6_gnJhTnyNME3h/view?usp=sharing" class="resource-link">
+                        <div class="resource-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                <path d="M14 2v6h6M16 13H8M16 17H8"/>
+                            </svg>
+                        </div>
+                        <span>Comprehensive Notes</span>
+                    </a>
+                    <a href="https://www.youtube.com/@simplifiedmindssslc" class="resource-link">
+                        <div class="resource-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.33z"/>
+                                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+                            </svg>
+                        </div>
+                        <span>Video Lectures</span>
+                    </a>
+                </section>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="https://www.whatsapp.com/channel/0029Vb3QDu17YSd1brABFi1d" class="bottom-button whatsapp-btn">
+            <svg width="20" height="20" fill="white" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+            </svg>
+            Join WhatsApp
+        </a>
+        <a href="https://www.youtube.com/@simplifiedmindssslc" class="bottom-button youtube-btn">
+            <svg width="20" height="20" fill="white" viewBox="0 0 24 24">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            Video Lectures
+        </a>
+    </nav>
+
+    <script>
+        // Create molecular background
+        function createMolecules() {
+            const bg = document.querySelector('.molecular-bg');
+            const count = window.innerWidth > 768 ? 8 : 5;
+            
+            for (let i = 0; i < count; i++) {
+                const molecule = document.createElement('div');
+                molecule.className = 'molecule';
+                const size = Math.random() * 100 + 50;
+                molecule.style.width = size + 'px';
+                molecule.style.height = size + 'px';
+                molecule.style.top = Math.random() * 100 + '%';
+                molecule.style.left = Math.random() * 100 + '%';
+                molecule.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                molecule.style.animationDelay = (-Math.random() * 5) + 's';
+                bg.appendChild(molecule);
+            }
+        }
+
+        // Initialize molecular background
+        createMolecules();
+
+        // Loading Screen
+        window.addEventListener('load', () => {
+            const loadingScreen = document.querySelector('.loading');
+            setTimeout(() => {
+                loadingScreen.style.opacity = '0';
+                loadingScreen.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 300);
+            }, 300);
+        });
+
+        // Handle Coming Soon Cards
+        document.querySelectorAll('[data-coming-soon]').forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                showToast('Content coming soon! Check back later.');
+            });
+        });
+
+        // Toast Notification System
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            toast.style.position = 'fixed';
+            toast.style.bottom = '100px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.zIndex = '2000';
+            
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, 20px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Intersection Observer for Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections for fade-in animation
+        document.querySelectorAll('.video-section, .cards-grid, .resources').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'all 0.5s ease';
+            observer.observe(section);
+        });
+
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const bg = document.querySelector('.molecular-bg');
+                bg.innerHTML = '';
+                createMolecules();
+            }, 250);
+        });
+
+        // Add hover effects for resource links
+        document.querySelectorAll('.resource-link').forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                link.style.transform = 'translateX(10px)';
+            });
+
+            link.addEventListener('mouseleave', () => {
+                link.style.transform = 'translateX(0)';
+            });
+        });
+    </script>
+</body>
+</html>

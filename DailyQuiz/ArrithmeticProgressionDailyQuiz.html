@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arithmetic Progression Daily Quiz- SimplifiedMinds</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --success: #50c878;
+            --danger: #ff4757;
+            --background: #f8f9fa;
+            --text: #2d3436;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f2f5 0%, #e6e9ef 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--text);
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .quiz-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 12px;
+            background-color: #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, #6c5ce7 100%);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .timer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: var(--background);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .timer {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .question-container {
+            margin-bottom: 2rem;
+        }
+
+        #question {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option {
+            padding: 1.2rem;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-color: var(--primary);
+        }
+
+        .option.correct {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .option.incorrect {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
+
+        .results {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-box {
+            background: var(--background);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .result-item {
+            border: 2px solid #e9ecef;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            background: white;
+        }
+
+        .retry-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-top: 2rem;
+        }
+
+        .retry-btn:hover {
+            transform: scale(1.02);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            .quiz-container { padding: 1.5rem; }
+            #question { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <h1>Quadratic Equations Mastery</h1>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <span id="progress-text">0/10</span>
+            </div>
+        </div>
+        
+        <div class="question-container">
+            <div class="timer-container">
+                <div class="timer" id="timer">⏱ Total Time: 0s</div>
+                <div class="timer" id="question-timer">⏳ Current Question: 0s</div>
+            </div>
+            <h2 id="question"></h2>
+            <div class="options" id="options"></div>
+        </div>
+
+        <div class="results" id="results">
+            <div class="results-header">
+                <h2>🎉 Quiz Results</h2>
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <h3>Score</h3>
+                        <p id="score" class="score-value">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Time</h3>
+                        <p id="total-time">0s</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Accuracy</h3>
+                        <p id="accuracy">0%</p>
+                    </div>
+                </div>
+            </div>
+            <div id="result-details"></div>
+            <button class="retry-btn" onclick="location.reload()">🔄 Retry Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [ 
+{
+    question: "In an AP, if a = –7.2, d = 3.6, an = 7.2, then n is",
+    options: ["1", "3", "4", "5"],
+    correct: 3
+},
+{
+    question: "The 11th term of the AP: -5, -5/2, 0, 5/2, ... is",
+    options: ["-20", "20", "-30", "30"],
+    correct: 1
+},
+{
+    question: "If the sum of three numbers in an AP is 9 and their product is 24, the numbers are",
+    options: ["2, 4, 6", "1, 5, 3", "2, 8, 4", "2, 3, 4"],
+    correct: 3
+},
+{
+    question: "Two APs have same common difference. First terms are -1 and -8. Difference between their 4th terms is",
+    options: ["-1", "-8", "7", "-9"],
+    correct: 2
+},
+{
+    question: "In an AP, if d = -4, n = 7, an = 4, then 'a' is",
+    options: ["6", "7", "20", "28"],
+    correct: 3
+},
+{
+    question: "If the common difference of an AP is 5, then a₁₈ - a₁₃ is",
+    options: ["5", "20", "25", "30"],
+    correct: 2
+},
+{
+    question: "Smith asked daddy to give ₹100 on first day and decrease by ₹10 daily. Money collected in 10 days is",
+    options: ["550", "1000", "480", "320"],
+    correct: 0
+},
+{
+    question: "What is the sum of first 10 terms of AP: 15, 10, 5,...",
+    options: ["-75", "-125", "75", "125"],
+    correct: 0
+},
+{
+    question: "For AP with a = 3.5, d = 0, n = 101, then tn =",
+    options: ["0", "3.5", "103.5", "104.5"],
+    correct: 1
+},
+{
+    question: "The sequence -10, -6, -2, 2,... is",
+    options: ["AP with d = -16", "AP with d = 4", "AP with d = -4", "not an AP"],
+    correct: 1
+}
+ ]; // Same quiz data as before
+
+        let currentQuestion = 0;
+        let score = 0;
+        let totalTime = 0;
+        let questionStartTime;
+        let answers = [];
+        let totalTimerInterval;
+        let questionTimerInterval;
+
+        function startQuiz() {
+            questionStartTime = Date.now();
+            totalTimerInterval = setInterval(updateTotalTimer, 1000);
+            startQuestionTimer();
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = quizData[currentQuestion];
+            document.getElementById('question').textContent = question.question;
+            
+            const optionsHtml = question.options.map((option, index) => `
+                <div class="option" onclick="selectAnswer(${index})" 
+                     data-index="${index}">
+                    <span class="option-number">${String.fromCharCode(65 + index)}.</span>
+                    ${option}
+                </div>
+            `).join('');
+            
+            document.getElementById('options').innerHTML = optionsHtml;
+            updateProgress();
+            startQuestionTimer();
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion) / quizData.length) * 100;
+            document.getElementById('progress').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = 
+                `${currentQuestion}/${quizData.length}`;
+        }
+
+        function updateTotalTimer() {
+            totalTime = Math.floor((Date.now() - questionStartTime) / 1000);
+            document.getElementById('timer').textContent = `⏱ Total Time: ${totalTime}s`;
+        }
+
+        function startQuestionTimer() {
+            let questionTime = 0;
+            clearInterval(questionTimerInterval);
+            questionTimerInterval = setInterval(() => {
+                questionTime++;
+                document.getElementById('question-timer').textContent = 
+                    `⏳ Current Question: ${questionTime}s`;
+            }, 1000);
+        }
+
+        function selectAnswer(selectedIndex) {
+            clearInterval(questionTimerInterval);
+            const options = document.querySelectorAll('.option');
+            const correctIndex = quizData[currentQuestion].correct;
+            const timeTaken = (Date.now() - questionStartTime) / 1000;
+
+            options.forEach((option, index) => {
+                option.classList.remove('correct', 'incorrect');
+                if(index === correctIndex) option.classList.add('correct');
+                if(index === selectedIndex && index !== correctIndex) 
+                    option.classList.add('incorrect');
+                option.style.pointerEvents = 'none';
+            });
+
+            answers.push({
+                question: currentQuestion,
+                selected: selectedIndex,
+                correct: selectedIndex === correctIndex,
+                time: timeTaken
+            });
+
+            if(selectedIndex === correctIndex) score++;
+
+            setTimeout(() => {
+                if(currentQuestion < quizData.length - 1) {
+                    currentQuestion++;
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            }, 1500);
+        }
+
+        function showResults() {
+            clearInterval(totalTimerInterval);
+            document.querySelector('.question-container').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            
+            const accuracy = Math.round((score / quizData.length) * 100);
+            document.getElementById('score').textContent = `${score}/${quizData.length}`;
+            document.getElementById('total-time').textContent = `${totalTime}s`;
+            document.getElementById('accuracy').textContent = `${accuracy}%`;
+
+            const resultDetails = answers.map((answer, index) => `
+                <div class="result-item">
+                    <p><strong>Q${index + 1}:</strong> ${quizData[index].question}</p>
+                    <p class="${answer.correct ? 'correct' : 'incorrect'}">
+                        Your answer: ${quizData[index].options[answer.selected]}
+                        ${answer.correct ? '✅' : '❌'}
+                    </p>
+                    ${!answer.correct ? `
+                        <p class="correct">Correct answer: ${quizData[index].options[quizData[index].correct]} ✅</p>
+                    ` : ''}
+                    <p>⏱ ${answer.time.toFixed(1)}s</p>
+                </div>
+            `).join('');
+
+            document.getElementById('result-details').innerHTML = resultDetails;
+        }
+
+        startQuiz();
+    </script>
+</body>
+</html>

@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon & its Compounds MCQs</title>
+
+    <!-- Google Analytics Script -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q0HGP73J9J"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-Q0HGP73J9J', {
+            custom_map: {
+                'dimension1': 'question_subject',
+                'dimension2': 'question_type',
+                'dimension3': 'mark_value',
+                'dimension4': 'success_rate'
+            }
+        });
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .header-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .chapter-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        body {
+            background-color: #f0fdf4;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .timer-card {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .timer-warning {
+            background: #fee2e2;
+            animation: pulse 1s infinite;
+        }
+
+        .timer-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .question-card {
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .question-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .badge-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .subject-badge {
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 14px;
+            background: #4338ca;
+            color: white;
+        }
+
+        .marks-badge {
+            background: #f3f4f6;
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .question-content {
+            font-size: 18px;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .mcq-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 16px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .option:hover:not(.selected):not(.correct):not(.incorrect) {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.selected {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.correct {
+            border-color: #059669;
+            background: #d1fae5;
+        }
+
+        .option.incorrect {
+            border-color: #dc2626;
+            background: #fee2e2;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            background: #4338ca;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .solution {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 16px;
+            display: none;
+            background: #eef2ff;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #4338ca;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .badge-container {
+                flex-wrap: wrap;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .mcq-options {
+                grid-template-columns: 1fr;
+            }
+        }
+/* Add these to your existing styles */
+.question-image-container,
+.solution-image-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.question-image-container img,
+.solution-image-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.question-image-container img:hover,
+.solution-image-container img:hover {
+    transform: scale(1.02);
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <div class="logo-container">
+                <img src="../SimplifiedMinds_App_icon.jpg" alt="Logo" class="logo">
+                <span class="chapter-name">Carbon & its Compounds</span>
+            </div>
+        </div>
+
+        <div class="timer-card">
+            <div class="timer-text">
+                ⏰ Time Left: <span id="time-display">1:00</span>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-header">
+                <h2 class="question-number" id="question-number">Question 1</h2>
+                <div class="badge-container">
+                    <span id="subject-badge" class="subject-badge">Physics</span>
+                    <span id="marks-badge" class="marks-badge">1 Mark</span>
+                    <span id="exam-year-badge" class="marks-badge">2020 Mains</span>
+                </div>
+            </div>
+
+            <div id="question-content" class="question-content"></div>
+
+            <button id="solution-btn" class="btn">Show Solution</button>
+
+            <div id="solution-content" class="solution">
+                <div id="solution-text"></div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button id="prev-btn" class="btn" disabled>← Previous</button>
+            <div id="dots" class="dots"></div>
+            <button id="next-btn" class="btn">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        // Questions Array
+        const questions = [
+            {
+        subject: 'physics',
+        type: 'mcq_carbon',
+        question: 'The functional groups present in propanol and propanal respectively are',
+        options: [
+            { id: 'a', text: '— OH and — CHO', correct: true },
+            { id: 'b', text: '— OH and — COOH', correct: false },
+            { id: 'c', text: '— CHO and — COOH', correct: false },
+            { id: 'd', text: '— CHO and — CO', correct: false }
+        ],
+        examYear: '2019 Main',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `Propanol contains hydroxyl group (—OH)<br>
+Propanal contains aldehyde group (—CHO)<br>
+Therefore, option (a) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_carbon',
+        question: 'An example for saturated hydrocarbon is',
+        options: [
+            { id: 'a', text: 'C2H6', correct: true },
+            { id: 'b', text: 'C3H4', correct: false },
+            { id: 'c', text: 'C2H2', correct: false },
+            { id: 'd', text: 'C2H4', correct: false }
+        ],
+        examYear: '2020 Main',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `C2H6 (ethane) is a saturated hydrocarbon because:<br>
+- It has only single bonds between carbon atoms<br>
+- Has maximum possible hydrogen atoms<br>
+- Follows formula CnH2n+2<br>
+Other options are unsaturated hydrocarbons.<br>
+Therefore, option (a) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_carbon',
+        question: 'The molecular formula of three carbon compounds which are in homologous series are C2H6, C3H8, C4H10. The suitable general formula for these compounds is',
+        options: [
+            { id: 'a', text: 'CnH2n', correct: false },
+            { id: 'b', text: 'CnH2n-1', correct: false },
+            { id: 'c', text: 'CnH2n-2', correct: false },
+            { id: 'd', text: 'CnH2n+2', correct: true }
+        ],
+        examYear: '2020 Main',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `The given compounds are alkanes:<br>
+- C2H6 (ethane)<br>
+- C3H8 (propane)<br>
+- C4H10 (butane)<br>
+These follow the general formula CnH2n+2 where n is number of carbon atoms.<br>
+Therefore, option (d) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_carbon',
+        question: 'The number of single bonds and double bonds present in a structure of benzene molecule respectively',
+        options: [
+            { id: 'a', text: '3 and 9', correct: false },
+            { id: 'b', text: '9 and 3', correct: false },
+            { id: 'c', text: '6 and 6', correct: true },
+            { id: 'd', text: '7 and 5', correct: false }
+        ],
+        examYear: '2021 Main',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `In benzene (C6H6):<br>
+- Contains 6 carbon atoms in a ring<br>
+- Has alternating single and double bonds<br>
+- Has 6 single bonds and 6 double bonds<br>
+Therefore, option (c) is correct.`
+    }
+        ];
+
+        // Initialize variables
+        let currentQuestionIndex = 0;
+        let timeLeft = questions[0].timeAllowed;
+        let timerInterval;
+        let savedTimes = {};
+
+        // Get DOM elements
+        const timeDisplay = document.getElementById('time-display');
+        const questionNumber = document.getElementById('question-number');
+        const questionContent = document.getElementById('question-content');
+        const solutionBtn = document.getElementById('solution-btn');
+        const solutionContent = document.getElementById('solution-content');
+        const solutionText = document.getElementById('solution-text');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const dots = document.getElementById('dots');
+        const timer = document.querySelector('.timer-card');
+
+        // Helper functions
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timeDisplay.textContent = formatTime(timeLeft);
+                if (timeLeft <= 5) {
+                    timer.classList.add('timer-warning');
+                }
+            }
+        }
+
+        function updateQuestion() {
+            const question = questions[currentQuestionIndex];
+            
+            questionNumber.textContent = `Question ${currentQuestionIndex + 1}`;
+            document.getElementById('exam-year-badge').textContent = question.examYear;
+
+            let content = `<p>${question.question}</p>`;
+            
+            if (question.options) {
+                content += '<div class="mcq-options">';
+                question.options.forEach(option => {
+                    content += `
+                        <div class="option" data-id="${option.id}">
+                            ${option.id.toUpperCase()}. ${option.text}
+                        </div>
+                    `;
+                });
+                content += '</div>';
+            }
+            
+            questionContent.innerHTML = content;
+            solutionText.innerHTML = question.solution;
+            
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = currentQuestionIndex === questions.length - 1;
+
+            dots.innerHTML = questions.map((_, index) => `
+                <span class="dot ${index === currentQuestionIndex ? 'active' : ''}"></span>
+            `).join('');
+
+            solutionContent.style.display = 'none';
+            solutionBtn.textContent = 'Show Solution';
+
+            clearInterval(timerInterval);
+            timer.classList.remove('timer-warning');
+            timeLeft = savedTimes[currentQuestionIndex] || question.timeAllowed;
+            timeDisplay.textContent = formatTime(timeLeft);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Event Listeners
+        questionContent.addEventListener('click', (e) => {
+            const optionElement = e.target.closest('.option');
+            if (!optionElement) return;
+
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            optionElement.classList.add('selected');
+            
+            if (solutionContent.style.display === 'block') {
+                const selectedOptionId = optionElement.dataset.id;
+                const question = questions[currentQuestionIndex];
+                const correctOption = question.options.find(opt => opt.correct);
+                
+                document.querySelectorAll('.option').forEach(opt => {
+                    const optionId = opt.dataset.id;
+                    if (optionId === correctOption.id) {
+                        opt.classList.add('correct');
+                    } else if (optionId === selectedOptionId) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            }
+        });
+
+        solutionBtn.addEventListener('click', () => {
+            const isShowing = solutionContent.style.display === 'block';
+            solutionContent.style.display = isShowing ? 'none' : 'block';
+            solutionBtn.textContent = isShowing ? 'Show Solution' : 'Hide Solution';
+
+            const question = questions[currentQuestionIndex];
+            const selectedOption = document.querySelector('.option.selected');
+            
+            if (!isShowing && question.options) {
+                const correctOption = question.options.find(opt => opt.correct);
+                
+                document.querySelectorAll('.option').forEach(opt => {
+                    if (opt.dataset.id === correctOption.id) {
+                        opt.classList.add('correct');
+                    } else if (selectedOption && opt === selectedOption) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                savedTimes[currentQuestionIndex] = timeLeft;
+                currentQuestionIndex--;
+                updateQuestion();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.length - 1) {
+                savedTimes[currentQuestionIndex] = timeLeft;
+                currentQuestionIndex++;
+                updateQuestion();
+            }
+        });
+
+        // Function to add more questions
+        function addQuestions() {
+            questions.push(
+                {
+    subject: 'physics',
+    type: 'mcq_carbon',
+    question: 'The common molecular formula of both hexene and cyclohexane is',
+    options: [
+        { id: 'a', text: 'C6H6', correct: false },
+        { id: 'b', text: 'C6H14', correct: false },
+        { id: 'c', text: 'C6H12', correct: true },
+        { id: 'd', text: 'C6H10', correct: false }
+    ],
+    examYear: '2021 Main',
+    marks: 1,
+    timeAllowed: 60,
+    solution: `Both hexene and cyclohexane have formula C6H12:<br>
+- Hexene follows alkene formula CnH2n (n=6)<br>
+- Cyclohexane also has formula CnH2n (n=6)<br>
+- Both have same formula but different structures<br>
+Therefore, option (c) is correct.`
+},
+{
+    subject: 'physics',
+    type: 'mcq_carbon',
+    question: 'The pair of carbon compounds having same molecular formula is',
+    options: [
+        { id: 'a', text: 'Hexane, Hexene', correct: false },
+        { id: 'b', text: 'Hexene, Hexyne', correct: false },
+        { id: 'c', text: 'Hexene, Benzene', correct: false },
+        { id: 'd', text: 'Hexene, Cyclohexane', correct: true }
+    ],
+    examYear: '2021 Sup',
+    marks: 1,
+    timeAllowed: 60,
+    solution: `Hexene and Cyclohexane both have formula C6H12:<br>
+- Hexene is an alkene with formula CnH2n (n=6)<br>
+- Cyclohexane is cyclic alkane with same formula<br>
+- They are structural isomers<br>
+Therefore, option (d) is correct.`
+},
+{
+    subject: 'physics',
+    type: 'mcq_carbon',
+    question: 'A group of carbon compounds that are in homologous series',
+    options: [
+        { id: 'a', text: 'CH4, C2H4, C3H4', correct: false },
+        { id: 'b', text: 'C2H2, C2H6, C3H6', correct: false },
+        { id: 'c', text: 'C2H4, C3H6, C4H8', correct: true },
+        { id: 'd', text: 'C3H6, C3H8, C3H4', correct: false }
+    ],
+    examYear: '2021 Sup',
+    marks: 1,
+    timeAllowed: 60,
+    solution: `C2H4, C3H6, C4H8 form a homologous series because:<br>
+- They are all alkenes following formula CnH2n<br>
+- Differ by CH2 unit<br>
+- Have similar chemical properties<br>
+Therefore, option (c) is correct.`
+},
+{
+    subject: 'physics',
+    type: 'mcq_carbon',
+    question: 'The saturated hydrocarbon among the following is',
+    options: [
+        { id: 'a', text: 'C5H8', correct: false },
+        { id: 'b', text: 'C2H2', correct: false },
+        { id: 'c', text: 'C6H6', correct: false },
+        { id: 'd', text: 'C5H12', correct: true }
+    ],
+    examYear: '2021 Sup',
+    marks: 1,
+    timeAllowed: 60,
+    solution: `C5H12 is a saturated hydrocarbon because:<br>
+- Follows alkane formula CnH2n+2<br>
+- Has only single bonds<br>
+- Contains maximum possible hydrogen atoms<br>
+Other options are unsaturated hydrocarbons.<br>
+Therefore, option (d) is correct.`
+},
+{
+    subject: 'physics',
+    type: 'mcq_carbon',
+    question: 'Number of single bonds found in the molecular structure of propanal is',
+    options: [
+        { id: 'a', text: '8', correct: true },
+        { id: 'b', text: '6', correct: false },
+        { id: 'c', text: '7', correct: false },
+        { id: 'd', text: '5', correct: false }
+    ],
+    examYear: '2022 Sup',
+    marks: 1,
+    timeAllowed: 60,
+    solution: `In propanal (C3H6O):<br>
+- 2 C-C single bonds<br>
+- 5 C-H single bonds<br>
+- 1 C=O double bond<br>
+Total single bonds = 8<br>
+Therefore, option (a) is correct.`
+},
+{
+    subject: 'physics',
+    type: 'mcq_carbon',
+    question: 'The name and the molecular formula of the unsaturated hydrocarbon having general formula CnH2n and containing 3 carbon atoms is',
+    options: [
+        { id: 'a', text: 'propane, C3H8', correct: false },
+        { id: 'b', text: 'Cyclopropane, C3H6', correct: true },
+        { id: 'c', text: 'Propyne, C3H4', correct: false },
+        { id: 'd', text: 'Propene, C3H6', correct: false }
+    ],
+    examYear: '2020 Sup',
+    marks: 1,
+    timeAllowed: 60,
+    solution: `For CnH2n with n=3:<br>
+- Formula would be C3H6<br>
+- Cyclopropane fits this formula<br>
+- Forms a 3-carbon ring structure<br>
+Therefore, option (b) is correct.`
+},
+{
+    subject: 'physics',
+    type: 'mcq_carbon',
+    question: 'Organic compounds obtained by the reaction between carboxylic acid and alcohol are',
+    options: [
+        { id: 'a', text: 'Aldehydes', correct: false },
+        { id: 'b', text: 'Ketones', correct: false },
+        { id: 'c', text: 'Esters', correct: true },
+        { id: 'd', text: 'Hydrocarbons', correct: false }
+    ],
+    examYear: '2024 Exam 1',
+    marks: 1,
+    timeAllowed: 60,
+    solution: `When carboxylic acid reacts with alcohol:<br>
+- Forms ester and water<br>
+- Called esterification reaction<br>
+- RCOOH + R'OH → RCOOR' + H2O<br>
+Therefore, option (c) is correct.`
+},
+{
+    subject: 'physics',
+    type: 'mcq_carbon',
+    question: 'The molecular formula of propanal is',
+    options: [
+        { id: 'a', text: 'C2H5COOH', correct: false },
+        { id: 'b', text: 'C2H5CHO', correct: true },
+        { id: 'c', text: 'C3H5CHO', correct: false },
+        { id: 'd', text: 'C3H5COOH', correct: false }
+    ],
+    examYear: '2024 Exam 2',
+    marks: 1,
+    timeAllowed: 60,
+    solution: `Propanal:<br>
+- Is a 3-carbon aldehyde<br>
+- Has formula C2H5CHO<br>
+- Contains aldehyde group (-CHO)<br>
+Therefore, option (b) is correct.`
+},
+{
+    subject: 'physics',
+    type: 'mcq_carbon',
+    question: 'Identify the correct electron dot structure of nitrogen molecule in the following:',
+    options: [
+        { id: 'a', text: ':N⋅⋅⋅N:', correct: true },
+        { id: 'b', text: '⋅N⋅⋅N⋅', correct: false },
+        { id: 'c', text: '⋅N⋅N⋅', correct: false },
+        { id: 'd', text: '⋅N⋅⋅⋅N⋅', correct: false }
+    ],
+    examYear: '2020 Sup',
+    marks: 1,
+    timeAllowed: 60,
+    solution: `Correct electron dot structure for N2:<br>
+- Shows triple bond between N atoms<br>
+- Each N has 8 electrons (octet rule)<br>
+- Has lone pairs of electrons<br>
+Therefore, option (a) is correct.`
+}
+                // Add more questions here as needed
+            );
+        }
+
+        // Call addQuestions to add more questions
+        addQuestions();
+
+        // Initialize the first question
+        updateQuestion();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            if (width < 640) {
+                document.querySelectorAll('.mcq-options').forEach(grid => {
+                    grid.style.gridTemplateColumns = '1fr';
+                });
+            } else {
+                document.querySelectorAll('.mcq-options').forEach(grid => {
+                    grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(240px, 1fr))';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
