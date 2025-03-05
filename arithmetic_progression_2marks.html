@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simplified Minds SSLC</title>
+
+<!-- Google Analytics Script -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q0HGP73J9J"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-Q0HGP73J9J', {
+            custom_map: {
+                'dimension1': 'question_subject',
+                'dimension2': 'question_type',
+                'dimension3': 'mark_value',
+                'dimension4': 'success_rate'
+            }
+        });
+
+        // Configure custom dimensions
+        gtag('set', {
+            'question_subject': 'not_set',
+            'question_type': 'not_set',
+            'mark_value': 'not_set',
+            'success_rate': 'not_set'
+        });
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .header-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .chapter-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        body {
+            background-color: #f0fdf4;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .timer-card {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .timer-warning {
+            background: #fee2e2;
+            animation: pulse 1s infinite;
+        }
+
+        .timer-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .question-card {
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .question-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .badge-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .subject-badge {
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .marks-badge {
+            background: #f3f4f6;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .question-content {
+            font-size: 18px;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .sub-questions {
+            margin-left: 24px;
+            margin-top: 16px;
+        }
+
+        .sub-questions li {
+            margin-bottom: 12px;
+            color: #4b5563;
+        }
+
+        .mcq-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 16px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .option:hover:not(.selected):not(.correct):not(.incorrect) {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.selected {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.correct {
+            border-color: #059669;
+            background: #d1fae5;
+        }
+
+        .option.incorrect {
+            border-color: #dc2626;
+            background: #fee2e2;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .solution {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 16px;
+            display: none;
+        }
+
+        .video-solution {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .video-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            background: white;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .video-button:hover {
+            background: #f9fafb;
+            transform: translateY(-1px);
+        }
+
+        .video-icon {
+            color: #ef4444;
+        }
+
+        .solution-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #4338ca;
+        }
+
+        /* Subject-specific styles */
+        .physics { background: #4338ca; color: white; }
+        .chemistry { background: #dc2626; color: white; }
+        .biology { background: #059669; color: white; }
+        .maths { background: #d97706; color: white; }
+
+        .light-physics { background: #e0e7ff; }
+        .light-chemistry { background: #fee2e2; }
+        .light-biology { background: #d1fae5; }
+        .light-maths { background: #fef3c7; }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+
+            .header-section {
+                padding: 10px 16px;
+            }
+            
+            .chapter-name {
+                font-size: 1.1rem;
+            }
+            
+            .logo {
+                width: 32px;
+                height: 32px;
+            }
+
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .badge-container {
+                flex-wrap: wrap;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .dots {
+                order: -1;
+            }
+
+            .mcq-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+.exam-year-badge {
+    background: #f3f4f6;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin-left: 8px;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <div class="logo-container">
+                <img src="SimplifiedMinds_App_icon.jpg" alt="Physics Logo" class="logo">
+                <span class="chapter-name">Arithmetic Progression</span>
+            </div>
+        </div>
+
+        <div class="timer-card">
+            <div class="timer-text">
+                ⏰ Time Left: <span id="time-display">1:00</span>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-header">
+                <h2 class="question-number" id="question-number">Question 1</h2>
+                <div class="badge-container">
+                    <span id="subject-badge" class="subject-badge physics">Physics</span>
+                    <span id="marks-badge" class="marks-badge">1 Mark</span>
+	     <span id="exam-year-badge" class="marks-badge">June 2022</span>
+                </div>
+            </div>
+
+            <div id="question-content" class="question-content">
+                <!-- Question content will be dynamically inserted here -->
+            </div>
+
+            <button id="solution-btn" class="btn physics">
+                <span>Show Solution</span>
+            </button>
+
+            <div id="solution-content" class="solution light-physics">
+                <div class="solution-header">
+                    📝 Solution
+                </div>
+                <div id="solution-text">
+                    <!-- Solution content will be dynamically inserted here -->
+                </div>
+                <div class="video-solution">
+                    <a id="video-link" href="#" target="_blank" class="video-button">
+                        <span class="video-icon">▶</span>
+                        Watch Video Solution
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button id="prev-btn" class="btn physics" disabled>← Previous</button>
+            <div id="dots" class="dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+            <button id="next-btn" class="btn physics">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Questions
+const questions = [
+{
+    subject: 'maths',
+    type: 'ap_sum',
+    question: 'Find the sum of first 20 terms of the A.P 3, 7, 11, 15, ...',
+    examYear: 'Prep 2020',
+    marks: 1,
+    timeAllowed: 90,
+    solution: `Step 1: Identify the values<br>
+- First term (a) = 3<br>
+- Common difference (d) = 7 - 3 = 4<br>
+- Number of terms (n) = 20<br>
+Step 2: Use the formula<br>
+Sₙ = (n/2)[2a + (n-1)d]<br>
+Step 3: Substitute values<br>
+S₂₀ = (20/2)[2(3) + (20-1)4]<br>
+    = 10[6 + 19(4)]<br>
+    = 10[6 + 76]<br>
+    = 10(82)<br>
+    = 820<br>
+Therefore, the sum of first 20 terms is 820.<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/qYBL3Cq8OHk?t=2975'
+},
+{
+    subject: 'maths',
+    type: 'ap_sum',
+    question: 'Find the sum of first 10 terms of the A.P 5, 8, 11, ...',
+    examYear: 'April 2020 & June 2020',
+    marks: 1,
+    timeAllowed: 90,
+    solution: `Step 1: Identify the values<br>
+- First term (a) = 5<br>
+- Common difference (d) = 8 - 5 = 3<br>
+- Number of terms (n) = 10<br>
+Step 2: Use the formula<br>
+Sₙ = (n/2)[2a + (n-1)d]<br>
+Step 3: Substitute values<br>
+S₁₀ = (10/2)[2(5) + (10-1)3]<br>
+    = 5[10 + 27]<br>
+    = 5(37)<br>
+    = 185<br>
+Therefore, the sum of first 10 terms is 185.<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/qYBL3Cq8OHk?t=2975'
+},
+{
+    subject: 'maths',
+    type: 'ap_sum',
+    question: 'Find the sum of 20 terms of the A.P 5, 10, 15, ...',
+    examYear: 'Sept 2020',
+    marks: 1,
+    timeAllowed: 90,
+    solution: `Step 1: Identify the values<br>
+- First term (a) = 5<br>
+- Common difference (d) = 10 - 5 = 5<br>
+- Number of terms (n) = 20<br>
+Step 2: Use the formula<br>
+Sₙ = (n/2)[2a + (n-1)d]<br>
+Step 3: Substitute values<br>
+S₂₀ = (20/2)[2(5) + (20-1)5]<br>
+    = 10[10 + 95]<br>
+    = 10(105)<br>
+    = 1050<br>
+Therefore, the sum of 20 terms is 1050.<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/qYBL3Cq8OHk?t=2975'
+},
+{
+    subject: 'maths',
+    type: 'ap_sum',
+    question: 'Find the sum of 20 terms of the A.P 2, 7, 12, ...',
+    examYear: 'Prep 2022',
+    marks: 1,
+    timeAllowed: 90,
+    solution: `Step 1: Identify the values<br>
+- First term (a) = 2<br>
+- Common difference (d) = 7 - 2 = 5<br>
+- Number of terms (n) = 20<br>
+Step 2: Use the formula<br>
+Sₙ = (n/2)[2a + (n-1)d]<br>
+Step 3: Substitute values<br>
+S₂₀ = (20/2)[2(2) + (20-1)5]<br>
+    = 10[4 + 19(5)]<br>
+    = 10[4 + 95]<br>
+    = 10(99)<br>
+    = 990<br>
+Therefore, the sum of first 20 terms is 990.<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/qYBL3Cq8OHk?t=2737'
+},
+{
+    subject: 'maths',
+    type: 'ap_sum',
+    question: 'Find the sum of 20 terms of the A.P 10, 15, 20, ...',
+    examYear: 'April 2022',
+    marks: 1,
+    timeAllowed: 90,
+    solution: `Step 1: Identify the values<br>
+- First term (a) = 10<br>
+- Common difference (d) = 15 - 10 = 5<br>
+- Number of terms (n) = 20<br>
+Step 2: Use the formula<br>
+Sₙ = (n/2)[2a + (n-1)d]<br>
+Step 3: Substitute values<br>
+S₂₀ = (20/2)[2(10) + (20-1)5]<br>
+    = 10[20 + 95]<br>
+    = 10(115)<br>
+    = 1150<br>
+Therefore, the sum of 20 terms is 1150.<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/qYBL3Cq8OHk?t=2737'
+},
+{
+    subject: 'maths',
+    type: 'ap_sum',
+    question: 'Find the sum of 16 terms of the A.P 7, 11, 15, ...',
+    examYear: 'June 2022',
+    marks: 1,
+    timeAllowed: 90,
+    solution: `Step 1: Identify the values<br>
+- First term (a) = 7<br>
+- Common difference (d) = 11 - 7 = 4<br>
+- Number of terms (n) = 16<br>
+Step 2: Use the formula<br>
+Sₙ = (n/2)[2a + (n-1)d]<br>
+Step 3: Substitute values<br>
+S₁₆ = (16/2)[2(7) + (16-1)4]<br>
+    = 8[14 + 60]<br>
+    = 8(74)<br>
+    = 592<br>
+Therefore, the sum of 16 terms is 592.<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/qYBL3Cq8OHk?t=2737'
+},
+{
+    subject: 'maths',
+    type: 'ap_sum',
+    question: 'Find the sum of first 20 terms of the Arithmetic progression 1, 5, 9, ...',
+    examYear: 'April 2024',
+    marks: 1,
+    timeAllowed: 90,
+    solution: `Step 1: Identify the values<br>
+- First term (a) = 1<br>
+- Common difference (d) = 5 - 1 = 4<br>
+- Number of terms (n) = 20<br>
+Step 2: Use the formula<br>
+Sₙ = (n/2)[2a + (n-1)d]<br>
+Step 3: Substitute values<br>
+S₂₀ = (20/2)[2(1) + (20-1)4]<br>
+    = 10[2 + 76]<br>
+    = 10(78)<br>
+    = 780<br>
+Therefore, the sum of first 20 terms is 780.<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/qYBL3Cq8OHk?t=2737'
+},
+{
+    subject: 'maths',
+    type: 'ap_term',
+    question: 'Find the 15th term of the A.P 3, 8, 13, ...',
+    examYear: 'Prep 2022',
+    marks: 1,
+    timeAllowed: 90,
+    solution: `Step 1: Identify the values<br>
+- First term (a) = 3<br>
+- Common difference (d) = 8 - 3 = 5<br>
+- Position of term (n) = 15<br>
+Step 2: Use the formula<br>
+aₙ = a + (n-1)d<br>
+Step 3: Substitute values<br>
+a₁₅ = 3 + (15-1)5<br>
+    = 3 + (14)5<br>
+    = 3 + 70<br>
+    = 73<br>
+Therefore, the 15th term is 73.<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/qYBL3Cq8OHk?t=1299'
+},
+{
+    subject: 'maths',
+    type: 'ap_term',
+    question: 'Find the 30th term of the A.P 5, 8, 11, ...',
+    examYear: 'April 2022',
+    marks: 1,
+    timeAllowed: 90,
+    solution: `Step 1: Identify the values<br>
+- First term (a) = 5<br>
+- Common difference (d) = 8 - 5 = 3<br>
+- Position of term (n) = 30<br>
+Step 2: Use the formula<br>
+aₙ = a + (n-1)d<br>
+Step 3: Substitute values<br>
+a₃₀ = 5 + (30-1)3<br>
+    = 5 + (29)3<br>
+    = 5 + 87<br>
+    = 92<br>
+Therefore, the 30th term is 92.<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/qYBL3Cq8OHk?t=1299'
+},
+{
+    subject: 'maths',
+    type: 'ap_term',
+    question: 'Find the 12th term of the A.P 2, 5, 8, ...',
+    examYear: 'June 2022',
+    marks: 1,
+    timeAllowed: 90,
+    solution: `Step 1: Identify the values<br>
+- First term (a) = 2<br>
+- Common difference (d) = 5 - 2 = 3<br>
+- Position of term (n) = 12<br>
+Step 2: Use the formula<br>
+aₙ = a + (n-1)d<br>
+Step 3: Substitute values<br>
+a₁₂ = 2 + (12-1)3<br>
+    = 2 + (11)3<br>
+    = 2 + 33<br>
+    = 35<br>
+Therefore, the 12th term is 35.<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/qYBL3Cq8OHk?t=1299'
+},
+{
+    subject: 'maths',
+    type: 'ap_term',
+    question: 'Find the 20th term of the arithmetic progression 4, 7, 10, ... by using formula.',
+    examYear: 'March 2023',
+    marks: 1,
+    timeAllowed: 90,
+    solution: `Step 1: Identify the values<br>
+- First term (a) = 4<br>
+- Common difference (d) = 7 - 4 = 3<br>
+- Position of term (n) = 20<br>
+Step 2: Use the formula<br>
+aₙ = a + (n-1)d<br>
+Step 3: Substitute values<br>
+a₂₀ = 4 + (20-1)3<br>
+    = 4 + (19)3<br>
+    = 4 + 57<br>
+    = 61<br>
+Therefore, the 20th term is 61.<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/qYBL3Cq8OHk?t=1299'
+},
+{
+    subject: 'maths',
+    type: 'ap_term',
+    question: 'Find the 21st term of the arithmetic progression 5, 9, 13, ... by using formula.',
+    examYear: 'June 2023',
+    marks: 1,
+    timeAllowed: 90,
+    solution: `Step 1: Identify the values<br>
+- First term (a) = 5<br>
+- Common difference (d) = 9 - 5 = 4<br>
+- Position of term (n) = 21<br>
+Step 2: Use the formula<br>
+aₙ = a + (n-1)d<br>
+Step 3: Substitute values<br>
+a₂₁ = 5 + (21-1)4<br>
+    = 5 + (20)4<br>
+    = 5 + 80<br>
+    = 85<br>
+Therefore, the 21st term is 85.<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/qYBL3Cq8OHk?t=1299'
+},
+{
+    subject: 'maths',
+    type: 'ap_special',
+    question: 'How many terms of the A.P 3, 6, 9, ... gives the sum 165?',
+    examYear: 'June 2022',
+    marks: 1,
+    timeAllowed: 120,
+    solution: `Step 1: Identify the values<br>
+- First term (a) = 3<br>
+- Common difference (d) = 6 - 3 = 3<br>
+- Sum (Sₙ) = 165<br>
+Step 2: Use the sum formula<br>
+Sₙ = (n/2)[2a + (n-1)d]<br>
+165 = (n/2)[2(3) + (n-1)3]<br>
+165 = (n/2)[6 + 3n - 3]<br>
+165 = (n/2)[3n + 3]<br>
+165 = (3n² + 3n)/2<br>
+330 = 3n² + 3n<br>
+Step 3: Form quadratic equation<br>
+3n² + 3n - 330 = 0<br>
+n² + n - 110 = 0<br>
+Step 4: Solve quadratic equation<br>
+(n + 11)(n - 10) = 0<br>
+n = 10 or n = -11<br>
+Step 5: Choose valid solution<br>
+Since n cannot be negative for number of terms,<br>
+n = 10<br>
+Therefore, 10 terms of the A.P will give sum 165.<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/qYBL3Cq8OHk?t=3060'
+},
+{
+    subject: 'maths',
+    type: 'ap_special',
+    question: 'In an Arithmetic progression, sum of the first six terms and sum of the first five terms are 78 and 55 respectively. Then find the sixth term of the progression.',
+    examYear: 'June 2023',
+    marks: 1,
+    timeAllowed: 60,
+    solution: `Step 1: Form equations using sum formula<br>
+For S₅ = 55:<br>
+55 = 5/2[2a + (5-1)d]<br>
+55 = 5/2[2a + 4d]<br>
+110 = 5(2a + 4d)<br>
+22 = 2a + 4d ... (1)<br>
+<br>
+For S₆ = 78:<br>
+78 = 6/2[2a + (6-1)d]<br>
+78 = 3[2a + 5d]<br>
+26 = 2a + 5d ... (2)<br>
+<br>
+Step 2: Solve equations<br>
+From (2) - (1):<br>
+26 - 22 = (2a + 5d) - (2a + 4d)<br>
+4 = d<br>
+<br>
+Step 3: Find first term<br>
+Substitute d = 4 in equation (1):<br>
+22 = 2a + 4(4)<br>
+22 = 2a + 16<br>
+2a = 6<br>
+a = 3<br>
+<br>
+Step 4: Find sixth term<br>
+a₆ = a + 5d<br>
+   = 3 + 5(4)<br>
+   = 3 + 20<br>
+   = 23<br>
+<br>
+Therefore, the sixth term is 23.<br>
+<br>
+Verification:<br>
+Sum of first 5 terms = 3 + 7 + 11 + 15 + 19 = 55<br>
+Sum of first 6 terms = 55 + 23 = 78<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/qYBL3Cq8OHk?t=3344'
+}
+];
+
+// Initialize variables
+let currentQuestionIndex = 0;
+let timeLeft = questions[0].timeAllowed;
+let timerInterval;
+let savedTimes = {};
+let questionStartTime;
+let mcqAttempts = {};
+
+// Initialize session ID for analytics
+const sessionId = Math.random().toString(36).substring(2, 15);
+
+// Get DOM elements
+const timeDisplay = document.getElementById('time-display');
+const questionNumber = document.getElementById('question-number');
+const subjectBadge = document.getElementById('subject-badge');
+const marksBadge = document.getElementById('marks-badge');
+const questionContent = document.getElementById('question-content');
+const solutionBtn = document.getElementById('solution-btn');
+const solutionContent = document.getElementById('solution-content');
+const solutionText = document.getElementById('solution-text');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const dots = document.getElementById('dots');
+const timer = document.querySelector('.timer-card');
+
+// Analytics tracking functions
+function trackQuestionStart(questionIndex) {
+    const question = questions[questionIndex];
+    questionStartTime = new Date();
+    
+    gtag('event', 'question_start', {
+        question_subject: question.subject,
+        question_type: question.type || 'regular',
+        mark_value: question.marks,
+        question_number: questionIndex + 1,
+        session_id: sessionId
+    });
+}
+
+function trackQuestionEnd(questionIndex, timeSpent) {
+    const question = questions[questionIndex];
+    const attempts = mcqAttempts[questionIndex] || 0;
+    const successRate = question.type === 'mcq' ? 
+        calculateMCQSuccessRate(questionIndex) : 'not_applicable';
+
+    gtag('event', 'question_end', {
+        question_subject: question.subject,
+        question_type: question.type || 'regular',
+        mark_value: question.marks,
+        question_number: questionIndex + 1,
+        time_spent_seconds: timeSpent,
+        attempts: attempts,
+        success_rate: successRate,
+        session_id: sessionId
+    });
+}
+
+function calculateMCQSuccessRate(questionIndex) {
+    const attempts = mcqAttempts[questionIndex] || 0;
+    if (attempts === 0) return 0;
+    
+    const correctAttempts = mcqAttempts[`${questionIndex}_correct`] || 0;
+    return (correctAttempts / attempts * 100).toFixed(2);
+}
+
+function trackMCQSelection(questionIndex, selectedOption) {
+    const question = questions[questionIndex];
+    const isCorrect = question.options.find(opt => opt.id === selectedOption)?.correct || false;
+    
+    mcqAttempts[questionIndex] = (mcqAttempts[questionIndex] || 0) + 1;
+    if (isCorrect) {
+        mcqAttempts[`${questionIndex}_correct`] = (mcqAttempts[`${questionIndex}_correct`] || 0) + 1;
+    }
+
+    gtag('event', 'mcq_selection', {
+        question_subject: question.subject,
+        question_type: 'mcq',
+        mark_value: question.marks,
+        question_number: questionIndex + 1,
+        selected_option: selectedOption,
+        is_correct: isCorrect,
+        attempt_number: mcqAttempts[questionIndex],
+        session_id: sessionId
+    });
+}
+
+function trackSolutionView(questionIndex) {
+    const question = questions[questionIndex];
+    gtag('event', 'solution_view', {
+        question_subject: question.subject,
+        question_type: question.type || 'regular',
+        mark_value: question.marks,
+        question_number: questionIndex + 1,
+        time_to_solution: Math.floor((new Date() - questionStartTime) / 1000),
+        session_id: sessionId
+    });
+}
+
+function trackTimeSpent() {
+    const timeSpent = questions[currentQuestionIndex].timeAllowed - timeLeft;
+    gtag('event', 'time_tracking', {
+        question_subject: questions[currentQuestionIndex].subject,
+        question_number: currentQuestionIndex + 1,
+        time_spent_seconds: timeSpent,
+        session_id: sessionId
+    });
+}
+
+// Helper functions
+function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function updateTimer() {
+    if (timeLeft > 0) {
+        timeLeft--;
+        timeDisplay.textContent = formatTime(timeLeft);
+        if (timeLeft <= 5) {
+            timer.classList.add('timer-warning');
+        }
+        // Track time spent every 30 seconds
+        if (timeLeft % 30 === 0) {
+            trackTimeSpent();
+        }
+    }
+}
+
+function updateQuestion() {
+    // Track end of previous question if it exists
+    if (typeof currentQuestionIndex !== 'undefined' && questionStartTime) {
+        const timeSpent = Math.floor((new Date() - questionStartTime) / 1000);
+        trackQuestionEnd(currentQuestionIndex, timeSpent);
+    }
+
+    const question = questions[currentQuestionIndex];
+    
+    questionNumber.textContent = `Question ${currentQuestionIndex + 1}`;
+    
+    ['physics', 'chemistry', 'biology', 'maths'].forEach(subject => {
+        subjectBadge.classList.remove(subject);
+        solutionBtn.classList.remove(subject);
+        solutionContent.classList.remove(`light-${subject}`);
+    });
+    
+    subjectBadge.classList.add(question.subject);
+    solutionBtn.classList.add(question.subject);
+    solutionContent.classList.add(`light-${question.subject}`);
+    
+    subjectBadge.textContent = question.subject.charAt(0).toUpperCase() + question.subject.slice(1);
+    marksBadge.textContent = `${question.marks} ${question.marks === 1 ? 'Mark' : 'Marks'}`;
+
+document.getElementById('exam-year-badge').textContent = question.examYear;
+
+    let content = `<p>${question.question}</p>`;
+    
+    if (question.type === 'mcq' && question.options) {
+        content += '<div class="mcq-options">';
+        question.options.forEach(option => {
+            content += `
+                <div class="option" data-id="${option.id}">
+                    ${option.id.toUpperCase()}. ${option.text}
+                </div>
+            `;
+        });
+        content += '</div>';
+    } else if (question.subQuestions) {
+        content += '<ol class="sub-questions">';
+        question.subQuestions.forEach(sq => {
+            content += `<li>${sq}</li>`;
+        });
+        content += '</ol>';
+    }
+    
+    questionContent.innerHTML = content;
+    solutionText.innerHTML = question.solution;
+    
+    const videoLink = document.getElementById('video-link');
+    if (question.videoUrl) {
+        videoLink.href = question.videoUrl;
+        videoLink.style.display = 'inline-flex';
+    } else {
+        videoLink.style.display = 'none';
+    }
+
+    prevBtn.disabled = currentQuestionIndex === 0;
+    nextBtn.disabled = currentQuestionIndex === questions.length - 1;
+    
+    ['physics', 'chemistry', 'biology', 'maths'].forEach(subject => {
+        prevBtn.classList.remove(subject);
+        nextBtn.classList.remove(subject);
+    });
+    prevBtn.classList.add(question.subject);
+    nextBtn.classList.add(question.subject);
+
+    dots.innerHTML = questions.map((_, index) => `
+        <span class="dot ${index === currentQuestionIndex ? 'active' : ''}"></span>
+    `).join('');
+
+    solutionContent.style.display = 'none';
+    solutionBtn.innerHTML = '<span>Show Solution</span>';
+
+    clearInterval(timerInterval);
+    timer.classList.remove('timer-warning');
+    timeLeft = savedTimes[currentQuestionIndex] || question.timeAllowed;
+    timeDisplay.textContent = formatTime(timeLeft);
+    timerInterval = setInterval(updateTimer, 1000);
+
+    // Track start of new question
+    trackQuestionStart(currentQuestionIndex);
+}
+
+// Event Listeners
+questionContent.addEventListener('click', (e) => {
+    const optionElement = e.target.closest('.option');
+    if (!optionElement) return;
+    
+    const question = questions[currentQuestionIndex];
+    if (question.type !== 'mcq') return;
+
+    // Track MCQ selection
+    trackMCQSelection(currentQuestionIndex, optionElement.dataset.id);
+
+    // Remove selected class from all options
+    document.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('selected', 'correct', 'incorrect');
+    });
+
+    // Add selected class to clicked option
+    optionElement.classList.add('selected');
+    
+    // If solution is visible, show correct/incorrect
+    if (solutionContent.style.display === 'block') {
+        const selectedOptionId = optionElement.dataset.id;
+        const correctOption = question.options.find(opt => opt.correct);
+        
+        document.querySelectorAll('.option').forEach(opt => {
+            const optionId = opt.dataset.id;
+            if (optionId === correctOption.id) {
+                opt.classList.add('correct');
+            } else if (optionId === selectedOptionId) {
+                opt.classList.add('incorrect');
+            }
+        });
+    }
+});
+
+solutionBtn.addEventListener('click', () => {
+    const isShowing = solutionContent.style.display === 'block';
+    
+    if (!isShowing) {
+        trackSolutionView(currentQuestionIndex);
+    }
+    
+    solutionContent.style.display = isShowing ? 'none' : 'block';
+    solutionBtn.innerHTML = isShowing ? '<span>Show Solution</span>' : '<span>Hide Solution</span>';
+
+    const question = questions[currentQuestionIndex];
+    if (question.type === 'mcq') {
+        const selectedOption = document.querySelector('.option.selected');
+        const correctOption = question.options.find(opt => opt.correct);
+        
+        document.querySelectorAll('.option').forEach(opt => {
+            if (opt.dataset.id === correctOption.id) {
+                opt.classList.add('correct');
+            } else if (selectedOption && opt === selectedOption) {
+                opt.classList.add('incorrect');
+            }
+        });
+    }
+});
+
+prevBtn.addEventListener('click', () => {
+    if (currentQuestionIndex > 0) {
+        savedTimes[currentQuestionIndex] = timeLeft;
+        const timeSpent = Math.floor((new Date() - questionStartTime) / 1000);
+        trackQuestionEnd(currentQuestionIndex, timeSpent);
+        currentQuestionIndex--;
+        updateQuestion();
+    }
+});
+
+nextBtn.addEventListener('click', () => {
+    if (currentQuestionIndex < questions.length - 1) {
+        savedTimes[currentQuestionIndex] = timeLeft;
+        const timeSpent = Math.floor((new Date() - questionStartTime) / 1000);
+        trackQuestionEnd(currentQuestionIndex, timeSpent);
+        currentQuestionIndex++;
+        updateQuestion();
+    }
+});
+
+// Track when user leaves the page
+window.addEventListener('beforeunload', () => {
+    if (typeof currentQuestionIndex !== 'undefined' && questionStartTime) {
+        const timeSpent = Math.floor((new Date() - questionStartTime) / 1000);
+        trackQuestionEnd(currentQuestionIndex, timeSpent);
+    }
+});
+
+// Initialize the first question
+updateQuestion();
+
+    </script>
+</body>
+</html>

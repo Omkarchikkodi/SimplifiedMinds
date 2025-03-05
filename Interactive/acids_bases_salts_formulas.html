@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acids, Bases and Salts - Interactive Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root[data-theme="light"] {
+            --theme-primary: #2196f3;
+            --theme-background: #fafafa;
+            --theme-surface: #ffffff;
+            --theme-text: #000000;
+            --theme-secondary-text: #666666;
+            --theme-border: #e0e0e0;
+            --theme-hover: #f5f5f5;
+        }
+
+        :root[data-theme="dark"] {
+            --theme-primary: #90caf9;
+            --theme-background: #121212;
+            --theme-surface: #1e1e1e;
+            --theme-text: #ffffff;
+            --theme-secondary-text: #aaaaaa;
+            --theme-border: #333333;
+            --theme-hover: #2d2d2d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--theme-background);
+            color: var(--theme-text);
+            line-height: 1.6;
+        }
+
+        .top-bar {
+            background-color: var(--theme-primary);
+            color: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .theme-toggle {
+            background-color: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+
+        .main-content {
+            margin-top: 80px;
+            padding: 24px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: var(--theme-surface);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .chip {
+            padding: 8px 16px;
+            border-radius: 16px;
+            background: var(--theme-hover);
+            color: var(--theme-text);
+            border: 1px solid var(--theme-border);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .section-title {
+            color: var(--theme-text);
+            font-size: 1.5em;
+            margin: 32px 0 16px;
+            padding: 12px 20px;
+            background: var(--theme-surface);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .reaction-card {
+            background: var(--theme-surface);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .equation {
+            font-size: 1.1em;
+            padding: 12px;
+            background: var(--theme-hover);
+            border-radius: 4px;
+            margin: 8px 0;
+        }
+
+        .compound-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .compound-item {
+            background: var(--theme-surface);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--theme-border);
+            transition: transform 0.2s;
+        }
+
+        .compound-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .indicator-list {
+            margin-top: 16px;
+        }
+
+        .indicator-item {
+            background: var(--theme-surface);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid var(--theme-border);
+        }
+
+        .natural-acids {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .acid-item {
+            background: var(--theme-surface);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--theme-border);
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <header class="top-bar">
+        <h1>Acids, Bases and Salts</h1>
+        <button class="theme-toggle" id="themeToggle">Switch Theme</button>
+    </header>
+
+    <main class="main-content">
+        <div class="filter-chips">
+            <button class="chip active" data-filter="all">All Topics</button>
+            <button class="chip" data-filter="reactions">Reactions</button>
+            <button class="chip" data-filter="indicators">Indicators</button>
+            <button class="chip" data-filter="compounds">Compounds</button>
+            <button class="chip" data-filter="natural-acids">Natural Acids</button>
+        </div>
+
+        
+    <!-- Acids and Bases with Metals -->
+    <section data-category="reactions">
+        <h2 class="section-title">How do Acids and Bases React with Metals?</h2>
+        <div class="reaction-card">
+            <div class="equation">Acid + Metal → Salt + Hydrogen gas</div>
+            <div class="equation">2NaOH + Zn → Na₂ZnO₂ + H₂</div>
+        </div>
+    </section>
+
+    <!-- Metal Carbonates and Acids -->
+    <section data-category="reactions">
+        <h2 class="section-title">How do Metal Carbonates and Metal Hydrogencarbonates React with Acids?</h2>
+        <div class="reaction-card">
+            <div class="equation">Metal carbonate/Metal hydrogencarbonate + Acid → Salt + Carbon dioxide + Water</div>
+            <div class="equation">Na₂CO₃(s) + HCl(aq) → NaCl(aq) H₂O(l) + CO₂(g)</div>
+            <div class="equation">NaHCO₃(s) + HCl(aq) → NaCl(aq) H₂O(l) + CO₂(g)</div>
+            <div class="equation">Ca(OH)₂(aq) + CO₂(g) → CaCO₃(s) + H₂O(l)</div>
+            <div class="equation">CaCO₃(s) + H₂O(l) + CO₂(g) → Ca(HCO₃)₂(s)</div>
+        </div>
+    </section>
+
+    <!-- Acid & Base Reactions -->
+    <section data-category="reactions">
+        <h2 class="section-title">How Acid & Base React with each other?</h2>
+        <div class="reaction-card">
+            <div class="equation">Base + Acid → Salt + Water</div>
+            <div class="equation">NaOH(aq) + HCl(aq) → NaCl(aq) + H₂O(l)</div>
+        </div>
+    </section>
+
+    <!-- Metal Oxides with Acids -->
+    <section data-category="reactions">
+        <h2 class="section-title">Reaction of Metallic Oxides with Acids</h2>
+        <div class="reaction-card">
+            <div class="equation">Metal oxide + Acid → Salt + Water</div>
+        </div>
+    </section>
+
+    <!-- Water Solution Reactions -->
+    <section data-category="reactions">
+        <h2 class="section-title">When Acid or a Base is added to Water Solution?</h2>
+        <div class="reaction-card">
+            <div class="equation">HCl + H₂O → H₃O⁺ + Cl⁻</div>
+            <div class="equation">H⁺ + H₂O → H₃O⁺</div>
+            <div class="equation">NaOH(s) → Na⁺(aq) + OH⁻(aq)</div>
+            <div class="equation">KOH(s) → K⁺(aq) + OH⁻(aq)</div>
+            <div class="equation">Mg(OH)₂(s) → Mg²⁺(aq) + 2OH⁻(aq)</div>
+        </div>
+    </section>
+
+    <!-- Sodium hydroxide -->
+    <section data-category="reactions">
+        <h2 class="section-title">Sodium hydroxide</h2>
+        <div class="reaction-card">
+            <div class="equation">2NaCl(aq) + 2H₂O(l) → 2NaOH(aq) + Cl₂(g) + H₂(g)</div>
+        </div>
+    </section>
+
+    <!-- Bleaching powder -->
+    <section data-category="reactions">
+        <h2 class="section-title">Bleaching powder</h2>
+        <div class="reaction-card">
+            <div class="equation">Ca(OH)₂ + Cl₂ → CaOCl₂ + H₂O</div>
+        </div>
+    </section>
+
+    <!-- Baking soda -->
+    <section data-category="reactions">
+        <h2 class="section-title">Baking soda</h2>
+        <div class="reaction-card">
+            <div class="equation">NaCl + H₂O + CO₂ + NH₃ → NH₄Cl + NaHCO₃</div>
+            <div class="equation">2NaHCO₃ → Na₂CO₃ + H₂O + CO₂</div>
+            <div class="equation">NaHCO₃ + H⁺ → CO₂ + H₂O + Sodium salt of acid</div>
+        </div>
+    </section>
+
+    <!-- Washing soda -->
+    <section data-category="reactions">
+        <h2 class="section-title">Washing soda</h2>
+        <div class="reaction-card">
+            <div class="equation">Na₂CO₃ + 10H₂O → Na₂CO₃.10H₂O</div>
+        </div>
+    </section>
+
+    <!-- Plaster of Paris -->
+    <section data-category="reactions">
+        <h2 class="section-title">Plaster of Paris</h2>
+        <div class="reaction-card">
+            <div class="equation">CaSO₄.(1/2)H₂O + 1(1/2)H₂O → CaSO₄.2H₂O</div>
+        </div>
+    </section>
+
+    <!-- Exercise Questions -->
+    <section data-category="reactions">
+        <h2 class="section-title">From exercise question</h2>
+        <div class="reaction-card">
+            <div class="equation">Zn + H₂SO₄ → ZnSO₄ + H₂</div>
+            <div class="equation">Mg + 2HCl → MgCl₂ + H₂</div>
+            <div class="equation">2Al + 3H₂SO₄ → Al₂(SO₄)₃ + 3H₂</div>
+            <div class="equation">3Fe + 6HCl → 3FeCl₂ + 3H₂</div>
+            <div class="equation">NaOH + HCl → NaCl + H₂O</div>
+            <div class="equation">Mg(OH)₂ + H₂CO₃ → MgCO₃ + 2H₂O</div>
+        </div>
+    </section>
+
+        <!-- Indicators -->
+        <section data-category="indicators">
+            <h2 class="section-title">Indicators and Color Changes</h2>
+            <div class="indicator-list">
+                <div class="indicator-item">Litmus solution - purple</div>
+                <div class="indicator-item">Acidic solution + blue litmus paper - Turns red</div>
+                <div class="indicator-item">Acidic solution + red litmus paper - Stays red</div>
+                <div class="indicator-item">Alkaline solution + blue litmus paper - Stays blue</div>
+                <div class="indicator-item">Acidic solution + Phenolphthalein - Colorless</div>
+                <div class="indicator-item">Alkaline solution + Phenolphthalein - Pink</div>
+                <div class="indicator-item">Acidic solution + Methyl orange - Red</div>
+                <div class="indicator-item">Alkaline solution + Methyl orange - Yellow</div>
+            </div>
+        </section>
+
+        <!-- Natural Acids -->
+        <section data-category="natural-acids">
+            <h2 class="section-title">Naturally Occurring Acids</h2>
+            <div class="natural-acids">
+                <div class="acid-item">Vinegar - Acetic acid</div>
+                <div class="acid-item">Orange - Citric acid</div>
+                <div class="acid-item">Tamarind - Tartaric acid</div>
+                <div class="acid-item">Tomato - Oxalic acid</div>
+                <div class="acid-item">Sour milk (Curd) - Lactic acid</div>
+                <div class="acid-item">Lemon - Citric acid</div>
+                <div class="acid-item">Ant sting - Methanoic acid</div>
+                <div class="acid-item">Nettle sting - Methanoic acid</div>
+            </div>
+        </section>
+
+        <!-- Common Compounds -->
+        <section data-category="compounds">
+            <h2 class="section-title">Common Compounds</h2>
+            <div class="compound-list">
+                <div class="compound-item">Copper(II) chloride - Blue green</div>
+                <div class="compound-item">Hydrated Copper sulphate - Blue</div>
+                <div class="compound-item">Unhydrated Copper sulphate - White</div>
+                <div class="compound-item">Rock salt with impurities - Brown</div>
+                <div class="compound-item">Sodium zincate - Na₂ZnO₂</div>
+            <div class="compound-item">Sodium carbonate - Na₂CO₃</div>
+            <div class="compound-item">Sodium hydrogencarbonate - NaHCO₃</div>
+            <div class="compound-item">Calcium carbonate - CaCO₃</div>
+            <div class="compound-item">Lime water - Ca(OH)₂(aq)</div>
+            <div class="compound-item">Sodium hydroxide - NaOH</div>
+            <div class="compound-item">Potassium hydroxide - KOH</div>
+            <div class="compound-item">Magnesium hydroxide - Mg(OH)₂</div>
+            <div class="compound-item">Potassium sulphate - K₂SO₄</div>
+            <div class="compound-item">Sodium sulphate - Na₂SO₄</div>
+            <div class="compound-item">Calcium sulphate - CaSO₄</div>
+            <div class="compound-item">Magnesium sulphate - MgSO₄</div>
+            <div class="compound-item">Copper sulphate - CuSO₄</div>
+            <div class="compound-item">Zinc sulphate - ZnSO₄</div>
+            <div class="compound-item">Sodium chloride - NaCl</div>
+            <div class="compound-item">Sodium nitrate - NaNO₃</div>
+            <div class="compound-item">Potassium nitrate - KNO₃</div>
+            <div class="compound-item">Ammonium chloride - NH₄Cl</div>
+            <div class="compound-item">Aluminium chloride - AlCl₃</div>
+            <div class="compound-item">Sodium acetate - CH₃COONa</div>
+            <div class="compound-item">Bleaching powder - CaOCl₂</div>
+            <div class="compound-item">Baking soda - NaHCO₃</div>
+            <div class="compound-item">Washing soda - Na₂CO₃.10H₂O</div>
+            <div class="compound-item">Gypsum - CaSO₄.2H₂O</div>
+            <div class="compound-item">Plaster of Paris - CaSO₄.(1/2)H₂O</div>
+            <div class="compound-item">Aluminium Sulphate - Al₂(SO₄)₃</div>
+            <div class="compound-item">Ferrous Chloride - FeCl₂</div>
+            <div class="compound-item">Magnesium Chloride - MgCl₂</div>
+                <!-- Add all other compounds from the list -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        function toggleTheme() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Filter Functionality
+        const chips = document.querySelectorAll('.chip');
+        const categories = document.querySelectorAll('section[data-category]');
+
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                
+                const filter = chip.getAttribute('data-filter');
+                
+                categories.forEach(category => {
+                    if (filter === 'all' || category.getAttribute('data-category') === filter) {
+                        category.style.display = 'block';
+                    } else {
+                        category.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science Questions Bank</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .question-card {
+            transition: all 0.3s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .solution {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .solution.show {
+            max-height: 1000px;
+            transition: max-height 0.5s ease-in;
+        }
+        .dark-mode {
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+        .dark-mode .question-card {
+            background-color: #2d3748;
+            color: #e2e8f0;
+        }
+        .dark-mode .filter-btn {
+            background-color: #4a5568;
+            color: #e2e8f0;
+        }
+        .dark-mode .solution {
+            border-color: white;
+        }
+        .dark-mode .question-card .solution p {
+            color: white !important;
+        }
+        /* Logo Styles */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            font-size: 2.5rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .logo:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .logo .simplified {
+            color: #ffd700;
+        }
+
+        .logo .minds {
+            color: #ff0000;
+        }
+
+        .home-icon {
+            font-size: 1.2rem;
+            margin-right: 10px;
+            color: #718096;
+            transition: color 0.3s ease;
+        }
+
+        .logo:hover .home-icon {
+            color: #2d3748;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3748;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .logo:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* Learning Resources Styles */
+        .learning-resources {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .resources-title {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .resources-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .resource-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            min-width: 200px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .whatsapp-button {
+            background-color: #25D366;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #22c55e;
+        }
+
+        .video-button {
+            background-color: #FF0000;
+        }
+
+        .video-button:hover {
+            background-color: #ef4444;
+        }
+
+        .button-icon {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .button-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .resources-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .resource-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen dark:bg-gray-900">
+    <!-- Image Modal -->
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-90 hidden z-50" onclick="closeModal()">
+        <span class="absolute top-4 right-4 text-white text-3xl cursor-pointer">&times;</span>
+        <img id="modalImage" class="max-w-full max-h-full m-auto" alt="Modal Image">
+    </div>
+
+    <header class="bg-white shadow-sm dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Science Questions Bank</h1>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">Model Question Paper 2025</p>
+                </div>
+                <button id="darkModeToggle" class="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-800 dark:bg-gray-200 rounded-full transition-all duration-300 shadow-lg text-white dark:text-gray-800">
+                    <span class="flex items-center gap-2">
+                        🌙 Switch to Dark
+                    </span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="logo-container">
+        <a href="../index.html" class="logo">
+            <span class="home-icon">🏠</span>
+            <span class="simplified">Simplified</span><span class="minds">Minds</span>
+            <span class="tooltip">Go to Homepage</span>
+        </a>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Search Bar -->
+        <div class="mb-8">
+            <input type="text" id="searchInput" placeholder="Search questions..." 
+                   class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        </div>
+
+        <!-- Filters -->
+        <div class="mb-8 space-y-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div class="w-full md:w-auto">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Filter by Marks</h2>
+                    <div class="flex flex-wrap gap-2" id="marksFilter">
+                        <button class="filter-btn marks-filter active px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600">All</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="1">1M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="2">2M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="3">3M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="4">4M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="5">5M</button>
+                    </div>
+                </div>
+                <div class="w-full md:w-auto">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Filter by Chapter</h2>
+                    <div class="flex flex-wrap gap-2" id="chapterFilter">
+                        <button class="filter-btn chapter-filter active px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600">All</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Chemical Reactions and Equations">Chemical Reactions</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Acids, Bases and Salts">Acids & Bases</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Metals and Non-metals">Metals & Non-metals</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Carbon and its Compounds">Carbon Compounds</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Life Processes">Life Processes</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Control and Coordination">Control & Coordination</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="How do Organisms Reproduce?">Reproduction</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Heredity">Heredity</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Light – Reflection and Refraction">Light</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="The Human Eye and the Colourful World">Human Eye</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Electricity">Electricity</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Magnetic Effects of Electric Current">Magnetism</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Our Environment">Environment</button>
+                    </div>
+                </div>
+                <button onclick="resetViewedQuestions()" 
+                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
+                    Reset Progress
+                </button>
+            </div>
+        </div>
+
+        <!-- Questions Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="questionsContainer">
+            <!-- Questions will be dynamically inserted here -->
+        </div>
+
+        <!-- Learning Resources Section -->
+        <div class="learning-resources dark:bg-gray-800">
+            <h2 class="resources-title dark:text-white">Learning Resources</h2>
+            <div class="resources-buttons">
+                <a href="https://www.whatsapp.com/channel/0029Vb3QDu17YSd1brABFi1d" class="resource-button whatsapp-button">
+                    <span class="button-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                        </svg>
+                    </span>
+                    Join WhatsApp Channel
+                </a>
+                <a href="https://www.youtube.com/@simplifiedmindssslc" class="resource-button video-button">
+                    <span class="button-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 4-8 4z"/>
+                        </svg>
+                    </span>
+                    Video Lectures
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // You'll need to define your questions array here
+        const questions = [
+    // Section I - Multiple Choice Questions (1 mark each)
+        {
+        id: 1,
+        question: "The centre of a spherical mirror is",
+        options: ["(A) centre of curvature", "(B) pole", "(C) radius of curvature", "(D) aperture"],
+        marks: 1,
+        chapter: "Light – Reflection and Refraction",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 2,
+        question: "Ohm's law gives the relationship between",
+        options: ["(A) potential difference and electric charge", "(B) potential difference and resistance", "(C) electric current and potential difference", "(D) electric current and electric power"],
+        marks: 1,
+        chapter: "Electricity",
+        type: "MCQ",
+        section: "Section I"
+    },
+
+    // CHEMISTRY - Multiple Choice Questions (1 mark each)
+    {
+        id: 13,
+        question: "The electrolysis of water to form hydrogen and oxygen gases is",
+        options: ["(A) an endothermic reaction", "(B) a displacement reaction", "(C) an exothermic reaction", "(D) a redox reaction"],
+        marks: 1,
+        chapter: "Chemical Reactions and Equations",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 14,
+        question: "The number of carbon and hydrogen atoms that are present in the molecule of fifth member of alkene is",
+        options: ["(A) five and ten", "(B) five and twelve", "(C) six and twelve", "(D) six and six"],
+        marks: 1,
+        chapter: "Carbon and its Compounds",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 15,
+        question: "The property of carbon atom to form bonds with other carbon atoms, to give rise large molecules is",
+        options: ["(A) Allotrophism", "(B) Catenation", "(C) Isomorphism", "(D) Substitution"],
+        marks: 1,
+        chapter: "Carbon and its Compounds",
+        type: "MCQ",
+        section: "Section I"
+    },
+
+    // BIOLOGY - Multiple Choice Questions (1 mark each)
+    {
+        id: 26,
+        question: "The type of reproduction during plasmodium is",
+        options: ["(A) budding", "(B) fragmentation", "(C) vegetative propagation", "(D) multiple fission"],
+        marks: 1,
+        chapter: "How do Organisms Reproduce?",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 27,
+        question: "Pyruvate (in cytoplasm) → Muscle cell → X + energy; Here 'X' represents",
+        options: ["(A) Oxygen", "(B) Ethanol", "(C) Lactic acid", "(D) Carbon monoxide"],
+        marks: 1,
+        chapter: "Life Processes",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 28,
+        question: "Observe the female reproductive structures given in figure A and figure B. The correct statement related to these figure is",
+        options: ["(A) Fertilization of egg is possible in both of the structures", "(B) Fertilization of egg is possible only in the structure of figure-B", "(C) Fertilization of egg is possible only in the structure of figure-A", "(D) Fertilization of egg is not possible in both of the structures"],
+        marks: 1,
+        chapter: "How do Organisms Reproduce?",
+        type: "MCQ",
+        section: "Section I",
+        questionImage: "images/1m28.jpg" // Replace with actual image path
+    },
+
+    // PHYSICS - Short Answer Questions
+    {
+        id: 3,
+        question: "Draw the symbol diagram of rheostat/variable resistance used in an electric circuit.",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 4,
+        question: "Write any two properties of magnetic field lines.",
+        marks: 1,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 5,
+        question: "What is long sightedness (Hypermetropia)? Mention the two causes for this defect.",
+        marks: 2,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 6,
+        question: "Observe the circuit diagram given below. Answer the questions given. i) Mention the direction of magnetic field that forms around at the points 'X' and 'Y'. ii) State the rule that helps to decide the direction of magnetic field.",
+        marks: 2,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "Problem Solving",
+        section: "Section III",
+        questionImage: "images/1m6.jpg" // Replace with actual image path
+    },
+    {
+        id: 7,
+        question: "'Connecting electrical appliances in parallel in domestic electric circuits is better.' Give two reasons for this measure.",
+        marks: 2,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section III"
+    },
+
+    // CHEMISTRY - Short Answer Questions
+    {
+        id: 16,
+        question: "How can rancidity be controlled?",
+        marks: 1,
+        chapter: "Chemical Reactions and Equations",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 17,
+        question: "The pH value of an antacid is more than 7. Give reason.",
+        marks: 1,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 18,
+        question: "The conversion of ethanol into ethanoic acid is called oxidation reaction. Why?",
+        marks: 1,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 19,
+        question: "What are structural isomers? Write the structural isomers of butane.",
+        marks: 2,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section III",
+        hasAlternate: true
+    },
+    {
+        id: 20,
+        question: "What are functional groups? Name the functional group present in propanal and propanol.",
+        marks: 2,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section III",
+        isAlternate: true
+    },
+    {
+        id: 21,
+        question: "Write any two differences between saturated hydrocarbons and unsaturated hydrocarbons.",
+        marks: 2,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section III"
+    },
+
+    // BIOLOGY - Short Answer Questions
+    {
+        id: 29,
+        question: "Draw the diagram of open stomata.",
+        marks: 1,
+        chapter: "Life Processes",
+        type: "Drawing",
+        section: "Section II"
+    },
+    {
+        id: 30,
+        question: "Sexual reproduction leads to more variations. Why?",
+        marks: 2,
+        chapter: "How do Organisms Reproduce?",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 31,
+        question: "Use of non-biodegradable substances should be minimised. Why?",
+        marks: 2,
+        chapter: "Our Environment",
+        type: "Short Answer",
+        section: "Section III"
+    },
+
+    // PHYSICS - Longer Questions
+    {
+        id: 8,
+        question: "Draw the ray diagram for the image formation in a convex lens when the object is placed at 2F₁. Mention the position and the nature of the image formed. (F₁: Principal focus of the lens)",
+        marks: 3,
+        chapter: "Light – Reflection and Refraction",
+        type: "Drawing",
+        section: "Section IV"
+    },
+    {
+        id: 9,
+        question: "What is dispersion of light? Explain the formation of rainbow in the nature.",
+        marks: 3,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section IV",
+        hasAlternate: true
+    },
+    {
+        id: 10,
+        question: "What is Tyndall effect? The colour of the clear sky is blue. Why? Explain.",
+        marks: 3,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section IV",
+        isAlternate: true
+    },
+    {
+        id: 11,
+        question: "Explain an experiment to show that a current carrying conductor experiences a mechanical force when it is placed in a magnetic field.",
+        marks: 3,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "Experimental",
+        section: "Section IV"
+    },
+    {
+        id: 12,
+        question: "a) State the laws of refraction of light. b) A ray of light travelling in kerosene enters obliquely into water. Does that light ray bend towards the normal or away from the normal? Why? (Refractive indices of water and kerosene are 1·33 and 1·44 respectively)",
+        marks: 3,
+        chapter: "Light – Reflection and Refraction",
+        type: "Problem Solving",
+        section: "Section IV",
+        hasAlternate: true
+    },
+    {
+        id: 13,
+        question: "a) State the laws of reflection of light. b) Magnification of a mirror is + 1. What does it mean? Mention the type of this mirror.",
+        marks: 3,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section IV",
+        isAlternate: true
+    },
+
+    // CHEMISTRY - Longer Questions
+    {
+        id: 22,
+        question: "Draw the diagram of the arrangement of apparatus to show the action of steam on a metal. Label the following parts: i) Metal sample ii) Hydrogen gas",
+        marks: 3,
+        chapter: "Metals and Non-metals",
+        type: "Drawing",
+        section: "Section IV"
+    },
+    {
+        id: 23,
+        question: "Write the balanced chemical equations for the following chemical reactions: i) Burning of natural gas ii) Reaction of potassium metal with water iii) Reaction of iron with copper sulphate solution.",
+        marks: 3,
+        chapter: "Chemical Reactions and Equations",
+        type: "Problem Solving",
+        section: "Section IV",
+        hasAlternate: true
+    },
+    {
+        id: 24,
+        question: "What is the type of chemical reaction in which barium chloride solution reacts with aluminium sulphate solution? Write the balanced chemical equation for this reaction.",
+        marks: 3,
+        chapter: "Chemical Reactions and Equations",
+        type: "Problem Solving",
+        section: "Section IV",
+        isAlternate: true
+    },
+    {
+        id: 25,
+        question: "You are provided with the substances NaOH, Ca(OH)₂, H₂ and Cl₂. Which of these materials will be chosen to prepare bleaching powder? Write the chemical name and the molecular formula of bleaching powder and mention two uses of it.",
+        marks: 3,
+        chapter: "Acids, Bases and Salts",
+        type: "Problem Solving",
+        section: "Section IV"
+    },
+
+    // BIOLOGY - Longer Questions
+    {
+        id: 32,
+        question: "How is ozone layer formed? Protection of ozone layer is necessary. Why? Give reasons.",
+        marks: 3,
+        chapter: "Our Environment",
+        type: "Short Answer",
+        section: "Section IV",
+        hasAlternate: true
+    },
+    {
+        id: 33,
+        question: "Give an example for a food chain of an aquatic ecosystem. If there is an increase in the number of organisms in the third trophic level how does this affect on that food chain?",
+        marks: 3,
+        chapter: "Our Environment",
+        type: "Short Answer",
+        section: "Section IV",
+        isAlternate: true
+    },
+    {
+        id: 34,
+        question: "Round seed producing (RR) pea plant is hybridised with wrinkled seed producing (rr) pea plant. Mention the results obtained in F₂ generation with the help of a checker board. Write the genotypic ratio of plant types.",
+        marks: 3,
+        chapter: "Heredity",
+        type: "Problem Solving",
+        section: "Section IV"
+    },
+
+    // PHYSICS - Advanced Problems
+    {
+        id: 14,
+        question: "An electric heater connected to a 220 V generator draws a current of 10 A. What is the power of the electric heater? If it is used for 8 hours a day then calculate the total cost of using it for 30 days at Rs. 5·00 per 1 kWh.",
+        marks: 4,
+        chapter: "Electricity",
+        type: "Problem Solving",
+        section: "Section V"
+    },
+
+    // CHEMISTRY - Advanced Problems
+    {
+        id: 25,
+        question: "a) Explain the extraction of zinc metal from its sulphide ore. b) Show the formation of sodium chloride molecule by transfer of electrons.",
+        marks: 4,
+        chapter: "Metals and Non-metals",
+        type: "Problem Solving",
+        section: "Section V"
+    },
+
+    // BIOLOGY - Advanced Questions
+    {
+        id: 34,
+        question: "How is the sex of a child will be determined in the human beings?",
+        marks: 4,
+        chapter: "Heredity",
+        type: "Short Answer",
+        section: "Section V",
+        hasAlternate: true
+    },
+    {
+        id: 35,
+        question: "How do Mendel's experiments show that the parental traits are inherited independently to the offsprings of next generation?",
+        marks: 4,
+        chapter: "Heredity",
+        type: "Short Answer",
+        section: "Section V",
+        isAlternate: true
+    },
+
+    // Section VI - 5 Marks Questions
+    {
+        id: 35,
+        question: "How are phototropism, thigmotropism and chemotropism coordinated in the apparent movement of creepers (climbing up plants) towards particular direction?",
+        marks: 5,
+        chapter: "Control and Coordination",
+        type: "Short Answer",
+        section: "Section VI",
+        hasAlternate: true
+    },
+    {
+        id: 36,
+        question: "What is the role of insulin, estrogen and thyroxine hormones in our body?",
+        marks: 5,
+        chapter: "Control and Coordination",
+        type: "Short Answer",
+        section: "Section VI",
+        isAlternate: true
+    },
+    {
+        id: 37,
+        question: "What is cross pollination? What are the changes that accur in flower after fertilization.",
+        marks: 5,
+        chapter: "How do Organisms Reproduce?",
+        type: "Short Answer",
+        section: "Section VI"
+    },
+    {
+        id: 38,
+        question: "Draw the diagram to show the structure of the human brain. Label the following parts: i) Cerebrum ii) Cerebellum.",
+        marks: 5,
+        chapter: "Control and Coordination",
+        type: "Drawing",
+        section: "Section VI"
+    },
+    {
+        id: 39,
+        question: "a) Explain the process of digestion in the small intestine of man. Mention the importance of double circulation in our body. b) What are the differences between xylem and phloem tissues?",
+        marks: 5,
+        chapter: "Life Processes",
+        type: "Short Answer",
+        section: "Section VI"
+    },
+{
+        id: 1,
+        question: "One of the properties of concave lens is, it",
+        options: ["(A) is thinner at the edges and thicker at the middle", "(B) diverges the light rays", "(C) forms real and inverted image", "(D) converges light rays"],
+        marks: 1,
+        chapter: "Light – Reflection and Refraction",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 2,
+        question: "The crystalline lens of the eye in old age people sometimes becomes milky and cloudy. This condition is called",
+        options: ["(A) Hypermetropia", "(B) Myopia", "(C) Presbyopia", "(D) Cataract"],
+        marks: 1,
+        chapter: "The Human Eye and the Colourful World",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 3,
+        question: "In Fleming's left hand rule the middle finger indicates the direction of the",
+        options: ["(A) current", "(B) induced current", "(C) movement of the conductor", "(D) magnetic field"],
+        marks: 1,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "MCQ",
+        section: "Section I"
+    },
+
+    // CHEMISTRY - Multiple Choice Questions (1 mark each)
+    {
+        id: 13,
+        question: "An alloy that is made up of copper and zinc is",
+        options: ["(A) solder metal", "(B) bronze", "(C) brass", "(D) stainless steel"],
+        marks: 1,
+        chapter: "Metals and Non-metals",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 14,
+        question: "The reactants that exchange ions by reacting each other and form a precipitate among the following are",
+        options: ["(A) Aluminium oxide and hydrochloric acid", "(B) Sodium hydroxide and sulphuric acid", "(C) Aluminium oxide and hydrochloric acid", "(D) Barium chloride and sodium sulphate"],
+        marks: 1,
+        chapter: "Chemical Reactions and Equations",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 15,
+        question: "The gas liberated when sodium bicarbonate reacts with dilute hydrochloric acid is",
+        options: ["(A) Carbon dioxide", "(B) Nitrogen", "(C) Hydrogen", "(D) Nitrogen dioxide"],
+        marks: 1,
+        chapter: "Acids, Bases and Salts",
+        type: "MCQ",
+        section: "Section I"
+    },
+
+    // BIOLOGY - Multiple Choice Questions (1 mark each)
+    {
+        id: 26,
+        question: "Small intestine : Villi :: Lungs : .....................",
+        options: ["(A) Bronchi", "(B) Alveoli", "(C) Nephrons", "(D) Diaphragm"],
+        marks: 1,
+        chapter: "Life Processes",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 27,
+        question: "A trait that cannot be inherited among the following is",
+        options: ["(A) Shape of the eye", "(B) Colour of the hair", "(C) Type of the blood group", "(D) Playing skills"],
+        marks: 1,
+        chapter: "Heredity",
+        type: "MCQ",
+        section: "Section I"
+    },
+
+    // PHYSICS - Short Answer Questions
+    {
+        id: 4,
+        question: "If the focal length of a spherical mirror is 25 cm then find its radius of curvature.",
+        marks: 1,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 5,
+        question: "Draw the symbol diagram of two electric cells connected in series in an electric circuit.",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Drawing",
+        section: "Section II"
+    },
+    {
+        id: 6,
+        question: "How does our eye accommodate to see the objects at different distances?",
+        marks: 2,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section III",
+        hasAlternate: true
+    },
+    {
+        id: 7,
+        question: "Stars appear to be twinkling. Why?",
+        marks: 2,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section III",
+        isAlternate: true
+    },
+    {
+        id: 8,
+        question: "What is a solenoid? How can it be converted into an electromagnet?",
+        marks: 2,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "Short Answer",
+        section: "Section III"
+    },
+
+    // CHEMISTRY - Short Answer Questions
+    {
+        id: 16,
+        question: "Mention any two methods to prevent the corrosion of iron materials.",
+        marks: 1,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 17,
+        question: "In a homologous series, if the first member of hydrocarbon group has the molecular formula of C₂H₄, then find the molecular formula of the fifth member.",
+        marks: 1,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 18,
+        question: "Thermite process has wider industrial applications. Why?",
+        marks: 1,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 19,
+        question: "Balance the following chemical equations: i) FeSO₄ → heat → Fe₂O₃ + SO₂ + SO₃ ii) CH₄ + O₂ → CO₂ + H₂O",
+        marks: 2,
+        chapter: "Chemical Reactions and Equations",
+        type: "Problem Solving",
+        section: "Section III"
+    },
+    {
+        id: 20,
+        question: "What are alkynes? Write the molecular and structural formula of Benzene.",
+        marks: 2,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 21,
+        question: "Write the properties of ionic compounds.",
+        marks: 2,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section III",
+        hasAlternate: true
+    },
+    {
+        id: 22,
+        question: "Give reason: a) Aluminium oxide is called amphoteric oxide. b) Calcium floats on water.",
+        marks: 2,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section III",
+        isAlternate: true
+    },
+
+    // BIOLOGY - Short Answer Questions
+    {
+        id: 28,
+        question: "What is transpiration?",
+        marks: 1,
+        chapter: "Life Processes",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 29,
+        question: "The folding up of leaves of sensitive plant (touch-me-not plant) on touching with a finger is not a trophism. Why?",
+        marks: 1,
+        chapter: "Control and Coordination",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 30,
+        question: "Mention any two advantages of vegetative propagation.",
+        marks: 1,
+        chapter: "How do Organisms Reproduce?",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 31,
+        question: "Draw the diagram showing the germination of pollen on stigma and label the part ovary.",
+        marks: 2,
+        chapter: "How do Organisms Reproduce?",
+        type: "Drawing",
+        section: "Section III"
+    },
+    {
+        id: 32,
+        question: "Write the functions of medulla and cerebellum of the human brain.",
+        marks: 2,
+        chapter: "Control and Coordination",
+        type: "Short Answer",
+        section: "Section III"
+    },
+
+    // PHYSICS - Longer Questions
+    {
+        id: 9,
+        question: "Draw the diagram to show the recombination of the spectrum of white light.",
+        marks: 3,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Drawing",
+        section: "Section IV"
+    },
+    {
+        id: 10,
+        question: "State Ohm's law. How are ammeter and voltmeter connected in an electrical circuit? Why are these instruments have to be connected in an electric circuit?",
+        marks: 3,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section IV",
+        hasAlternate: true
+    },
+    {
+        id: 11,
+        question: "State Joule's law of heating. How is fuse connected in the circuit? How does fuse work in a circuit?",
+        marks: 3,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section IV",
+        isAlternate: true
+    },
+    {
+        id: 12,
+        question: "How do you trace the magnetic field lines around a bar magnet using compass needle? Magnetic field lines do not intersect each other. Why?",
+        marks: 3,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "Experimental",
+        section: "Section IV",
+        hasAlternate: true
+    },
+    {
+        id: 13,
+        question: "What are the causes for overload and short circuit in an electric circuit? What is the function of earth wire in domestic circuits?",
+        marks: 3,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section IV",
+        isAlternate: true
+    },
+
+    // CHEMISTRY - Longer Questions
+    {
+        id: 22,
+        question: "Draw the diagram of the arrangement of apparatus used to show the reaction of zinc granules with dilute sulphuric acid and testing hydrogen gas by burning and label zinc granule.",
+        marks: 3,
+        chapter: "Acids, Bases and Salts",
+        type: "Drawing",
+        section: "Section IV"
+    },
+    {
+        id: 23,
+        question: "Among the materials sodium carbonate, calcium oxychloride, calcium carbonate, sodium bicarbonate, calcium sulphate hemihydrate, i) which compound is used to make drinking water free from germs? ii) which compound is used in soda acid fire extinguisher? iii) which compound does a doctor use to give support to fractured bones in the right position?",
+        marks: 3,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 24,
+        question: "Write the differences between calcination and roasting. How is pure zinc metal will be obtained by these processes?",
+        marks: 3,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+
+    // BIOLOGY - Longer Questions
+    {
+        id: 33,
+        question: "Give reason: i) Nephrons are called fundamental functional units of excretory system. ii) Small intestine is called complete digestion centre.",
+        marks: 3,
+        chapter: "Life Processes",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    
+    // PHYSICS - Advanced Problems
+    {
+        id: 11,
+        question: "a) A wire of given material having length 'l' and area of cross-section 'A', has a resistance of 4 Ω. What would be the resistance of another wire of the same material having a length l/2 and the area of cross-section 2 A. b) In an electric circuit, the resistors R₁, R₂ and R₃ have the values 5 Ω, 10 Ω and 30 Ω respectively. When these resistors are connected to a battery of 12 V parallely then calculate the total resistance of this circuit.",
+        marks: 4,
+        chapter: "Electricity",
+        type: "Problem Solving",
+        section: "Section V"
+    },
+    {
+        id: 12,
+        question: "a) What is refraction of light? The refractive index of diamond is 2·42. What is the meaning of this statement? b) What are the uses of concave mirror? Write the mirror formula.",
+        marks: 4,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section V"
+    },
+
+    // CHEMISTRY - Advanced Problems
+    {
+        id: 25,
+        question: "a) Explain substitution reaction in hydrocarbons with an example. b) Explain the mechanism of cleaning action of soaps.",
+        marks: 4,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section V",
+        hasAlternate: true
+    },
+    {
+        id: 26,
+        question: "a) Carbon atoms do not form C⁴⁻ anion and C⁴⁺ cation. Why? b) Write the electron dot structures of nitrogen molecule and ethene molecule.",
+        marks: 4,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section V",
+        isAlternate: true
+    },
+
+    // BIOLOGY - Advanced Questions
+    {
+        id: 34,
+        question: "A tall (TT) pea plant is crossed with a dwarf (tt) pea plant. Mention the types of plant obtained in F₁ generation and represent the result obtained in F₂ generation with the help of checker board and mention the ratio of varieties of plants.",
+        marks: 4,
+        chapter: "Heredity",
+        type: "Problem Solving",
+        section: "Section V",
+        hasAlternate: true
+    },
+    {
+        id: 35,
+        question: "Round green colour seeds producing pea plant (RRyy) are crossed with wrinkled yellow colour seeds producing pea plant (rrYY). Show the result of F₂ generation with the help of a checker board and mention the ratio of varieties of plants.",
+        marks: 4,
+        chapter: "Heredity",
+        type: "Problem Solving",
+        section: "Section V",
+        isAlternate: true
+    },
+    {
+        id: 36,
+        question: "What is reflex arc? Trace the sequence of events that occur in this structure, when a bright light is focused on our eyes.",
+        marks: 4,
+        chapter: "Control and Coordination",
+        type: "Short Answer",
+        section: "Section V"
+    },
+
+    // Section VI - 5 Marks Questions
+    {
+        id: 35,
+        question: "Draw the diagram showing the schematic sectional view of the human heart. Label the following parts: i) Aorta ii) Pulmonary veins.",
+        marks: 5,
+        chapter: "Life Processes",
+        type: "Drawing",
+        section: "Section VI"
+    },
+    {
+        id: 36,
+        question: "What are trophic levels? Flow of energy in an ecosystem is always unidirectional. Why? Explain.",
+        marks: 5,
+        chapter: "Our Environment",
+        type: "Short Answer",
+        section: "Section VI",
+        hasAlternate: true
+    },
+    {
+        id: 37,
+        question: "What is ozone? What is the function of ozone layer? What are the causes for the depletion of ozone layer?",
+        marks: 5,
+        chapter: "Our Environment",
+        type: "Short Answer",
+        section: "Section VI",
+        isAlternate: true
+    },
+    {
+        id: 38,
+        question: "a) Explain the structure and function of placenta. b) What are the functions of prostate gland and testosterone hormone.",
+        marks: 5,
+        chapter: "How do Organisms Reproduce?",
+        type: "Short Answer",
+        section: "Section VI"
+    },
+{
+        id: 1,
+        question: "The S.I. unit of electric current is",
+        options: ["(A) coulomb", "(B) volt", "(C) ampere", "(D) watt"],
+        marks: 1,
+        chapter: "Electricity",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 2,
+        question: "The change in focal length of an eye lens is controlled by",
+        options: ["(A) Ciliary muscles", "(B) Pupil", "(C) Retina", "(D) Iris"],
+        marks: 1,
+        chapter: "The Human Eye and the Colourful World",
+        type: "MCQ",
+        section: "Section I"
+    },
+
+    // CHEMISTRY - Multiple Choice Questions (1 mark each)
+    {
+        id: 13,
+        question: "A salt used to remove the permanent hardness of water is",
+        options: ["(A) calcium sulphate hemihydrate", "(B) calcium oxychloride", "(C) sodium carbonate", "(D) sodium hydrogen carbonate"],
+        marks: 1,
+        chapter: "Acids, Bases and Salts",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 14,
+        question: "As the pH value of a neutral solution decreases, then",
+        options: ["(A) concentration of H⁺ ions decreases", "(B) concentration of H⁺ ions increases", "(C) solution becomes basic", "(D) concentration of H⁺ and OH⁻ ions equalises"],
+        marks: 1,
+        chapter: "Acids, Bases and Salts",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 15,
+        question: "Electronic configurations of the elements A, B and C respectively are 2, 8, 2; 2, 8 and 2, 8, 7. Among these the elements that can react each other to form an ionic compound are",
+        options: ["(A) Elements A and B", "(B) Elements B and C", "(C) Elements A and C", "(D) Elements A, B and C"],
+        marks: 1,
+        chapter: "Metals and Non-metals",
+        type: "MCQ",
+        section: "Section I"
+    },
+
+    // BIOLOGY - Multiple Choice Questions (1 mark each)
+    {
+        id: 26,
+        question: "Rhizopus: Spore formation :: Spirogyra:",
+        options: ["(A) Fragmentation", "(B) Regeneration", "(C) Budding", "(D) Vegetative propagation"],
+        marks: 1,
+        chapter: "How do Organisms Reproduce?",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 27,
+        question: "Osmotic pressure in plants is necessary for",
+        options: ["(A) the transportation of materials to the tissues that have low pressure", "(B) the transportation of water from root to shoot", "(C) the evaporation of excess of water present in plant body", "(D) the elimination of the difference in the concentration of ions between root and soil"],
+        marks: 1,
+        chapter: "Life Processes",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 28,
+        question: "The correct pathway of movement of male gamete in a flower is",
+        options: ["(A) Ovary → Stigma → Pollen tube", "(B) Stigma → Pollen tube → Ovary", "(C) Anther → Pollen tube → Stigma", "(D) Style → Pollen tube → Ovary"],
+        marks: 1,
+        chapter: "How do Organisms Reproduce?",
+        type: "MCQ",
+        section: "Section I"
+    },
+
+    // PHYSICS - Short Answer Questions
+    {
+        id: 3,
+        question: "Write the symbols of the following components used in an electric circuit. i) Electric cell ii) Rheostat",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 4,
+        question: "What problems will occur when live and neutral wires are connected directly to the household electrical appliances from the electric poles?",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 5,
+        question: "Connecting resistors in parallel in domestic circuits is better than connecting them in series. How? Explain.",
+        marks: 2,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 6,
+        question: "How do magnetic field lines appear when electric current passes through a circular loop of conducting wires?",
+        marks: 2,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "Short Answer",
+        section: "Section III",
+        hasAlternate: true
+    },
+    {
+        id: 7,
+        question: "Explain the function of earth wire in domestic circuits.",
+        marks: 2,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section III",
+        isAlternate: true
+    },
+    {
+        id: 8,
+        question: "Observe the following figure. Whether this phenomenon can be observed on the moon surface? Justify the answer.",
+        marks: 2,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Problem Solving",
+        section: "Section III",
+        questionImage: "images/3m7.jpg" // Replace with actual image path
+    },
+
+    // CHEMISTRY - Short Answer Questions
+    {
+        id: 16,
+        question: "What is galvanisation?",
+        marks: 1,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 17,
+        question: "Hydrogen gas is not evolved when a metal reacts with nitric acid. Why?",
+        marks: 1,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 18,
+        question: "Name the organic compounds that have below given structural formula: i) H―C―O [with H attached to C] ii) CH₃―CH₂―Br",
+        marks: 2,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 19,
+        question: "What is the reason for tooth decay? Explain. How can this be prevented?",
+        marks: 2,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 20,
+        question: "On heating crystals of copper sulphate its blue colour disappears. Give the reason for this change. How can the blue colour of copper sulphate be restored?",
+        marks: 2,
+        chapter: "Chemical Reactions and Equations",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 21,
+        question: "Write the electron dot structure of the following molecules: i) Hydrogen ii) Ethane",
+        marks: 2,
+        chapter: "Carbon and its Compounds",
+        type: "Problem Solving",
+        section: "Section III"
+    },
+
+    // BIOLOGY - Short Answer Questions
+    {
+        id: 29,
+        question: "Surgical method of contraception is better than oral method of contraception. Why?",
+        marks: 1,
+        chapter: "How do Organisms Reproduce?",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 30,
+        question: "What is ozone? What is the advantage of this layer to the organisms on the earth?",
+        marks: 1,
+        chapter: "Our Environment",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 31,
+        question: "Exact copies of the progenies of the parent organism cannot be produced in sexual reproduction. Justify.",
+        marks: 2,
+        chapter: "How do Organisms Reproduce?",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    
+    // PHYSICS - Longer Questions
+    {
+        id: 9,
+        question: "Explain an activity to verify Fleming's left hand rule.",
+        marks: 3,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "Experimental",
+        section: "Section IV"
+    },
+    {
+        id: 10,
+        question: "Draw the ray diagram for the image formation in a convex lens when the object is placed between optical centre (O) and principal focus (F₁). Mention the position and the nature of the image formed.",
+        marks: 3,
+        chapter: "Light – Reflection and Refraction",
+        type: "Drawing",
+        section: "Section IV"
+    },
+    {
+        id: 11,
+        question: "Observe the figure given below. Name the defect of the eye depicted in the figure. What causes this defect? How can this defect be corrected?",
+        marks: 3,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Problem Solving",
+        section: "Section IV",
+        questionImage: "images/3m10.jpg", // Replace with actual image path
+        hasAlternate: true
+    },
+    {
+        id: 12,
+        question: "Stars twinkle but planets do not twinkle. Why? Explain.",
+        marks: 3,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section IV",
+        isAlternate: true
+    },
+
+    // CHEMISTRY - Longer Questions
+    {
+        id: 22,
+        question: "a) Balance the following chemical equations: i) NaOH + H₂SO₄ → Na₂SO₄ + H₂O ii) K + O₂ → K₂O b) ZnO + C → Zn + CO Identify the reactant that is oxidised and the reactant that is reduced in this reaction.",
+        marks: 3,
+        chapter: "Chemical Reactions and Equations",
+        type: "Problem Solving",
+        section: "Section IV",
+        hasAlternate: true
+    },
+    {
+        id: 23,
+        question: "Mention the meaning of following chemical reactions: i) Thermal decomposition ii) Displacement reaction iii) Rancidity",
+        marks: 3,
+        chapter: "Chemical Reactions and Equations",
+        type: "Short Answer",
+        section: "Section IV",
+        isAlternate: true
+    },
+    {
+        id: 24,
+        question: "What is neutralistion reaction? How can sodium chloride be obtained by neutralisation method? Write the balanced chemical equation for this reaction.",
+        marks: 3,
+        chapter: "Acids, Bases and Salts",
+        type: "Problem Solving",
+        section: "Section IV"
+    },
+    {
+        id: 25,
+        question: "Draw the diagram of the apparatus arranged to show the action of steam on metal and label the following parts: i) Delivery tube ii) Hydrogen gas",
+        marks: 3,
+        chapter: "Metals and Non-metals",
+        type: "Drawing",
+        section: "Section IV"
+    },
+
+    // BIOLOGY - Longer Questions
+    {
+        id: 32,
+        question: "What are biodegradable and non-biodegrable substances? Give an example for each.",
+        marks: 3,
+        chapter: "Our Environment",
+        type: "Short Answer",
+        section: "Section IV",
+        hasAlternate: true
+    },
+    {
+        id: 33,
+        question: "How do energy and harmful materials travel in the trophic levels of a food chain?",
+        marks: 3,
+        chapter: "Our Environment",
+        type: "Short Answer",
+        section: "Section IV",
+        isAlternate: true
+    },
+    {
+        id: 34,
+        question: "Draw a diagram to show the structure of nephron and label Bowman's cup.",
+        marks: 3,
+        chapter: "Life Processes",
+        type: "Drawing",
+        section: "Section IV"
+    },
+
+    // PHYSICS - Advanced Problems
+    {
+        id: 11,
+        question: "A convex mirror that has a radius of curvature 4 m is used in a bus. If a car is located at the distance of 10 m from the mirror, then find the image distance. Mention the nature and the size of the image formed.",
+        marks: 4,
+        chapter: "Light – Reflection and Refraction",
+        type: "Problem Solving",
+        section: "Section V"
+    },
+    {
+        id: 12,
+        question: "a) State Ohm's law. b) Mention the factors on which the resistance of a conductor depend. c) Resistivity of a material A is 10¹² Ω m and the resistivity of a material B is 2.63 × 10⁻⁸ Ω m. Which of these two materials can be used as an insulator?",
+        marks: 4,
+        chapter: "Electricity",
+        type: "Problem Solving",
+        section: "Section V"
+    },
+
+    // CHEMISTRY - Advanced Problems
+    {
+        id: 25,
+        question: "a) Explain the cleansing action of soaps. b) What is esterification? Mention the uses of esters.",
+        marks: 4,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section V",
+        hasAlternate: true
+    },
+    {
+        id: 26,
+        question: "a) List any two differences between saturated and unsaturated carbon compounds. b) What are structural isomers? Write the structures of butane isomers.",
+        marks: 4,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section V",
+        isAlternate: true
+    },
+
+    // BIOLOGY - Advanced Questions
+    {
+        id: 34,
+        question: "How are the complex molecules of food converted into the simplest forms in the small intestine of human digestive canal?",
+        marks: 4,
+        chapter: "Life Processes",
+        type: "Short Answer",
+        section: "Section V",
+        hasAlternate: true
+    },
+    {
+        id: 35,
+        question: "What is the role of arteries and capillaries in the circulation of blood in our body? Mention the importance of double circulation.",
+        marks: 4,
+        chapter: "Life Processes",
+        type: "Short Answer",
+        section: "Section V",
+        isAlternate: true
+    },
+    {
+        id: 36,
+        question: "Red flowering tall pea plant (TtRr) is hybridised with white flowering, dwarf pea plant (ttrr). Draw a checker board to show the result of plants obtained in F₂ generation. What is the phenotypic ratio of the plants produced in F₂ generation?",
+        marks: 4,
+        chapter: "Heredity",
+        type: "Problem Solving",
+        section: "Section V"
+    },
+
+    // Section VI - 5 Marks Questions
+    {
+        id: 35,
+        question: "Draw the diagram of the human brain. Label the following parts: i) Pons ii) Cerebellum",
+        marks: 5,
+        chapter: "Control and Coordination",
+        type: "Drawing",
+        section: "Section VI"
+    },
+    {
+        id: 36,
+        question: "Roles of the 'uterus' and 'placenta' are complementary to each other in the development of a child. How? Explain.",
+        marks: 5,
+        chapter: "How do Organisms Reproduce?",
+        type: "Short Answer",
+        section: "Section VI",
+        hasAlternate: true
+    },
+    {
+        id: 37,
+        question: "\"Position of the testis in the human male reproductive system and the role of prostate gland are complementary to each other.\" How? Explain.",
+        marks: 5,
+        chapter: "How do Organisms Reproduce?",
+        type: "Short Answer",
+        section: "Section VI",
+        isAlternate: true
+    },
+    {
+        id: 38,
+        question: "a) How do climbing plants (creepers) show directional movement? Explain. b) Mention the function of thyroxine and adrenaline hormones in the human body.",
+        marks: 5,
+        chapter: "Control and Coordination",
+        type: "Short Answer",
+        section: "Section VI"
+    },
+{
+        id: 1,
+        question: "The magnification of the image produced by a mirror is – 1·73. Then the nature of this image is",
+        options: ["(A) Real and magnified", "(B) Real and diminished", "(C) Virtual and magnified", "(D) Virtual and diminished"],
+        marks: 1,
+        chapter: "Light – Reflection and Refraction",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 2,
+        question: "A person clearly sees the objects placed at the distance of 40 cm to 80 cm only. This defect of the eye and a measure to rectify this defect are",
+        options: ["(A) Myopia, use of suitable concave lens", "(B) Hypermetropia, use of suitable convex lens", "(C) Presbyopia, use of suitable bifocal lens", "(D) Cataract, surgical treatment"],
+        marks: 1,
+        chapter: "The Human Eye and the Colourful World",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 3,
+        question: "A beam of white light is passed through two transparent media A and B. The colour of the scattered light from the medium A is blue and the colour of the scattered light from the medium B is white. The correct statement related to this phenomenon is",
+        options: ["(A) size of the particles in medium A is more than that of B medium", "(B) size of the particles in medium B is more than that of A medium", "(C) sizes of the particles in both A and B media are the same", "(D) densities of both A and B media are the same"],
+        marks: 1,
+        chapter: "The Human Eye and the Colourful World",
+        type: "MCQ",
+        section: "Section I"
+    },
+
+    // CHEMISTRY - Multiple Choice Questions (1 mark each)
+    {
+        id: 13,
+        question: "The property of carbon atoms to form bonds with other carbon atoms to give large molecules is",
+        options: ["(A) Isomerism", "(B) Allotropism", "(C) Catenation", "(D) Addition"],
+        marks: 1,
+        chapter: "Carbon and its Compounds",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 14,
+        question: "ZnO + C → Zn + CO; the reactants that are oxidised and reduced in this chemical reaction respectively are",
+        options: ["(A) ZnO and C", "(B) C and ZnO", "(C) Zn and CO", "(D) Co and Zn"],
+        marks: 1,
+        chapter: "Chemical Reactions and Equations",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 15,
+        question: "When excess of sodium hydroxide is dissolved in the same basic solution then",
+        options: ["(A) the concentration of OH⁻ ions increases", "(B) the concentration of H₃O⁺ ions increases", "(C) the pH value of the solution decreases", "(D) the concentration of OH⁻ ions decreases"],
+        marks: 1,
+        chapter: "Acids, Bases and Salts",
+        type: "MCQ",
+        section: "Section I"
+    },
+
+    // BIOLOGY - Multiple Choice Questions (1 mark each)
+    {
+        id: 26,
+        question: "The second trophic level of a food chain consists of",
+        options: ["(A) Producers", "(B) Herbivores", "(C) Secondary consumer", "(D) Primary carnivores"],
+        marks: 1,
+        chapter: "Our Environment",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 27,
+        question: "If a trait is appeared in the progenies of many generations, then the trait must be",
+        options: ["(A) dominant trait", "(B) recessive trait", "(C) acquired trait", "(D) intermediate trait"],
+        marks: 1,
+        chapter: "Heredity",
+        type: "MCQ",
+        section: "Section I"
+    },
+
+    // PHYSICS - Short Answer Questions
+    {
+        id: 4,
+        question: "Draw the diagrams of circuit symbols of 'wires crossing without joining' and 'rheostat'.",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Drawing",
+        section: "Section II"
+    },
+    {
+        id: 5,
+        question: "\"The absolute refractive index of a medium cannot be less than 1.\" Justify this statement.",
+        marks: 1,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 6,
+        question: "State the laws of reflection of light.",
+        marks: 2,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section III",
+        hasAlternate: true
+    },
+    {
+        id: 7,
+        question: "What is power of lens? Write its SI unit.",
+        marks: 2,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section III",
+        isAlternate: true
+    },
+    {
+        id: 8,
+        question: "Explain the method of preparing an electromagnet.",
+        marks: 2,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "Short Answer",
+        section: "Section III",
+        hasAlternate: true
+    },
+    {
+        id: 9,
+        question: "How can the strength of magnetic field generated by a circular coil of wire be increased? Explain.",
+        marks: 2,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "Short Answer",
+        section: "Section III",
+        isAlternate: true
+    },
+    {
+        id: 10,
+        question: "What is magnetic field? List any four properties of magnetic field lines.",
+        marks: 2,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "Short Answer",
+        section: "Section III",
+        hasAlternate: true
+    },
+    {
+        id: 11,
+        question: "What is short circuiting? Write any two measures that can be followed to prevent the possible damage due to short circuit.",
+        marks: 2,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section III",
+        isAlternate: true
+    },
+
+    // CHEMISTRY - Short Answer Questions
+    {
+        id: 16,
+        question: "Mention any two methods of preventing rancidity.",
+        marks: 1,
+        chapter: "Chemical Reactions and Equations",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 17,
+        question: "Write the structural formula of the ketone having three carbon atoms.",
+        marks: 1,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 18,
+        question: "Aqueous solution of HNO₃ shows acidic character but the solution of alcohol does not show this character. Why?",
+        marks: 1,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 19,
+        question: "Observe the following chemical reactions. Answer the question asked. i) [CHEMICAL REACTION: Compound of Hydrocarbon used in tincture of iodine → Hot. conc. H₂SO₄ → a + H₂O] ii) [CHEMICAL REACTION: a → Nickel/H₂ → b] Name 'a' and 'b' products. Identify saturated and unsaturated product in 'a' and 'b'.",
+        marks: 2,
+        chapter: "Carbon and its Compounds",
+        type: "Problem Solving",
+        section: "Section III",
+        questionImage: "images/4m19.jpg" // Replace with actual image path
+    },
+    {
+        id: 20,
+        question: "Write the balanced chemical equation for the chemical reaction given below and identify the type of this reaction. Lead nitrate + Potassium iodide → Lead iodide + Potassium nitrate.",
+        marks: 2,
+        chapter: "Chemical Reactions and Equations",
+        type: "Problem Solving",
+        section: "Section III"
+    },
+    {
+        id: 21,
+        question: "Give reason for the following uses of baking soda: i) As an ingredient in antacids ii) As baking powder in bakeries.",
+        marks: 2,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section III"
+    },
+
+    // BIOLOGY - Short Answer Questions
+    {
+        id: 28,
+        question: "'Stomata of leaves facilitate the transportation of water through xylem.' Justify.",
+        marks: 1,
+        chapter: "Life Processes",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 29,
+        question: "'Vegetative propagation can be considered as a boon to the farmers.' How?",
+        marks: 1,
+        chapter: "How do Organisms Reproduce?",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 30,
+        question: "Father alone is responsible to determine the sex of a child. Why?",
+        marks: 1,
+        chapter: "Heredity",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 31,
+        question: "Mention the needs for the separation of non-biodegradable wastes in the waste management.",
+        marks: 2,
+        chapter: "Our Environment",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 32,
+        question: "Draw the diagram to show the germination of pollen on stigma and label 'pollen tube'.",
+        marks: 2,
+        chapter: "How do Organisms Reproduce?",
+        type: "Drawing",
+        section: "Section III"
+    },
+    
+    // PHYSICS - Longer Questions
+    {
+        id: 9,
+        question: "An object is placed between F₁ and 2F₁ of convex lens. Draw the ray diagram to show the image formation. [F₁: Principal focus of a lens]",
+        marks: 3,
+        chapter: "Light – Reflection and Refraction",
+        type: "Drawing",
+        section: "Section IV"
+    },
+    {
+        id: 10,
+        question: "Resistance of a metal wire of length 2 m is 28 Ω at 20°C. If the diameter of the wire is 0·04 mm then what will be the resistivity of the metal at that temperature?",
+        marks: 3,
+        chapter: "Electricity",
+        type: "Problem Solving",
+        section: "Section IV"
+    },
+    {
+        id: 11,
+        question: "Explain the following phenomena: i) Formation of rainbow in the atmosphere ii) Twinkling of stars.",
+        marks: 3,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+
+    // CHEMISTRY - Longer Questions
+    {
+        id: 22,
+        question: "Draw the diagram of arrangement of apparatus to show the action of steam on a metal and label the following parts: i) Metal sample ii) Hydrogen gas",
+        marks: 3,
+        chapter: "Metals and Non-metals",
+        type: "Drawing",
+        section: "Section IV"
+    },
+    {
+        id: 23,
+        question: "a) While diluting an acid, water should not be added to the acid but acid should be added to water. Why? Explain. b) Among one molar of hydrochloric acid and acetic acid, which of the acid is strong acid and which of the acid is weak acid? Give reason for your answer.",
+        marks: 3,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section IV",
+        hasAlternate: true
+    },
+    {
+        id: 24,
+        question: "One test tube has distilled water and other two test tubes have acidic and basic solutions. How can the nature of these three solutions be identified using red and blue litmus paper?",
+        marks: 3,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section IV",
+        isAlternate: true
+    },
+
+    // BIOLOGY - Longer Questions
+    
+    
+    // PHYSICS - Advanced Problems
+    {
+        id: 12,
+        question: "a) Connecting resistors in parallel in a circuit is better than connecting them in series. Why? Explain. b) State Joule's law of heating. Explain how an electric bulb works on the basis of this law.",
+        marks: 4,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section V"
+    },
+
+    // CHEMISTRY - Advanced Problems
+    {
+        id: 24,
+        question: "Define the following: i) Structural isomers ii) Esterification iii) Micelles.",
+        marks: 4,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section V",
+        hasAlternate: true
+    },
+    {
+        id: 25,
+        question: "a) What are substitution reactions? b) Name the simplest hydrocarbon and write its molecular formula. c) What are oxidising agents?",
+        marks: 4,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section V",
+        isAlternate: true
+    },
+    {
+        id: 26,
+        question: "a) Show the formation of magnesium chloride by the transfer of electrons. b) Differentiate between calcination and roasting. c) What are the constituent metals present in solder metal? Why is solder metal used for welding electrical wires?",
+        marks: 4,
+        chapter: "Metals and Non-metals",
+        type: "Problem Solving",
+        section: "Section V"
+    },
+
+    // BIOLOGY - Advanced Questions
+    {
+        id: 34,
+        question: "Draw the diagram to show the structure of the human brain and label the following parts: i) Cerebellum ii) Pons.",
+        marks: 4,
+        chapter: "Control and Coordination",
+        type: "Drawing",
+        section: "Section V"
+    },
+    {
+        id: 35,
+        question: "a) 'Reflex arcs are considered as more efficient for quick responses.' Justify. b) When a plant receives light from one direction then the plant appears to bend towards the direction of light. Analyse the reason for this response.",
+        marks: 4,
+        chapter: "Control and Coordination",
+        type: "Short Answer",
+        section: "Section V"
+    },
+    {
+        id: 36,
+        question: "a) Mention the types of blood vessels in the human body and write one function of each. b) What is double circulation?",
+        marks: 4,
+        chapter: "Life Processes",
+        type: "Short Answer",
+        section: "Section V"
+    },
+
+    // Section VI - 5 Marks Questions
+    {
+        id: 35,
+        question: "Round, yellow seeds (RRYY) producing pea plant is crossed with wrinkled, green seeds (rryy) producing pea plant. Write the checker board to show the results obtained in the F₂ generation of this cross. What is the phenotypic ratio of the plants produced in F₂ generation?",
+        marks: 5,
+        chapter: "Heredity",
+        type: "Problem Solving",
+        section: "Section VI",
+        hasAlternate: true
+    },
+    {
+        id: 36,
+        question: "Tall pea plant (TT) is crossed with dwarf pea plant (tt). What kind of plants will be produced in F₁ generation? Draw a checker board to show the results obtained in F₂ generation when pea plants of F₁ generation are self pollinated. What is the phenotypic ratio of the plants produced here?",
+        marks: 5,
+        chapter: "Heredity",
+        type: "Problem Solving",
+        section: "Section VI",
+        isAlternate: true
+    },
+    {
+        id: 37,
+        question: "a) What is the role of testes and prostate gland in human male reproductive system? b) How does an embryo get nutrition from the mother's blood? Explain.",
+        marks: 5,
+        chapter: "How do Organisms Reproduce?",
+        type: "Short Answer",
+        section: "Section VI",
+        hasAlternate: true
+    },
+    {
+        id: 38,
+        question: "a) What are the different methods of contraception followed in human beings? b) Mention one difference between fragmentation and regeneration.",
+        marks: 5,
+        chapter: "How do Organisms Reproduce?",
+        type: "Short Answer",
+        section: "Section VI",
+        isAlternate: true
+    }
+];
+
+        let viewedQuestions = new Set(JSON.parse(localStorage.getItem('viewedQuestions') || '[]'));
+        let bookmarkedQuestions = new Set(JSON.parse(localStorage.getItem('bookmarkedQuestions') || '[]'));
+
+        function createQuestionCard(question) {
+            const hasQuestionImage = question.questionImage ? true : false;
+            const hasSolutionImage = question.solutionImage ? true : false;
+            const isBookmarked = bookmarkedQuestions.has(question.id);
+            const options = question.options ? question.options.map(opt => `<p class="mb-1">${opt}</p>`).join('') : '';
+
+            return `
+                <div class="question-card bg-white rounded-lg shadow p-6 question dark:bg-gray-800 dark:text-white" 
+                     data-marks="${question.marks}" 
+                     data-chapter="${question.chapter}"
+                     data-keywords="${question.question.toLowerCase()}">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-200">
+                            ${question.marks}M
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                            ${question.chapter}
+                        </span>
+                        <button onclick="toggleBookmark(${question.id})" 
+                                class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                            ${isBookmarked ? '🔖' : '📌'}
+                        </button>
+                    </div>
+                    <h3 class="text-lg font-medium mb-4">${question.question}</h3>
+                    ${options ? `<div class="mb-4">${options}</div>` : ''}
+                    ${hasQuestionImage ? `
+                        <div class="mb-4">
+                            <img src="${question.questionImage}" 
+                                 alt="Question Image" 
+                                 class="question-image rounded-lg cursor-pointer"
+                                 onclick="openModal(this.src)">
+                        </div>
+                    ` : ''}
+                                        <div id="solution-${question.id}" class="solution mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <p class="text-gray-600 dark:text-gray-400">${question.answer || "Solution will be provided here."}</p>
+                        ${hasSolutionImage ? `
+                            <div class="mt-4">
+                                <img src="${question.solutionImage}" 
+                                     alt="Solution Image" 
+                                     class="solution-image rounded-lg cursor-pointer"
+                                     onclick="openModal(this.src)">
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function isQuestionViewed(id) {
+            return viewedQuestions.has(id);
+        }
+
+        function markQuestionAsViewed(id) {
+            viewedQuestions.add(id);
+            localStorage.setItem('viewedQuestions', JSON.stringify([...viewedQuestions]));
+        }
+
+        function toggleSolution(id) {
+            const solution = document.getElementById(`solution-${id}`);
+            const button = document.getElementById(`solution-btn-${id}`);
+            const isShowing = solution.classList.toggle('show');
+            
+            if (isShowing) {
+                button.classList.add('viewed');
+                markQuestionAsViewed(id);
+                button.textContent = 'Hide Solution (Viewed)';
+            } else {
+                button.textContent = 'Show Solution (Viewed)';
+            }
+        }
+
+        function toggleBookmark(id) {
+            if (bookmarkedQuestions.has(id)) {
+                bookmarkedQuestions.delete(id);
+            } else {
+                bookmarkedQuestions.add(id);
+            }
+            localStorage.setItem('bookmarkedQuestions', JSON.stringify([...bookmarkedQuestions]));
+            initializeQuestions();
+        }
+
+        function resetViewedQuestions() {
+            viewedQuestions.clear();
+            localStorage.removeItem('viewedQuestions');
+            document.querySelectorAll('.solution-btn').forEach(btn => {
+                btn.classList.remove('viewed');
+                btn.textContent = 'Show Solution';
+            });
+        }
+
+        function openModal(imgSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = "block";
+            modalImg.src = imgSrc;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
+
+        function initializeQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            questions.forEach(question => {
+                container.innerHTML += createQuestionCard(question);
+            });
+        }
+
+        function filterQuestions() {
+            const activeMarksFilter = document.querySelector('.marks-filter.active').dataset.marks || 'All';
+            const activeChapterFilter = document.querySelector('.chapter-filter.active').dataset.chapter || 'All';
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            
+            document.querySelectorAll('.question').forEach(question => {
+                const matchesMarks = activeMarksFilter === 'All' || question.dataset.marks === activeMarksFilter;
+                const matchesChapter = activeChapterFilter === 'All' || question.dataset.chapter === activeChapterFilter;
+                const matchesSearch = question.dataset.keywords.includes(searchQuery);
+                
+                question.classList.toggle('hidden', !(matchesMarks && matchesChapter && matchesSearch));
+            });
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.marks-filter').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.marks-filter').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                filterQuestions();
+            });
+        });
+
+        document.querySelectorAll('.chapter-filter').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.chapter-filter').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                filterQuestions();
+            });
+        });
+
+        document.getElementById('searchInput').addEventListener('input', filterQuestions);
+
+        document.getElementById('darkModeToggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            // Update the text based on dark mode state
+            if (document.body.classList.contains('dark-mode')) {
+                document.getElementById('darkModeToggle').innerHTML = `
+                    <span class="flex items-center gap-2">
+                        ☀️ Switch to Light
+                    </span>`;
+            } else {
+                document.getElementById('darkModeToggle').innerHTML = `
+                    <span class="flex items-center gap-2">
+                        🌙 Switch to Dark
+                    </span>`;
+            }
+        });
+
+        // Initialize
+        initializeQuestions();
+    </script>
+</body>
+</html>

@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Quiz Application</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f0fdf4;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Header styles */
+        .header-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .chapter-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        /* Timer styles */
+        .timer-card {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timer-warning {
+            background: #fee2e2;
+            animation: pulse 1s infinite;
+        }
+
+        .timer-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Question card styles */
+        .question-card {
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .question-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* Badge styles */
+        .badge-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .subject-badge {
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 14px;
+            background: #4338ca;
+            color: white;
+        }
+
+        .type-badge {
+            background: #f3f4f6;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .difficulty-badge {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Content styles */
+        .question-content {
+            font-size: 18px;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        /* Image container styles */
+        .question-image-container,
+        .solution-image-container {
+            margin: 20px 0;
+            text-align: center;
+            max-width: 100%;
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .question-image,
+        .solution-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 0 auto;
+            display: block;
+            max-height: 400px;
+            object-fit: contain;
+        }
+
+        .placeholder {
+            background: #e2e8f0;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-style: italic;
+            border-radius: 4px;
+        }
+
+        .image-caption {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        /* MCQ options styles */
+        .mcq-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 16px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .option:hover:not(.selected):not(.correct):not(.incorrect) {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.selected {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.correct {
+            border-color: #059669;
+            background: #d1fae5;
+        }
+
+        .option.incorrect {
+            border-color: #dc2626;
+            background: #fee2e2;
+        }
+
+        /* Button styles */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            background: #4338ca;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Solution styles */
+        .solution {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 16px;
+            display: none;
+            background: #eef2ff;
+        }
+
+        .solution-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .solution-content {
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        .formula-box {
+            background: #fff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Video solution styles */
+        .video-solution {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .video-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            background: white;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .video-button:hover {
+            background: #f9fafb;
+            transform: translateY(-1px);
+        }
+
+        .video-icon {
+            color: #ef4444;
+        }
+
+        /* Navigation styles */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #4338ca;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .badge-container {
+                flex-wrap: wrap;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .dots {
+                order: -1;
+            }
+
+            .mcq-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <span class="chapter-name" id="chapter-name">Physics Quiz</span>
+        </div>
+
+        <div class="timer-card">
+            <div class="timer-text">
+                ⏰ Time Left: <span id="time-display">1:00</span>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-header">
+                <h2 class="question-number" id="question-number">Question 1</h2>
+                <div class="badge-container">
+                    <span id="subject-badge" class="subject-badge">Physics</span>
+                    <span id="type-badge" class="type-badge">Conceptual</span>
+                    <span id="difficulty-badge" class="difficulty-badge">Medium</span>
+                </div>
+            </div>
+
+            <div id="question-content" class="question-content"></div>
+
+            <button id="solution-btn" class="btn">
+                <span>Show Solution</span>
+            </button>
+
+            <div id="solution-content" class="solution">
+                <div class="solution-header">
+                    📝 Solution
+                </div>
+                <div id="solution-text" class="solution-content"></div>
+                <div id="formula-box" class="formula-box"></div>
+                <div class="video-solution">
+                    <a id="video-link" href="#" target="_blank" class="video-button">
+                        <span class="video-icon">▶</span>
+                        Watch Video Solution
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button id="prev-btn" class="btn" disabled>← Previous</button>
+            <div id="dots" class="dots"></div>
+            <button id="next-btn" class="btn">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        // Questions data
+        const questions = {
+            "exam_questions": [
+                
+{
+"question_number": 7,
+"question": "To obtain a diminished image of an object from a concave mirror, position of the object should be",
+"options": {
+"A": "between C and F",
+"B": "beyond C",
+"C": "between P and F",
+"D": "at F"
+},
+"correct_option": "B",
+"solution_step": "1) For concave mirror, when object is placed beyond center of curvature (C)\n2) The image formed is real, inverted, and diminished\n3) This happens because rays converge after reflection at a point closer to the mirror than the object",
+"time": 60,
+"formula_box": "Mirror formula: 1/f = 1/v + 1/u\nMagnification: m = -v/u\nWhere u = object distance, v = image distance, f = focal length",
+"subject": "Physics [1M]",
+"chapter": "Light - Reflection and Refraction",
+"type": "Conceptual",
+"difficulty": "Easy",
+"misconceptions": "Students often mix up image characteristics for different object positions in concave mirrors",
+"prerequisites": "Understanding of concave mirror, focal point, center of curvature, rules of image formation"
+},
+{
+"question_number": 12,
+"question": "What is the centre of curvature of a spherical mirror?",
+"options": null,
+"correct_option": null,
+"solution_step": "The centre of curvature is the centre of the sphere of which the reflecting surface of the spherical mirror forms a part",
+"time": 60,
+"formula_box": "Radius of curvature R = 2f, where f is focal length",
+"subject": "Physics [1M]",
+"chapter": "Light - Reflection and Refraction",
+"type": "Conceptual",
+"difficulty": "Easy",
+"misconceptions": "Students often confuse centre of curvature with focal point",
+"prerequisites": "Understanding of spherical mirrors"
+},
+{
+"question_number": 28,
+"question": "The focal length of a concave lens is 30 cm. At what distance should the object be placed from the lens so that it forms an image at 20 cm from the lens?",
+"options": null,
+"correct_option": null,
+"solution_step": "1) Given: f = -30 cm (concave lens has negative focal length)\nv = 20 cm (image distance)\n2) Using lens formula: 1/f = 1/v + 1/u\n3) 1/-30 = 1/20 + 1/u\n4) -1/30 = 1/20 + 1/u\n5) 1/u = -1/30 - 1/20 = (-2-3)/60 = -5/60\n6) u = -60 cm",
+"time": 120,
+"formula_box": "Lens formula: 1/f = 1/v + 1/u\nWhere f = focal length, v = image distance, u = object distance\nFor concave lens, f is negative",
+"subject": "Physics [2M]",
+"chapter": "Light - Reflection and Refraction",
+"type": "Numerical",
+"difficulty": "Medium",
+"misconceptions": "Students often forget to use negative focal length for concave lens and may mix up sign conventions",
+"prerequisites": "Understanding of lens formula, Sign conventions for spherical lenses"
+},
+{
+"question_number": 41,
+"question": "State the two laws of reflection of light.",
+"options": null,
+"correct_option": null,
+"solution_step": "1) First Law: The angle of incidence (i) equals the angle of reflection (r)\n2) Second Law: The incident ray, reflected ray, and the normal at the point of incidence all lie in the same plane\n3) These laws apply to all types of reflecting surfaces\n4) They explain how mirrors form images and how we see reflected light",
+"time": 120,
+"formula_box": "angle of incidence (i) = angle of reflection (r)\nAll angles are measured from the normal to the surface",
+"subject": "Physics [2M]",
+"chapter": "Light - Reflection and Refraction",
+"type": "Conceptual",
+"difficulty": "Easy",
+"misconceptions": "Students sometimes forget about the second law or measure angles from the surface instead of the normal",
+"prerequisites": "Understanding of light rays, angles, normal to surface"
+},
+{
+"question_number": 43,
+"question": "Write the properties of image formed in a plane mirror.",
+"options": null,
+"correct_option": null,
+"solution_step": "1) The image is virtual (appears to be behind the mirror)\n2) The image is erect (same orientation as object)\n3) The image size equals the object size (magnification = 1)\n4) The image distance behind the mirror equals the object distance in front\n5) The image is laterally inverted (left appears right and vice versa)",
+"time": 120,
+"formula_box": "Image distance = Object distance\nMagnification (m) = height of image/height of object = 1\nLateral inversion occurs due to reflection",
+"subject": "Physics [2M]",
+"chapter": "Light - Reflection and Refraction",
+"type": "Conceptual",
+"difficulty": "Medium",
+"misconceptions": "Students often confuse virtual images with real images, or don't understand why lateral inversion occurs",
+"prerequisites": "Understanding of reflection, virtual images, lateral inversion"
+},
+{
+"question_number": 45,
+"question": "Draw the ray diagrams for the image formation in a convex lens when an object is placed (i) at focus F₁ (ii) beyond 2F₁.",
+"options": null,
+"correct_option": null,
+"solution_step": "When object at F₁:\n1) Rays become parallel to principal axis after refraction\n2) Image forms at infinity\n3) Image is real, highly magnified\n\nWhen object beyond 2F₁:\n1) Image forms between F₂ and 2F₂\n2) Image is real, inverted, and diminished\n3) Both object and image are on opposite sides of lens",
+"solution_image": {
+"url": "../2019/2019_M_P_Q45.jpg",
+"alt": "Ray diagrams for convex lens",
+"caption": "Ray diagrams showing image formation in convex lens"
+},
+"time": 180,
+"formula_box": "1/f = 1/v + 1/u\nMagnification m = -v/u\nWhere f = focal length, v = image distance, u = object distance",
+"subject": "Physics [3M]",
+"chapter": "Light - Reflection and Refraction",
+"type": "Conceptual",
+"difficulty": "Hard",
+"misconceptions": "Students often struggle with ray diagrams for different object positions and may confuse image characteristics",
+"prerequisites": "Understanding of convex lens, focal points, principal axis, rules for ray diagrams"
+},
+{
+"question_number": 4,
+"question": "An object is kept at the centre of curvature of a concave mirror. The position and nature of the image formed is",
+"options": {
+"A": "between F and C and inverted",
+"B": "behind the mirror and erect",
+"C": "between F and P and erect",
+"D": "at the centre of curvature and inverted"
+},
+"correct_option": "D",
+"solution_step": "When object is placed at center of curvature (C):\n1. All incident rays return along same path\n2. Image forms at same point C\n3. Image is real and inverted\n4. Same size as object (magnification = -1)",
+"time": 60,
+"formula_box": "1/f = 1/u + 1/v\nMagnification = -v/u = -1 when u = v = -R/2",
+"subject": "Physics [1M]",
+"chapter": "Light - Reflection",
+"type": "Conceptual",
+"difficulty": "Medium",
+"misconceptions": "Students often confuse image positions for different object distances in concave mirrors",
+"prerequisites": "Ray diagrams for concave mirrors, image formation rules"
+},
+{
+"question_number": 20,
+"question": "Object distance and image distance of a lens are –30 cm and –10 cm respectively. Find the magnification and decide the type of lens used and nature of the image.",
+"options": null,
+"correct_option": null,
+"solution_step": "1. Given: u = -30 cm, v = -10 cm\n2. Magnification m = -v/u = -(-10)/(-30) = +0.33\n3. Negative v indicates concave lens\n4. Positive magnification < 1 indicates erect, virtual, and diminished image",
+"time": 120,
+"formula_box": "Magnification (m) = -v/u\nwhere v is image distance and u is object distance",
+"subject": "Physics [2M]",
+"chapter": "Light - Reflection and Refraction",
+"type": "Numerical",
+"difficulty": "Medium",
+"misconceptions": "Students often get confused with sign conventions and interpretation of magnification",
+"prerequisites": "Understanding of lens formula and sign conventions"
+},
+{
+"question_number": 25,
+"question": "a) State the laws of refraction of light.\nb) In the given figure, AB is the incident ray, BC is the refracted ray and MN is the normal at the point of incidence. Which medium is more denser? Why?",
+"options": null,
+"correct_option": null,
+"solution_step": "Laws of refraction:\n1. The incident ray, refracted ray, and normal all lie in the same plane\n2. sin(i)/sin(r) = constant (Snell's law)\n\nMedium analysis:\n1. Medium 1 is denser\n2. When light travels from rarer to denser medium, it bends towards normal",
+"solution_image": {
+"url": "../2020/2020_S_P_Q25.jpg",
+"alt": "Refraction of light diagram",
+"caption": "Diagram showing refraction of light ray"
+},
+"time": 180,
+"formula_box": "Snell's Law: n1sin(i) = n2sin(r)\nwhere n1, n2 are refractive indices",
+"subject": "Physics [3M]",
+"chapter": "Light - Refraction",
+"type": "Conceptual",
+"difficulty": "Medium",
+"misconceptions": "Students often confuse the relationship between angle of incidence and refraction with medium density",
+"prerequisites": "Understanding of light refraction and Snell's law"
+},
+{
+"question_number": 40,
+"question": "An object is kept on the principal axis of a concave mirror of focal length 12 cm. If the object is at a distance of 18 cm from the mirror, calculate the image distance. Determine the nature of the image formed by calculating the magnification produced by the mirror.",
+"options": null,
+"correct_option": null,
+"solution_step": "Given:\n1. f = -12 cm\n2. u = -18 cm\n3. Using 1/f = 1/u + 1/v\n4. 1/v = 1/f - 1/u\n5. v = -36 cm\n6. Magnification m = -v/u = -(-36/-18) = -2\n7. Image is real, inverted and enlarged",
+"time": 300,
+"formula_box": "1/f = 1/u + 1/v\nm = -v/u\nNegative v means real image\nNegative m means inverted image",
+"subject": "Physics [3M]",
+"chapter": "Light - Reflection",
+"type": "Numerical",
+"difficulty": "Hard",
+"misconceptions": "Students often forget sign conventions and misinterpret magnification",
+"prerequisites": "Mirror formula, sign conventions, magnification"
+},
+{
+"question_number": 42,
+"question": "Draw the ray diagram when the object is kept between F₁ and 2F₁ of the convex lens. With the help of the diagram mention the position and nature of the image formed.",
+"options": null,
+"correct_option": null,
+"solution_step": "1. Draw convex lens with F₁, 2F₁ marked\n2. Place object between F₁ and 2F₁\n3. Draw rays:\n   - Parallel to principal axis\n   - Through optical center\n   - Through focus\n4. Image forms beyond 2F₂\n5. Image is real, inverted and enlarged",
+"solution_image": {
+"url": "./2019/2019_M_P_Q45.jpg",
+"alt": "Ray diagram for convex lens",
+"caption": "Ray diagram showing image formation in convex lens"
+},
+"time": 300,
+"formula_box": "1/f = 1/u + 1/v\nm = -v/u\nf = focal length\nu = object distance\nv = image distance",
+"subject": "Physics [3M]",
+"chapter": "Light - Refraction through Lens",
+"type": "Conceptual",
+"difficulty": "Medium",
+"misconceptions": "Students often draw incorrect ray paths and miss marking important points",
+"prerequisites": "Understanding of lens formula and ray diagrams"
+},
+{
+"question_number": 7,
+"question": "Identify the emergent ray in the given figure.",
+"options": {
+"A": "CD",
+"B": "BC",
+"C": "AB",
+"D": "IJ"
+},
+"question_image": {
+"url": "../2019/2019_S_P_Q7.jpg",
+"alt": "Diagram showing light ray passing through glass block",
+"caption": "Figure: Light ray path through glass block showing refraction"
+},
+"correct_option": "A",
+"solution_step": "1) CD is the emergent ray because it exits the glass block into air\n2) The ray undergoes refraction twice:\n   - First at point B (entering glass)\n   - Second at point C (leaving glass)\n3) CD is the final path after second refraction\n4) It represents the ray emerging from the glass block back into air",
+"time": 60,
+"formula_box": "Snell's Law: n₁sin(θ₁) = n₂sin(θ₂)\nwhere n₁, n₂ are refractive indices of media",
+"subject": "Physics [1M]",
+"chapter": "Light - Reflection and Refraction",
+"type": "Conceptual",
+"difficulty": "Medium",
+"misconceptions": "Students often confuse between incident ray (AB) and emergent ray (CD), or fail to recognize that emergent ray is the final path after both refractions",
+"prerequisites": "Understanding of:\n1) Light refraction through glass slab\n2) Path of light through different media\n3) Basic refraction concepts"
+}
+                // Add more questions here as needed
+            ]
+        };
+
+        // Initialize variables
+        let currentQuestionIndex = 0;
+        let timeLeft = 60;
+        let timerInterval;
+        let savedTimes = {};
+
+        // Get DOM elements
+        const timeDisplay = document.getElementById('time-display');
+        const questionNumber = document.getElementById('question-number');
+        const subjectBadge = document.getElementById('subject-badge');
+        const typeBadge = document.getElementById('type-badge');
+        const questionContent = document.getElementById('question-content');
+        const solutionBtn = document.getElementById('solution-btn');
+        const solutionContent = document.getElementById('solution-content');
+        const solutionText = document.getElementById('solution-text');
+        const formulaBox = document.getElementById('formula-box');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const dots = document.getElementById('dots');
+        const timer = document.querySelector('.timer-card');
+        const chapterName = document.getElementById('chapter-name');
+
+        // Helper function to format time
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+        // Timer update function
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timeDisplay.textContent = formatTime(timeLeft);
+                if (timeLeft <= 5) {
+                    timer.classList.add('timer-warning');
+                }
+            }
+        }
+
+        // Function to handle image errors
+        function handleImageError(img, type = 'question') {
+            console.error(`Failed to load ${type} image:`, img.src);
+            img.onerror = null;
+            img.classList.add('placeholder');
+            const placeholder = document.createElement('div');
+            placeholder.className = `${type}-image placeholder`;
+            placeholder.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} image not available`;
+            img.parentElement.replaceChild(placeholder, img);
+        }
+
+        // Main function to update question content
+        function updateQuestion() {
+            const question = questions.exam_questions[currentQuestionIndex];
+            
+            // Update header information
+            questionNumber.textContent = `Question ${question.question_number}`;
+            subjectBadge.textContent = question.subject;
+            typeBadge.textContent = question.type;
+            chapterName.textContent = question.chapter;
+            document.getElementById('difficulty-badge').textContent = question.difficulty;
+            
+            // Build question content
+            let content = `<p>${question.question}</p>`;
+            
+            // Add question image if present
+            if (question.question_image) {
+                content += `
+                    <div class="question-image-container">
+                        <img 
+                            src="${question.question_image.url}" 
+                            alt="${question.question_image.alt || `Image for Question ${question.question_number}`}"
+                            class="question-image"
+                            onerror="handleImageError(this, 'question')"
+                        >
+                        ${question.question_image.caption ? 
+                            `<p class="image-caption">${question.question_image.caption}</p>` : ''}
+                    </div>`;
+            }
+            
+            // Add MCQ options if present
+            if (question.options) {
+                content += '<div class="mcq-options">';
+                Object.entries(question.options).forEach(([key, value]) => {
+                    content += `
+                        <div class="option" data-id="${key}">
+                            ${key}. ${value}
+                        </div>
+                    `;
+                });
+                content += '</div>';
+            }
+            
+            questionContent.innerHTML = content;
+
+            // Update solution content
+            let solutionHtml = question.solution_step;
+            
+            // Add solution image if present
+            if (question.solution_image) {
+                solutionHtml += `
+                    <div class="solution-image-container">
+                        <img 
+                            src="${question.solution_image.url}" 
+                            alt="${question.solution_image.alt || 'Solution illustration'}"
+                            class="solution-image"
+                            onerror="handleImageError(this, 'solution')"
+                        >
+                        ${question.solution_image.caption ? 
+                            `<p class="image-caption">${question.solution_image.caption}</p>` : ''}
+                    </div>`;
+            }
+            
+            // Add misconceptions and prerequisites
+            if (question.misconceptions) {
+                solutionHtml += `\n\n<strong>Common Misconceptions:</strong>\n${question.misconceptions}`;
+            }
+            if (question.prerequisites) {
+                solutionHtml += `\n\n<strong>Prerequisites:</strong>\n${question.prerequisites}`;
+            }
+            
+            solutionText.innerHTML = solutionHtml;
+            formulaBox.innerHTML = question.formula_box ? 
+                `<strong>Formulas:</strong><br>${question.formula_box}` : '';
+
+            // Update video link
+            const videoLink = document.getElementById('video-link');
+            if (question.video_url) {
+                videoLink.href = question.video_url;
+                videoLink.style.display = 'inline-flex';
+            } else {
+                videoLink.style.display = 'none';
+            }
+            
+            // Update navigation buttons state
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = currentQuestionIndex === questions.exam_questions.length - 1;
+            
+            // Update progress dots
+            dots.innerHTML = questions.exam_questions.map((_, index) => `
+                <span class="dot ${index === currentQuestionIndex ? 'active' : ''}"></span>
+            `).join('');
+
+            // Reset solution visibility
+            solutionContent.style.display = 'none';
+            solutionBtn.innerHTML = '<span>Show Solution</span>';
+
+            // Reset and start timer for new question
+            clearInterval(timerInterval);
+            timer.classList.remove('timer-warning');
+            timeLeft = savedTimes[currentQuestionIndex] || question.time;
+            timeDisplay.textContent = formatTime(timeLeft);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Function to preload images
+        function preloadImages() {
+            questions.exam_questions.forEach(question => {
+                // Preload question images
+                if (question.question_image && question.question_image.url) {
+                    const img = new Image();
+                    img.onerror = () => console.error('Failed to preload question image:', img.src);
+                    img.src = question.question_image.url;
+                }
+                // Preload solution images
+                if (question.solution_image && question.solution_image.url) {
+                    const img = new Image();
+                    img.onerror = () => console.error('Failed to preload solution image:', img.src);
+                    img.src = question.solution_image.url;
+                }
+            });
+        }
+
+        // Event handler for MCQ option selection
+        questionContent.addEventListener('click', (e) => {
+            const optionElement = e.target.closest('.option');
+            if (!optionElement) return;
+            
+            const question = questions.exam_questions[currentQuestionIndex];
+            if (!question.options) return;
+
+            // Remove previous selection and result classes
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            // Add selected class to clicked option
+            optionElement.classList.add('selected');
+            
+            // If solution is visible, show correct/incorrect indicators
+            if (solutionContent.style.display === 'block') {
+                const selectedOptionId = optionElement.dataset.id;
+                
+                document.querySelectorAll('.option').forEach(opt => {
+                    const optionId = opt.dataset.id;
+                    if (optionId === question.correct_option) {
+                        opt.classList.add('correct');
+                    } else if (optionId === selectedOptionId) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            }
+        });
+
+        // Event handler for solution button
+        solutionBtn.addEventListener('click', () => {
+            const isShowing = solutionContent.style.display === 'block';
+            solutionContent.style.display = isShowing ? 'none' : 'block';
+            solutionBtn.innerHTML = isShowing ? 
+                '<span>Show Solution</span>' : '<span>Hide Solution</span>';
+
+            // Show correct/incorrect indicators for MCQ when solution is displayed
+            const question = questions.exam_questions[currentQuestionIndex];
+            if (question.options) {
+                const selectedOption = document.querySelector('.option.selected');
+                
+                document.querySelectorAll('.option').forEach(opt => {
+                    if (opt.dataset.id === question.correct_option) {
+                        opt.classList.add('correct');
+                    } else if (selectedOption && opt === selectedOption) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            }
+        });
+
+        // Event handlers for navigation buttons
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                savedTimes[currentQuestionIndex] = timeLeft;
+                currentQuestionIndex--;
+                updateQuestion();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.exam_questions.length - 1) {
+                savedTimes[currentQuestionIndex] = timeLeft;
+                currentQuestionIndex++;
+                updateQuestion();
+            }
+        });
+
+        // Initialize the quiz
+        preloadImages();
+        updateQuestion();
+    </script>
+</body>
+</html>

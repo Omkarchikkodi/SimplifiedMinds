@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Questions Bank</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .question-card {
+            transition: all 0.3s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .solution {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .solution.show {
+            max-height: 1000px;
+            transition: max-height 0.5s ease-in;
+        }
+        .dark-mode {
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+        .dark-mode .question-card {
+            background-color: #2d3748;
+            color: #e2e8f0;
+        }
+        .dark-mode .filter-btn {
+            background-color: #4a5568;
+            color: #e2e8f0;
+        }
+        .dark-mode .solution {
+            border-color: white;
+        }
+.dark-mode .question-card .solution p {
+    color: white !important;
+}
+/* Logo Styles */
+    .logo-container {
+        text-align: center;
+        margin-bottom: 20px;
+        position: relative;
+        display: inline-block;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        font-size: 2.5rem;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .logo:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    .logo .simplified {
+        color: #ffd700;
+    }
+
+    .logo .minds {
+        color: #ff0000;
+    }
+
+    .home-icon {
+        font-size: 1.2rem;
+        margin-right: 10px;
+        color: #718096;
+        transition: color 0.3s ease;
+    }
+
+    .logo:hover .home-icon {
+        color: #2d3748;
+    }
+
+    .tooltip {
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #2d3748;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        white-space: nowrap;
+    }
+
+    .logo:hover .tooltip {
+        opacity: 1;
+    }
+
+    /* Learning Resources Styles */
+    .learning-resources {
+        margin-top: 30px;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .resources-title {
+        font-size: 1.5rem;
+        color: #2d3748;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    .resources-buttons {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .resource-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 24px;
+        border-radius: 50px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        min-width: 200px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .whatsapp-button {
+        background-color: #25D366;
+    }
+
+    .whatsapp-button:hover {
+        background-color: #22c55e;
+    }
+
+    .video-button {
+        background-color: #FF0000;
+    }
+
+    .video-button:hover {
+        background-color: #ef4444;
+    }
+
+    .button-icon {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 10px;
+    }
+
+    .button-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .resources-buttons {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .resource-button {
+            width: 100%;
+        }
+    }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen dark:bg-gray-900">
+    <!-- Image Modal -->
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-90 hidden z-50" onclick="closeModal()">
+        <span class="absolute top-4 right-4 text-white text-3xl cursor-pointer">&times;</span>
+        <img id="modalImage" class="max-w-full max-h-full m-auto" alt="Modal Image">
+    </div>
+
+    <header class="bg-white shadow-sm dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Light Reflection and Refraction</h1>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">Previous Years' Questions Bank</p>
+                </div>
+                <button id="darkModeToggle" class="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-800 dark:bg-gray-200 rounded-full transition-all duration-300 shadow-lg text-white dark:text-gray-800">
+    <span class="flex items-center gap-2">
+        🌙 Switch to Dark
+    </span>
+</button>
+            </div>
+        </div>
+    </header>
+<div class="logo-container">
+    <a href="../index.html" class="logo">
+        <span class="home-icon">🏠</span>
+        <span class="simplified">Simplified</span><span class="minds">Minds</span>
+        <span class="tooltip">Go to Homepage</span>
+    </a>
+</div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Search Bar -->
+        <div class="mb-8">
+            <input type="text" id="searchInput" placeholder="Search questions..." 
+                   class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        </div>
+
+        <!-- Filters -->
+        <div class="mb-8 space-y-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div class="w-full md:w-auto">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Filter by Marks</h2>
+                    <div class="flex flex-wrap gap-2" id="marksFilter">
+                        <button class="filter-btn marks-filter active px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600">All</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="1">1M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="2">2M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="3">3M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="4">4M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="5">5M</button>
+                    </div>
+                </div>
+                <div class="w-full md:w-auto">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Filter by Year</h2>
+                    <div class="flex flex-wrap gap-2" id="yearFilter">
+                        <button class="filter-btn year-filter active px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600">All</button>
+                        <button class="filter-btn year-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-year="2019">2019</button>
+                        <button class="filter-btn year-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-year="2020">2020</button>
+                        <button class="filter-btn year-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-year="2021">2021</button>
+                        <button class="filter-btn year-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-year="2022">2022</button>
+                        <button class="filter-btn year-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-year="2023">2023</button>
+                        <button class="filter-btn year-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-year="2024">2024</button>
+                    </div>
+                </div>
+                <button onclick="resetViewedQuestions()" 
+                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
+                    Reset Progress
+                </button>
+            </div>
+        </div>
+
+        <!-- Questions Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="questionsContainer">
+            <!-- Questions will be dynamically inserted here -->
+        </div>
+<!-- Add this right before closing the main container -->
+<div class="learning-resources">
+    <h2 class="resources-title">Learning Resources</h2>
+    <div class="resources-buttons">
+        <a href="https://www.whatsapp.com/channel/0029Vb3QDu17YSd1brABFi1d" class="resource-button whatsapp-button">
+            <span class="button-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+            </span>
+            Join WhatsApp Channel
+        </a>
+        <a href="https://www.youtube.com/@simplifiedmindssslc" class="resource-button video-button">
+            <span class="button-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 4-8 4z"/>
+                </svg>
+            </span>
+            Video Lectures
+        </a>
+    </div>
+</div>
+    </main>
+
+    <script>
+        const questions = [
+            {
+                id: 1,
+                question: "What are the differences between real and virtual images?",
+                //questionImage: "/api/placeholder/600/300",
+                marks: 1,
+                year: 2019,
+                exam: "Mains",
+                answer: "A real image can be obtained on a screen while a virtual image cannot be obtained on a screen.",
+                //solutionImage: "/api/placeholder/600/400"
+            },
+            {
+                id: 2,
+                question: "Convex mirror is commonly used as rear-view mirror in vehicles. Why?",
+                marks: 1,
+                year: 2019,
+                exam: "Mains",
+                answer: "They always give an erect diminished image and have a wider field of view as they are curved outwards."
+            },
+            {
+                id: 3,
+                question: "The focal length of a concave lens is 30 cm. At what distance should the object be placed from the lens so that it forms an image at 20 cm from the lens?",
+                marks: 2,
+                year: 2019,
+                exam: "Mains",
+                answer: "Using lens formula: 1/f = 1/v - 1/u <br>Given: f = -30 cm (concave lens), <br>v = -20 cm<br>Substituting: 1/-30 = 1/-20 - 1/u<br>-1/30 = -1/20 - 1/u<br>1/u = -1/20 + 1/30<br>1/u = (-3 + 2)/60<br>1/u = -1/60<br>u = -60 cm<br>The object should be placed at 60 cm in front of the lens.",
+                //solutionImage: "/api/placeholder/600/400"
+            },
+            {
+                id: 4,
+                question: "State the two laws of reflection of light.",
+                marks: 2,
+                year: 2019,
+                exam: "Mains",
+                answer: "(i) The angle of incidence is equal to the angle of reflection.<br>(ii) The incident ray, the normal to the mirror at the point of incidence and the reflected ray, all lie in the same plane."
+            },
+            {
+                id: 5,
+                question: "Write the properties of image formed in a plane mirror.",
+                marks: 2,
+                year: 2019,
+                exam: "Mains",
+                answer: "1. Image formed by a plane mirror is always virtual and erect.<br>2. The size of the image is equal to that of the object.<br>3. The image formed is as far behind the mirror as the object is in front of it.<br>4. The image is laterally inverted."
+            },
+            {
+                id: 6,
+                question: "Draw the ray diagrams for the image formation in a convex lens when an object is placed (i) at focus F (ii) beyond 2F",
+                marks: 3,
+                year: 2019,
+                exam: "Mains",
+                solutionImage: "/api/placeholder/600/600",
+                answer: "When object is at F: Image formed at infinity, real and highly magnified<br>When object is beyond 2F: Image formed between F and 2F, real, inverted and diminished",
+solutionImage: "../2019/2019_M_P_Q45.jpg"
+            },
+            {
+                id: 7,
+                question: "What happens to a ray of light when it travels from one medium to another having different optical densities?",
+                marks: 1,
+                year: 2019,
+                exam: "Supplementary",
+                answer: "When a ray of light travels from one medium to another having different optical densities, it bends or changes its path at the interface. This bending of light is called refraction."
+            },
+            {
+                id: 8,
+                question: "What is the centre of curvature of a spherical mirror?",
+                marks: 1,
+                year: 2019,
+                exam: "Supplementary",
+                answer: "The reflecting surface of a spherical mirror forms a part of sphere. The centre of this sphere is called the centre of curvature."
+            },
+            {
+                id: 9,
+                question: "Draw the ray diagram to show the formation of image by a convex lens when the object is at 2F",
+                marks: 2,
+                year: 2019,
+                exam: "Supplementary",
+                solutionImage: "/api/placeholder/600/300",
+                answer: "When object is placed at 2F of a convex lens, the image formed is:<br>- At 2F on the other side<br>- Real and inverted<br>- Same size as the object",
+solutionImage: "../2019/2019_S_P_Q31.jpg"
+            },
+            {
+                id: 10,
+                question: "A concave lens has focal length 30 cm. At what distance should the object be placed from the lens so that it forms an image at 20 cm from the lens? Also, find the magnification produced by the lens.",
+                marks: 3,
+                year: 2019,
+                exam: "Supplementary",
+                solutionImage: "../2019/2019_S_P_Solution_1.jpg",
+                answer: "Using lens formula: 1/f = 1/v - 1/u<br>Given: f = -30 cm, v = -20 cm<br>Solving for u = -60 cm<br>Magnification (m) = v/u = -20/-60 = 1/3<br>The object should be placed at 60 cm from the lens.<br>Magnification is 1/3, meaning image is virtual, erect and diminished."
+            },
+{
+        id: 12,
+        question: "An object is kept on the principal axis of a concave mirror of focal length 12 cm. If the object is at a distance of 18 cm from the mirror, calculate the image distance. Determine the nature of the image formed by calculating the magnification produced by the mirror.",
+        marks: 3,
+        year: 2020,
+        exam: "Mains",
+        answer: "Given:<br>f = -12 cm<br>u = -18 cm<br>Using mirror formula: 1/f = 1/u + 1/v<br>1/-12 = 1/-18 + 1/v<br>1/-12 = -1/18 + 1/v<br>1/v = 1/-12 + 1/18<br>1/v = (-3 + 2)/36<br>1/v = -1/36<br>v = 36/-1 = -36 cm<br>Magnification = -v/u = -(-36)/-18 = -2<br>Since magnification is negative and more than 1, the image is real and enlarged."
+    },
+    {
+        id: 13,
+        question: "A doctor prescribes a corrective lens of power -0.5 D to a person. Find the focal length of the lens. Is this lens diverging or converging? Give reason. How does the property of this lens can be used to correct eye defects?",
+        marks: 3,
+        year: 2020,
+        exam: "Mains",
+        answer: "Given power P = -0.5 D<br>Focal length f = 1/P = 1/(-0.5) = -2 m = -200 cm<br>This lens is diverging because power of the lens is negative means the given lens is concave.<br>The diverging property of the lens is used to correct myopia. In myopic eye the image of a distant object is formed in front of the retina and not on the retina.<br>A concave lens of suitable power diverges the light rays and brings the image back on the retina."
+    },
+    {
+        id: 14,
+        question: "Draw the ray diagram when the object is kept between F₁ and 2F₁ of the convex lens. With the help of the diagram mention the position and nature of the image formed.",
+        marks: 3,
+        year: 2020,
+        exam: "Mains",
+        answer: "When object is placed between F₁ and 2F₁ of a convex lens:<br>Position of image: Beyond 2F₂<br>Nature of image: Real, inverted and enlarged",
+        solutionImage: "../2020/2020_M_P_Q42.jpg"
+    },
+    {
+        id: 15,
+        question: "Observe the given incomplete diagram.",
+questionImage: "../2020/2020_S_P_Q11.jpg",
+        marks: 1,
+        year: 2020,
+        exam: "Supplementary",
+        answer: "As given in the image",
+        solutionImage: "../2020/2020_S_P_Q11_2.jpg"
+    },
+    {
+        id: 17,
+        question: "Object distance and image distance of a lens are -30 cm and -10 cm respectively. Find the magnification and decide the type of lens used and nature of the image.",
+        marks: 2,
+        year: 2020,
+        exam: "Supplementary",
+        answer: "Given:<br>u = -30 cm<br>v = -10 cm<br>Magnification (m) = v/u = -10/-30 = 1/3<br>Here, as v is negative, the used lens is concave lens.<br>As the magnification is positive and less than one [having positive sign] the image formed is erect, virtual and diminished."
+    },
+    {
+        id: 18,
+        question: "State the laws of refraction of light. In the given figure, AB is the incident ray, BC is the refracted ray and MN is the normal at the point of incidence. Which medium is more denser? Why?",
+questionImage: "../2020/2020_S_P_Q25.jpg",
+        marks: 3,
+        year: 2020,
+        exam: "Supplementary",
+        answer: "Laws of refraction of light:<br>1. The incident ray, the refracted ray and the normal to the interface of two transparent media at the point of incidence, all lie in the same plane.<br>2. The ratio of sine of angle of incidence to the sine of angle of refraction is a constant for the light of a given colour and for the given pair of media (sin i/sin r = constant)<br>Medium 1 is more dense because when a ray of light travels from rarer medium to denser medium, it always bends towards the normal."
+    },
+    {
+        id: 19,
+        question: "Differentiate between convex mirror and concave mirror. Define the principal focus of a convex lens.",
+        marks: 3,
+        year: 2020,
+        exam: "Supplementary",
+        answer: "Differences between convex and concave mirror:<br>Convex Mirror:<br>1. Reflecting surface bulges outwards<br>2. Always forms virtual, erect and diminished image<br>3. Used as rear view mirrors in vehicles<br>Concave Mirror:<br>1. Reflecting surface curves inwards<br>2. Can form real or virtual images depending on object position<br>3. Used in solar furnaces, torches<br><br>Principal focus of convex lens: The rays of light falling on a convex lens parallel to the principal axis, after refraction from the lens converge to a point on the principal axis. This point on principal axis is called the 'principal focus' of the convex lens."
+    },
+    {
+        id: 29,
+        question: "An object is placed at 25 cm in front of a concave mirror of focal length 15 cm. At what distance from the mirror should a screen be placed in order to obtain a sharp image?",
+        marks: 2,
+        year: 2022,
+        exam: "Main",
+        answer: "Given:<br>u = -25 cm<br>f = 15 cm<br>Using mirror formula: 1/f = 1/u + 1/v<br>1/15 = 1/-25 + 1/v<br>1/15 = -1/25 + 1/v<br>1/v = 1/15 + 1/25<br>1/v = (5 + 3)/75<br>1/v = 8/75<br>v = 75/8 = 37.5 cm<br>The screen should be placed at a distance of 37.5 cm in front of the concave mirror"
+    },
+    {
+        id: 30,
+        question: "A concave lens has focal length of 15 cm. At what distance should the object from the lens be placed so that it forms an image at 10 cm from the lens?",
+        marks: 2,
+        year: 2022,
+        exam: "Main",
+        answer: "Given:<br>f = -15 cm (concave lens)<br>v = -10 cm<br>Using lens formula: 1/f = 1/v - 1/u<br>1/-15 = 1/-10 - 1/u<br>-1/15 = -1/10 - 1/u<br>1/u = -1/10 + 1/15<br>1/u = (-3 + 2)/30<br>1/u = -1/30<br>u = -30 cm<br>The object should be placed at 30 cm in front of the lens"
+    },
+    {
+        id: 31,
+        question: "Draw the ray diagram to show the image formation by a convex lens, when the object is kept at 2F₁ of the lens. With the help of the ray diagram mention the position and nature of the image formed.",
+        marks: 3,
+        year: 2022,
+        exam: "Main",
+        answer: "When object is placed at 2F₁ of a convex lens:<br>Position of image: At 2F₂<br>Nature of image:<br>- Real and inverted<br>- Same size as the object<br>- Distance from lens equal to object distance",
+        solutionImage: "../2022/2022_M_P_Light_1.jpg"
+    },
+    {
+        id: 32,
+        question: "What is refraction of light? State two laws of refraction of light. What is refractive index of light? 'The refractive index of diamond is 2.42.' What is the meaning of this statement?",
+        marks: 5,
+        year: 2022,
+        exam: "Main",
+        answer: "Refraction of light: Light travelling obliquely from one medium to another, the direction of propagation of light in the second medium changes.<br><br>Laws of refraction:<br>1. The incident ray, the refracted ray and the normal to the interface of two transparent media at the point of incidence all lie in the same plane.<br>2. The ratio of sine of angle of incidence to the sine of angle of refraction is constant, for the light of given colour and for the given pair of media (sin i/sin r = constant)<br><br>Refractive index: The ratio of speed of light in air and the speed of light in medium.<br><br>Statement meaning: The ratio of speed of light in air and the speed of light in diamond is 2.42"
+    },
+{
+        id: 33,
+        question: "Calculate the power of convex lens with a focal length of + 0·5 m.",
+        marks: 1,
+        year: 2022,
+        exam: "Supplementary",
+        answer: "Formula: Power (P) = 1/focal length (f)<br>where f is in meters<br><br>SI unit: Dioptre (D)<br><br>For the given lenses:<br>Lens: f = +0.50 m (positive focal length) → Convex lens<br>P = 1/0.5 <br> P = +2 D"
+    },
+{
+        id: 34,
+        question: "Draw the ray diagram of image formation when the object is kept at 2F1 of the convex lens. With the help of the ray diagram, mention the position and nature of the image formed.",
+        marks: 3,
+        year: 2022,
+        exam: "Supplementary",
+        answer: "As given in the image",
+        solutionImage: "../2022/2022_S_P_Light_2.jpg"
+    },
+{
+        id: 37,
+        question: "Write any four uses of concave mirror. An object is placed at a distance of 15 cm on the principal axis in front of a concave lens with a focal length of 10 cm. Find the image distance.",
+        marks: 4,
+        year: 2022,
+        exam: "Supplementary",
+        answer: "Uses of concave mirror:<br>1. Used in torches, search-lights<br>2. Used in vehicles head lights<br>3. Used as shaving mirrors<br>4. The dentists used to examine teeth of patients<br>5. Used in solar furnace<br><br>For image distance calculation:<br>Given:<br>u = -15 cm<br>f = -10 cm (concave lens)<br>Using lens formula: 1/f = 1/v - 1/u<br>1/-10 = 1/v - 1/-15<br>-1/10 = 1/v + 1/15<br>1/v = -1/10 - 1/15<br>1/v = (-3 - 2)/30<br>1/v = -5/30<br>v = -6 cm<br>The image is formed 6 cm from the lens on the same side as the object."
+    },
+    {
+        id: 39,
+        question: "Light enters from air to benzene having refractive index 1.50. Calculate the speed of light in benzene.",
+        marks: 2,
+        year: 2023,
+        exam: "Main",
+        answer: "Given:<br>Refractive index of benzene = 1.50<br>Speed of light in air = 3 × 10⁸ ms⁻¹<br>Using formula: Refractive index = Speed of light in air/Speed of light in medium<br>1.50 = (3 × 10⁸)/v<br>v = (3 × 10⁸)/1.50<br>v = 2 × 10⁸ ms⁻¹<br>Speed of light in benzene = 2 × 10⁸ ms⁻¹"
+    },
+    {
+        id: 40,
+        question: "A concave lens has focal length of 12 cm. At what distance should the object from the lens be placed so that it forms an image at 9 cm from the lens?",
+        marks: 2,
+        year: 2023,
+        exam: "Main",
+        answer: "Given:<br>f = -12 cm (concave lens)<br>v = -9 cm<br>Using lens formula: 1/f = 1/v - 1/u<br>1/-12 = 1/-9 - 1/u<br>-1/12 = -1/9 - 1/u<br>1/u = -1/9 + 1/12<br>1/u = (-4 + 3)/36<br>1/u = -1/36<br>u = -36 cm<br>The object should be placed 36 cm in front of the lens."
+    },
+    {
+        id: 41,
+        question: "Draw the ray diagram for the image formation in a convex lens when the object is placed beyond 2F₁. Mention the position and nature of the image formed.",
+        marks: 3,
+        year: 2023,
+        exam: "Main",
+        answer: "When object is placed beyond 2F₁ of a convex lens:<br>Position of image: Between F₂ and 2F₂<br>Nature of image:<br>- Real and inverted<br>- Diminished in size<br>- Image distance is less than object distance"
+    },
+    {
+        id: 43,
+        question: "What is meant by the 'aperture' of a spherical mirror? Mention the four uses of a concave mirror.",
+        marks: 3,
+        year: 2023,
+        exam: "Supplementary",
+        answer: "Aperture of a spherical mirror: The diameter of the reflecting surface of spherical mirror through which light rays are reflected.<br><br>Uses of concave mirror:<br>1. Used in torches and search-lights<br>2. Used in vehicle headlights<br>3. Used as shaving mirrors<br>4. Used by dentists to examine teeth"
+    },
+    {
+        id: 44,
+        question: "What is meant by the power of a lens? Write the formula used to find the power of a lens. What is the SI unit of power of a lens? If the focal lengths of two lenses 'A' and 'B' are + 0.50 m and - 0.40 m respectively. Mention the types of these lenses in the same order.",
+        marks: 3,
+        year: 2023,
+        exam: "Supplementary",
+        answer: "Power of lens: The degree of convergence or divergence of light rays achieved by a lens.<br><br>Formula: Power (P) = 1/focal length (f)<br>where f is in meters<br><br>SI unit: Dioptre (D)<br><br>For the given lenses:<br>Lens A: f = +0.50 m (positive focal length) → Convex lens<br>Lens B: f = -0.40 m (negative focal length) → Concave lens"
+    },
+    {
+        id: 45,
+        question: "Draw the ray diagram for the image formation by a convex lens, when the object is placed at 2F₁. With the help of the ray diagram mention the position and the nature of the image formed.",
+        marks: 3,
+        year: 2023,
+        exam: "Supplementary",
+        answer: "When object is placed at 2F₁ of a convex lens:<br>Position of image: At 2F₂<br>Nature of image:<br>- Real and inverted<br>- Same size as the object (magnification = 1)<br>- Distance from lens equals object distance"
+    },
+    {
+        id: 46,
+        question: "Draw the ray diagram for the image formation in a convex lens when the object is placed beyond 2F₁. With the help of the ray diagram mention the position and the nature of the image formed.",
+        marks: 3,
+        year: 2023,
+        exam: "Supplementary",
+        answer: "When object is placed beyond 2F₁ of a convex lens:<br>Position of image: Between F₂ and 2F₂<br>Nature of image:<br>- Real and inverted<br>- Diminished (smaller than object)<br>- Image distance is less than object distance"
+    },
+    {
+        id: 47,
+        question: "Draw the ray diagram of image formation when the object is kept at 2F₁ of the convex lens. With the help of ray diagram mention the position and the nature of the image formed.",
+        marks: 3,
+        year: 2024,
+        exam: "Exam 1",
+        answer: "When object is placed at 2F₁ of a convex lens:<br>Position of image: At 2F₂<br>Nature of image:<br>- Real and inverted<br>- Same size as object (magnification = 1)<br>- Image distance equals object distance",
+        solutionImage: "../2024/2024_E1_P_Light_1.jpg"
+    },
+    {
+        id: 48,
+        question: "State two laws of reflection of light. Write any two differences between concave mirror and convex mirror.",
+        marks: 4,
+        year: 2024,
+        exam: "Exam 1",
+        answer: "Laws of reflection:<br>1. The angle of incidence is equal to the angle of reflection<br>2. The incident ray, the normal to the mirror at the point of incidence and the reflected ray all lie in the same plane<br><br>Differences between concave and convex mirror:<br>1. Concave mirror has reflecting surface curved inwards, while convex mirror has reflecting surface curved outwards<br>2. Concave mirror can form both real and virtual images, while convex mirror always forms virtual, erect and diminished images",
+        solutionImage: "../2024/2024_E1_P_Light_2.jpg"
+    },
+{
+        id: 50,
+        question: "A concave lens has focal length of 25 cm. At what distance should the object from the lens be placed so that it forms an image at 20 cm from the lens? Find the magnification of the image produced by the lens.",
+        marks: 3,
+        year: 2024,
+        exam: "Exam 2",
+        answer: "Given:<br>f = -25 cm (concave lens)<br>v = -20 cm<br><br>Using lens formula: 1/f = 1/v - 1/u<br>1/-25 = 1/-20 - 1/u<br>-1/25 = -1/20 - 1/u<br>1/u = -1/20 + 1/25<br>1/u = (-5 + 4)/100<br>1/u = -1/100<br>u = -100 cm<br><br>Magnification (m) = v/u<br>m = -20/-100 = 1/5 = 0.2<br><br>The object should be placed at 100 cm from the lens.<br>Since magnification is positive but less than 1, image is virtual, erect and diminished."
+    },
+    {
+        id: 51,
+        question: "State two laws of reflection of light.",
+        marks: 2,
+        year: 2024,
+        exam: "Exam 2",
+        answer: "1. The angle of incidence is equal to the angle of reflection.<br>2. The incident ray, the normal to the mirror at the point of incidence and the reflected ray, all lie in the same plane."
+    },
+    {
+        id: 53,
+        question: "A concave lens has focal length of 30 cm. At what distance should the object from the lens be placed so that it forms an image at 20 cm from the lens?",
+        marks: 3,
+        year: 2024,
+        exam: "Exam 3",
+        answer: "Given:<br>f = -30 cm (concave lens)<br>v = -20 cm (concave lens forms virtual and erect image)<br><br>Using lens formula: 1/f = 1/v - 1/u<br>1/-30 = 1/-20 - 1/u<br>-1/30 = -1/20 - 1/u<br>1/u = -1/20 + 1/30<br>1/u = (-3 + 2)/60<br>1/u = -1/60<br>u = -60 cm<br><br>The object should be placed at 60 cm from the lens."
+    },
+    {
+        id: 54,
+        question: "Find the focal length of a convex mirror whose radius of curvature is 6 cm. Find the power of convex lens of focal length 0.2 m.",
+        marks: 3,
+        year: 2024,
+        exam: "Exam 3",
+        answer: "Part a)<br>Given: Radius of curvature (R) = 6 cm<br>For convex mirror: f = R/2<br>f = 6/2 = 3 cm<br>Focal length of convex mirror = 3 cm<br><br>Part b)<br>Given: Focal length (f) = 0.2 m<br>Power (P) = 1/f<br>P = 1/0.2<br>P = 5 D<br>Power of convex lens = 5 D"
+    },
+    {
+        id: 55,
+        question: "Draw the ray diagram for the image formation in a convex lens when the object is placed between 2F₁ and F₁. Mention the position and nature of the image formed.",
+        marks: 3,
+        year: 2024,
+        exam: "Exam 3",
+        answer: "When object is placed between 2F₁ and F₁ of a convex lens:<br>Position of image: Beyond 2F₂<br>Nature of image:<br>- Real and inverted<br>- Enlarged (bigger than object)<br>- Image distance is greater than object distance",
+        solutionImage: "../2024/2024_E3_P_Light_1.jpg"
+    }
+        ];
+
+        let viewedQuestions = new Set(JSON.parse(localStorage.getItem('viewedQuestions') || '[]'));
+        let bookmarkedQuestions = new Set(JSON.parse(localStorage.getItem('bookmarkedQuestions') || '[]'));
+
+        function createQuestionCard(question) {
+            const hasQuestionImage = question.questionImage ? true : false;
+            const hasSolutionImage = question.solutionImage ? true : false;
+            const isBookmarked = bookmarkedQuestions.has(question.id);
+
+            return `
+                <div class="question-card bg-white rounded-lg shadow p-6 question dark:bg-gray-800 dark:text-white" 
+                     data-marks="${question.marks}" 
+                     data-year="${question.year}"
+                     data-keywords="${question.question.toLowerCase()}">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-200">
+                            ${question.marks}M
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                            ${question.year} ${question.exam}
+                        </span>
+                        <button onclick="toggleBookmark(${question.id})" 
+                                class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                            ${isBookmarked ? '🔖' : '📌'}
+                        </button>
+                    </div>
+                    <h3 class="text-lg font-medium mb-4">${question.question}</h3>
+                    ${hasQuestionImage ? `
+                        <div class="mb-4">
+                            <img src="${question.questionImage}" 
+                                 alt="Question Image" 
+                                 class="question-image rounded-lg cursor-pointer"
+                                 onclick="openModal(this.src)">
+                        </div>
+                    ` : ''}
+                    <button onclick="toggleSolution(${question.id})" 
+                            id="solution-btn-${question.id}"
+                            class="solution-btn mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors w-full ${isQuestionViewed(question.id) ? 'viewed' : ''}">
+                        ${isQuestionViewed(question.id) ? 'Show Solution (Viewed)' : 'Show Solution'}
+                    </button>
+                    <div id="solution-${question.id}" class="solution mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <p class="text-gray-600 dark:text-gray-400">${question.answer}</p>
+                        ${hasSolutionImage ? `
+                            <div class="mt-4">
+                                <img src="${question.solutionImage}" 
+                                     alt="Solution Image" 
+                                     class="solution-image rounded-lg cursor-pointer"
+                                     onclick="openModal(this.src)">
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function isQuestionViewed(id) {
+            return viewedQuestions.has(id);
+        }
+
+        function markQuestionAsViewed(id) {
+            viewedQuestions.add(id);
+            localStorage.setItem('viewedQuestions', JSON.stringify([...viewedQuestions]));
+        }
+
+        function toggleSolution(id) {
+            const solution = document.getElementById(`solution-${id}`);
+            const button = document.getElementById(`solution-btn-${id}`);
+            const isShowing = solution.classList.toggle('show');
+            
+            if (isShowing) {
+                button.classList.add('viewed');
+                markQuestionAsViewed(id);
+                button.textContent = 'Hide Solution (Viewed)';
+            } else {
+                button.textContent = 'Show Solution (Viewed)';
+            }
+        }
+
+        function toggleBookmark(id) {
+            if (bookmarkedQuestions.has(id)) {
+                bookmarkedQuestions.delete(id);
+            } else {
+                bookmarkedQuestions.add(id);
+            }
+            localStorage.setItem('bookmarkedQuestions', JSON.stringify([...bookmarkedQuestions]));
+            initializeQuestions();
+        }
+
+        function resetViewedQuestions() {
+            viewedQuestions.clear();
+            localStorage.removeItem('viewedQuestions');
+            document.querySelectorAll('.solution-btn').forEach(btn => {
+                btn.classList.remove('viewed');
+                btn.textContent = 'Show Solution';
+            });
+        }
+
+        function openModal(imgSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = "block";
+            modalImg.src = imgSrc;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
+
+        function initializeQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            questions.forEach(question => {
+                container.innerHTML += createQuestionCard(question);
+            });
+        }
+
+        function filterQuestions() {
+            const activeMarksFilter = document.querySelector('.marks-filter.active').dataset.marks || 'All';
+            const activeYearFilter = document.querySelector('.year-filter.active').dataset.year || 'All';
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            
+            document.querySelectorAll('.question').forEach(question => {
+                const matchesMarks = activeMarksFilter === 'All' || question.dataset.marks === activeMarksFilter;
+                const matchesYear = activeYearFilter === 'All' || question.dataset.year === activeYearFilter;
+                const matchesSearch = question.dataset.keywords.includes(searchQuery);
+                
+                               question.classList.toggle('hidden', !(matchesMarks && matchesYear && matchesSearch));
+            });
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.marks-filter').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.marks-filter').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                filterQuestions();
+            });
+        });
+
+        document.querySelectorAll('.year-filter').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.year-filter').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                filterQuestions();
+            });
+        });
+
+        document.getElementById('searchInput').addEventListener('input', filterQuestions);
+
+        document.getElementById('darkModeToggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    // Update the text based on dark mode state
+    if (document.body.classList.contains('dark-mode')) {
+        document.getElementById('darkModeToggle').innerHTML = `
+            <span class="flex items-center gap-2">
+                ☀️ Switch to Light
+            </span>`;
+    } else {
+        document.getElementById('darkModeToggle').innerHTML = `
+            <span class="flex items-center gap-2">
+                🌙 Switch to Dark
+            </span>`;
+    }
+});
+
+        // Initialize
+        initializeQuestions();
+    </script>
+</body>
+</html>

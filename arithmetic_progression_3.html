@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simplified Minds SSLC</title>
+
+<!-- Google Analytics Script -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q0HGP73J9J"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-Q0HGP73J9J', {
+            custom_map: {
+                'dimension1': 'question_subject',
+                'dimension2': 'question_type',
+                'dimension3': 'mark_value',
+                'dimension4': 'success_rate'
+            }
+        });
+
+        // Configure custom dimensions
+        gtag('set', {
+            'question_subject': 'not_set',
+            'question_type': 'not_set',
+            'mark_value': 'not_set',
+            'success_rate': 'not_set'
+        });
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .header-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .chapter-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        body {
+            background-color: #f0fdf4;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .timer-card {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .timer-warning {
+            background: #fee2e2;
+            animation: pulse 1s infinite;
+        }
+
+        .timer-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .question-card {
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .question-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .badge-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .subject-badge {
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .marks-badge {
+            background: #f3f4f6;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .question-content {
+            font-size: 18px;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .sub-questions {
+            margin-left: 24px;
+            margin-top: 16px;
+        }
+
+        .sub-questions li {
+            margin-bottom: 12px;
+            color: #4b5563;
+        }
+
+        .mcq-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 16px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .option:hover:not(.selected):not(.correct):not(.incorrect) {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.selected {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.correct {
+            border-color: #059669;
+            background: #d1fae5;
+        }
+
+        .option.incorrect {
+            border-color: #dc2626;
+            background: #fee2e2;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .solution {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 16px;
+            display: none;
+        }
+
+        .video-solution {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .video-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            background: white;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .video-button:hover {
+            background: #f9fafb;
+            transform: translateY(-1px);
+        }
+
+        .video-icon {
+            color: #ef4444;
+        }
+
+        .solution-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #4338ca;
+        }
+
+        /* Subject-specific styles */
+        .physics { background: #4338ca; color: white; }
+        .chemistry { background: #dc2626; color: white; }
+        .biology { background: #059669; color: white; }
+        .maths { background: #d97706; color: white; }
+
+        .light-physics { background: #e0e7ff; }
+        .light-chemistry { background: #fee2e2; }
+        .light-biology { background: #d1fae5; }
+        .light-maths { background: #fef3c7; }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+
+            .header-section {
+                padding: 10px 16px;
+            }
+            
+            .chapter-name {
+                font-size: 1.1rem;
+            }
+            
+            .logo {
+                width: 32px;
+                height: 32px;
+            }
+
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .badge-container {
+                flex-wrap: wrap;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .dots {
+                order: -1;
+            }
+
+            .mcq-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+.exam-year-badge {
+    background: #f3f4f6;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin-left: 8px;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <div class="logo-container">
+                <img src="SimplifiedMinds_App_icon.jpg" alt="Physics Logo" class="logo">
+                <span class="chapter-name">Arithmetic Progression</span>
+            </div>
+        </div>
+
+        <div class="timer-card">
+            <div class="timer-text">
+                ⏰ Time Left: <span id="time-display">1:00</span>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-header">
+                <h2 class="question-number" id="question-number">Question 1</h2>
+                <div class="badge-container">
+                    <span id="subject-badge" class="subject-badge physics">Physics</span>
+                    <span id="marks-badge" class="marks-badge">1 Mark</span>
+	     <span id="exam-year-badge" class="marks-badge">June 2022</span>
+                </div>
+            </div>
+
+            <div id="question-content" class="question-content">
+                <!-- Question content will be dynamically inserted here -->
+            </div>
+
+            <button id="solution-btn" class="btn physics">
+                <span>Show Solution</span>
+            </button>
+
+            <div id="solution-content" class="solution light-physics">
+                <div class="solution-header">
+                    📝 Solution
+                </div>
+                <div id="solution-text">
+                    <!-- Solution content will be dynamically inserted here -->
+                </div>
+                <div class="video-solution">
+                    <a id="video-link" href="#" target="_blank" class="video-button">
+                        <span class="video-icon">▶</span>
+                        Watch Video Solution
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button id="prev-btn" class="btn physics" disabled>← Previous</button>
+            <div id="dots" class="dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+            <button id="next-btn" class="btn physics">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Questions
+const questions = [
+{
+    subject: 'maths',
+    type: 'ap_complex',
+    question: 'The 7th term of the A.P is four times the 2nd term and 12th term is 2 more than three times the 4th term. Find the terms of the A.P.',
+    examYear: 'March 2019',
+    marks: 3,
+    timeAllowed: 150,
+    solution: `Step 1: Let first term be 'a' and common difference be 'd'<br>
+Using nth term formula:<br>
+2nd term: a₂ = a + d<br>
+4th term: a₄ = a + 3d<br>
+7th term: a₇ = a + 6d<br>
+12th term: a₁₂ = a + 11d<br>
+
+Step 2: Given condition 1<br>
+a₇ = 4a₂<br>
+a + 6d = 4(a + d)<br>
+a + 6d = 4a + 4d<br>
+a + 6d = 4a + 4d<br>
+-3a + 2d = 0 ... (1)<br>
+
+Step 3: Given condition 2<br>
+a₁₂ = 3a₄ + 2<br>
+a + 11d = 3(a + 3d) + 2<br>
+a + 11d = 3a + 9d + 2<br>
+-2a + 2d = 2<br>
+-a + d = 1 ... (2)<br>
+
+Step 4: Solve (1) and (2)<br>
+From (1): -3a + 2d = 0<br>
+         3a = 2d<br>
+         a = 2d/3<br>
+Substitute in (2):<br>
+-2d/3 + d = 1<br>
+d/3 = 1<br>
+d = 3<br>
+Therefore a = 2<br>
+
+Step 5: Write terms<br>
+First term = 2<br>
+Common difference = 3<br>
+Therefore, the A.P is: 2, 5, 8, 11, 14, 17, 20, ...<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/PP6-g7t3o2E?si=KW7ny6CDEc5YDnDv'
+},
+{
+    subject: 'maths',
+    type: 'ap_complex',
+    question: 'Find the sum of the numbers divisible by 4 between 10 and 250.',
+    examYear: 'Prep 2022',
+    marks: 3,
+    timeAllowed: 150,
+    solution: `Step 1: Find first and last terms<br>
+First number divisible by 4 after 10 = 12<br>
+Last number divisible by 4 before 250 = 248<br>
+
+Step 2: Find number of terms<br>
+Common difference (d) = 4<br>
+Using arithmetic formula: n = (l-f)/d + 1<br>
+n = (248-12)/4 + 1<br>
+  = 236/4 + 1<br>
+  = 59 + 1<br>
+  = 60 terms<br>
+
+Step 3: Use sum formula<br>
+Sₙ = (n/2)[first + last]<br>
+S₆₀ = (60/2)[12 + 248]<br>
+    = 30[260]<br>
+    = 7800<br>
+
+Therefore, sum = 7800<br>
+▶ Watch Video Solution`,
+    videoUrl: 'https://youtu.be/PP6-g7t3o2E?si=KW7ny6CDEc5YDnDv'
+},
+{
+   subject: 'maths',
+   type: 'ap_complex',
+   question: 'The 12th term of the A.P is -13 and the sum of first 4 terms of the A.P 24. Find the sum of first 20 terms of the A.P.',
+   examYear: 'Prep 2020',
+   marks: 3,
+   timeAllowed: 150,
+   solution: `Step 1: Use 12th term formula<br>
+a + 11d = -13 ... (1)<br>
+
+Step 2: Use sum of first 4 terms formula<br>
+S₄ = (4/2)[2a + (4-1)d]<br>
+24 = 2[2a + 3d]<br>
+12 = 2a + 3d ... (2)<br>
+
+Step 3: Solve equations<br>
+From (2): 2a + 3d = 12<br>
+From (1): a + 11d = -13<br>
+Multiply (2) by 1: 2a + 3d = 12<br>
+Multiply (1) by 2: 2a + 22d = -26<br>
+Subtract: -19d = 38<br>
+d = -2<br>
+
+Step 4: Find first term<br>
+Substitute d = -2 in (1)<br>
+a + 11(-2) = -13<br>
+a - 22 = -13<br>
+a = 9<br>
+
+Step 5: Find sum of 20 terms<br>
+S₂₀ = (20/2)[2(9) + (20-1)(-2)]<br>
+   = 10[18 - 38]<br>
+   = 10[-20]<br>
+   = -200<br>
+
+Therefore, sum of first 20 terms is -200<br>
+▶ Watch Video Solution`,
+   videoUrl: 'https://youtu.be/PP6-g7t3o2E?si=KW7ny6CDEc5YDnDv'
+},
+{
+   subject: 'maths',
+   type: 'ap_complex',
+   question: 'The 14th term of the A.P is twice the 8th term. If 6th term is -8, find the sum of 20 terms of the A.P.',
+   examYear: 'Prep 2020',
+   marks: 3,
+   timeAllowed: 150,
+   solution: `Step 1: Use given conditions<br>
+a₁₄ = 2a₈<br>
+a + 13d = 2(a + 7d)<br>
+a + 13d = 2a + 14d<br>
+-a - d = 0<br>
+a = -d ... (1)<br>
+
+Step 2: Use 6th term condition<br>
+a₆ = -8<br>
+a + 5d = -8<br>
+From (1), -d + 5d = -8<br>
+4d = -8<br>
+d = -2<br>
+Therefore, a = 2<br>
+
+Step 3: Find sum of 20 terms<br>
+S₂₀ = (20/2)[2(2) + (20-1)(-2)]<br>
+   = 10[4 - 38]<br>
+   = 10[-34]<br>
+   = -340<br>
+
+Therefore, sum of first 20 terms is -340<br>
+▶ Watch Video Solution`,
+   videoUrl: 'https://youtu.be/PP6-g7t3o2E?si=KW7ny6CDEc5YDnDv'
+},
+{
+   subject: 'maths',
+   type: 'ap_complex', 
+   question: 'The sum of first 9 terms of the A.P is 144 and 9th term is 28. Find the first term and common difference of the A.P.',
+   examYear: 'April 2022',
+   marks: 3,
+   timeAllowed: 150,
+   solution: `Step 1: Use 9th term formula<br>
+a + 8d = 28 ... (1)<br>
+
+Step 2: Use sum formula<br>
+S₉ = (9/2)[2a + (9-1)d]<br>
+144 = (9/2)[2a + 8d]<br>
+32 = 2a + 8d ... (2)<br>
+
+Step 3: Solve equations<br>
+From (2): 2a + 8d = 32<br>
+        a + 4d = 16 ... (3)<br>
+From (1): a + 8d = 28<br>
+Subtract (3): 4d = 12<br>
+d = 3<br>
+
+Step 4: Find first term<br>
+Substitute d = 3 in (1)<br>
+a + 8(3) = 28<br>
+a + 24 = 28<br>
+a = 4<br>
+
+Therefore, first term = 4 and common difference = 3<br>
+▶ Watch Video Solution`,
+   videoUrl: 'https://youtu.be/PP6-g7t3o2E?si=KW7ny6CDEc5YDnDv'
+},
+{
+   subject: 'maths',
+   type: 'ap_complex',
+   question: 'The 3rd term of the A.P is 16 and 7th term is 12 more than 5th term. Find the terms of the A.P.',
+   examYear: 'June 2022',
+   marks: 3,
+   timeAllowed: 150,
+   solution: `Step 1: Use 3rd term condition<br>
+a + 2d = 16 ... (1)<br>
+
+Step 2: Use 7th and 5th term condition<br>
+a₇ = a₅ + 12<br>
+(a + 6d) = (a + 4d) + 12<br>
+a + 6d = a + 4d + 12<br>
+2d = 12<br>
+d = 6<br>
+
+Step 3: Find first term<br>
+Substitute d = 6 in (1)<br>
+a + 2(6) = 16<br>
+a + 12 = 16<br>
+a = 4<br>
+
+Step 4: Write terms<br>
+First term = 4<br>
+Common difference = 6<br>
+Therefore, A.P is: 4, 10, 16, 22, 28, 34, 40, ...<br>
+▶ Watch Video Solution`,
+   videoUrl: 'https://youtu.be/PP6-g7t3o2E?si=KW7ny6CDEc5YDnDv'
+},
+{
+   subject: 'maths',
+   type: 'ap_complex',
+   question: 'Find the sum of the first 40 positive integers divisible by 6.',
+   examYear: 'June 2023',
+   marks: 3,
+   timeAllowed: 150,
+   solution: `Step 1: Identify first few terms<br>
+Numbers divisible by 6: 6, 12, 18, 24, ...<br>
+This is an A.P with:<br>
+First term (a) = 6<br>
+Common difference (d) = 6<br>
+Number of terms (n) = 40<br>
+
+Step 2: Find last term<br>
+a₄₀ = a + 39d<br>
+   = 6 + 39(6)<br>
+   = 6 + 234<br>
+   = 240<br>
+
+Step 3: Use sum formula<br>
+S₄₀ = (40/2)[6 + 240]<br>
+   = 20[246]<br>
+   = 4920<br>
+
+Therefore, sum = 4920<br>
+▶ Watch Video Solution`,
+   videoUrl: 'https://youtu.be/PP6-g7t3o2E?si=KW7ny6CDEc5YDnDv'
+},
+{
+   subject: 'maths',
+   type: 'ap_complex',
+   question: 'The second and third terms of an arithmetic progression are 14 and 18 respectively. Find the sum of the first 26 terms of the Arithmetic progression.',
+   examYear: 'June 2023',
+   marks: 3,
+   timeAllowed: 150,
+   solution: `Step 1: Find common difference<br>
+d = 18 - 14 = 4<br>
+
+Step 2: Find first term<br>
+a₂ = a + d = 14<br>
+a + 4 = 14<br>
+a = 10<br>
+
+Step 3: Find last term<br>
+a₂₆ = a + 25d<br>
+   = 10 + 25(4)<br>
+   = 10 + 100<br>
+   = 110<br>
+
+Step 4: Use sum formula<br>
+S₂₆ = (26/2)[10 + 110]<br>
+   = 13[120]<br>
+   = 1560<br>
+
+Therefore, sum of first 26 terms is 1560<br>
+▶ Watch Video Solution`,
+   videoUrl: 'https://youtu.be/PP6-g7t3o2E?si=KW7ny6CDEc5YDnDv'
+}
+];
+
+// Initialize variables
+let currentQuestionIndex = 0;
+let timeLeft = questions[0].timeAllowed;
+let timerInterval;
+let savedTimes = {};
+let questionStartTime;
+let mcqAttempts = {};
+
+// Initialize session ID for analytics
+const sessionId = Math.random().toString(36).substring(2, 15);
+
+// Get DOM elements
+const timeDisplay = document.getElementById('time-display');
+const questionNumber = document.getElementById('question-number');
+const subjectBadge = document.getElementById('subject-badge');
+const marksBadge = document.getElementById('marks-badge');
+const questionContent = document.getElementById('question-content');
+const solutionBtn = document.getElementById('solution-btn');
+const solutionContent = document.getElementById('solution-content');
+const solutionText = document.getElementById('solution-text');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const dots = document.getElementById('dots');
+const timer = document.querySelector('.timer-card');
+
+// Analytics tracking functions
+function trackQuestionStart(questionIndex) {
+    const question = questions[questionIndex];
+    questionStartTime = new Date();
+    
+    gtag('event', 'question_start', {
+        question_subject: question.subject,
+        question_type: question.type || 'regular',
+        mark_value: question.marks,
+        question_number: questionIndex + 1,
+        session_id: sessionId
+    });
+}
+
+function trackQuestionEnd(questionIndex, timeSpent) {
+    const question = questions[questionIndex];
+    const attempts = mcqAttempts[questionIndex] || 0;
+    const successRate = question.type === 'mcq' ? 
+        calculateMCQSuccessRate(questionIndex) : 'not_applicable';
+
+    gtag('event', 'question_end', {
+        question_subject: question.subject,
+        question_type: question.type || 'regular',
+        mark_value: question.marks,
+        question_number: questionIndex + 1,
+        time_spent_seconds: timeSpent,
+        attempts: attempts,
+        success_rate: successRate,
+        session_id: sessionId
+    });
+}
+
+function calculateMCQSuccessRate(questionIndex) {
+    const attempts = mcqAttempts[questionIndex] || 0;
+    if (attempts === 0) return 0;
+    
+    const correctAttempts = mcqAttempts[`${questionIndex}_correct`] || 0;
+    return (correctAttempts / attempts * 100).toFixed(2);
+}
+
+function trackMCQSelection(questionIndex, selectedOption) {
+    const question = questions[questionIndex];
+    const isCorrect = question.options.find(opt => opt.id === selectedOption)?.correct || false;
+    
+    mcqAttempts[questionIndex] = (mcqAttempts[questionIndex] || 0) + 1;
+    if (isCorrect) {
+        mcqAttempts[`${questionIndex}_correct`] = (mcqAttempts[`${questionIndex}_correct`] || 0) + 1;
+    }
+
+    gtag('event', 'mcq_selection', {
+        question_subject: question.subject,
+        question_type: 'mcq',
+        mark_value: question.marks,
+        question_number: questionIndex + 1,
+        selected_option: selectedOption,
+        is_correct: isCorrect,
+        attempt_number: mcqAttempts[questionIndex],
+        session_id: sessionId
+    });
+}
+
+function trackSolutionView(questionIndex) {
+    const question = questions[questionIndex];
+    gtag('event', 'solution_view', {
+        question_subject: question.subject,
+        question_type: question.type || 'regular',
+        mark_value: question.marks,
+        question_number: questionIndex + 1,
+        time_to_solution: Math.floor((new Date() - questionStartTime) / 1000),
+        session_id: sessionId
+    });
+}
+
+function trackTimeSpent() {
+    const timeSpent = questions[currentQuestionIndex].timeAllowed - timeLeft;
+    gtag('event', 'time_tracking', {
+        question_subject: questions[currentQuestionIndex].subject,
+        question_number: currentQuestionIndex + 1,
+        time_spent_seconds: timeSpent,
+        session_id: sessionId
+    });
+}
+
+// Helper functions
+function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function updateTimer() {
+    if (timeLeft > 0) {
+        timeLeft--;
+        timeDisplay.textContent = formatTime(timeLeft);
+        if (timeLeft <= 5) {
+            timer.classList.add('timer-warning');
+        }
+        // Track time spent every 30 seconds
+        if (timeLeft % 30 === 0) {
+            trackTimeSpent();
+        }
+    }
+}
+
+function updateQuestion() {
+    // Track end of previous question if it exists
+    if (typeof currentQuestionIndex !== 'undefined' && questionStartTime) {
+        const timeSpent = Math.floor((new Date() - questionStartTime) / 1000);
+        trackQuestionEnd(currentQuestionIndex, timeSpent);
+    }
+
+    const question = questions[currentQuestionIndex];
+    
+    questionNumber.textContent = `Question ${currentQuestionIndex + 1}`;
+    
+    ['physics', 'chemistry', 'biology', 'maths'].forEach(subject => {
+        subjectBadge.classList.remove(subject);
+        solutionBtn.classList.remove(subject);
+        solutionContent.classList.remove(`light-${subject}`);
+    });
+    
+    subjectBadge.classList.add(question.subject);
+    solutionBtn.classList.add(question.subject);
+    solutionContent.classList.add(`light-${question.subject}`);
+    
+    subjectBadge.textContent = question.subject.charAt(0).toUpperCase() + question.subject.slice(1);
+    marksBadge.textContent = `${question.marks} ${question.marks === 1 ? 'Mark' : 'Marks'}`;
+
+document.getElementById('exam-year-badge').textContent = question.examYear;
+
+    let content = `<p>${question.question}</p>`;
+    
+    if (question.type === 'mcq' && question.options) {
+        content += '<div class="mcq-options">';
+        question.options.forEach(option => {
+            content += `
+                <div class="option" data-id="${option.id}">
+                    ${option.id.toUpperCase()}. ${option.text}
+                </div>
+            `;
+        });
+        content += '</div>';
+    } else if (question.subQuestions) {
+        content += '<ol class="sub-questions">';
+        question.subQuestions.forEach(sq => {
+            content += `<li>${sq}</li>`;
+        });
+        content += '</ol>';
+    }
+    
+    questionContent.innerHTML = content;
+    solutionText.innerHTML = question.solution;
+    
+    const videoLink = document.getElementById('video-link');
+    if (question.videoUrl) {
+        videoLink.href = question.videoUrl;
+        videoLink.style.display = 'inline-flex';
+    } else {
+        videoLink.style.display = 'none';
+    }
+
+    prevBtn.disabled = currentQuestionIndex === 0;
+    nextBtn.disabled = currentQuestionIndex === questions.length - 1;
+    
+    ['physics', 'chemistry', 'biology', 'maths'].forEach(subject => {
+        prevBtn.classList.remove(subject);
+        nextBtn.classList.remove(subject);
+    });
+    prevBtn.classList.add(question.subject);
+    nextBtn.classList.add(question.subject);
+
+    dots.innerHTML = questions.map((_, index) => `
+        <span class="dot ${index === currentQuestionIndex ? 'active' : ''}"></span>
+    `).join('');
+
+    solutionContent.style.display = 'none';
+    solutionBtn.innerHTML = '<span>Show Solution</span>';
+
+    clearInterval(timerInterval);
+    timer.classList.remove('timer-warning');
+    timeLeft = savedTimes[currentQuestionIndex] || question.timeAllowed;
+    timeDisplay.textContent = formatTime(timeLeft);
+    timerInterval = setInterval(updateTimer, 1000);
+
+    // Track start of new question
+    trackQuestionStart(currentQuestionIndex);
+}
+
+// Event Listeners
+questionContent.addEventListener('click', (e) => {
+    const optionElement = e.target.closest('.option');
+    if (!optionElement) return;
+    
+    const question = questions[currentQuestionIndex];
+    if (question.type !== 'mcq') return;
+
+    // Track MCQ selection
+    trackMCQSelection(currentQuestionIndex, optionElement.dataset.id);
+
+    // Remove selected class from all options
+    document.querySelectorAll('.option').forEach(opt => {
+        opt.classList.remove('selected', 'correct', 'incorrect');
+    });
+
+    // Add selected class to clicked option
+    optionElement.classList.add('selected');
+    
+    // If solution is visible, show correct/incorrect
+    if (solutionContent.style.display === 'block') {
+        const selectedOptionId = optionElement.dataset.id;
+        const correctOption = question.options.find(opt => opt.correct);
+        
+        document.querySelectorAll('.option').forEach(opt => {
+            const optionId = opt.dataset.id;
+            if (optionId === correctOption.id) {
+                opt.classList.add('correct');
+            } else if (optionId === selectedOptionId) {
+                opt.classList.add('incorrect');
+            }
+        });
+    }
+});
+
+solutionBtn.addEventListener('click', () => {
+    const isShowing = solutionContent.style.display === 'block';
+    
+    if (!isShowing) {
+        trackSolutionView(currentQuestionIndex);
+    }
+    
+    solutionContent.style.display = isShowing ? 'none' : 'block';
+    solutionBtn.innerHTML = isShowing ? '<span>Show Solution</span>' : '<span>Hide Solution</span>';
+
+    const question = questions[currentQuestionIndex];
+    if (question.type === 'mcq') {
+        const selectedOption = document.querySelector('.option.selected');
+        const correctOption = question.options.find(opt => opt.correct);
+        
+        document.querySelectorAll('.option').forEach(opt => {
+            if (opt.dataset.id === correctOption.id) {
+                opt.classList.add('correct');
+            } else if (selectedOption && opt === selectedOption) {
+                opt.classList.add('incorrect');
+            }
+        });
+    }
+});
+
+prevBtn.addEventListener('click', () => {
+    if (currentQuestionIndex > 0) {
+        savedTimes[currentQuestionIndex] = timeLeft;
+        const timeSpent = Math.floor((new Date() - questionStartTime) / 1000);
+        trackQuestionEnd(currentQuestionIndex, timeSpent);
+        currentQuestionIndex--;
+        updateQuestion();
+    }
+});
+
+nextBtn.addEventListener('click', () => {
+    if (currentQuestionIndex < questions.length - 1) {
+        savedTimes[currentQuestionIndex] = timeLeft;
+        const timeSpent = Math.floor((new Date() - questionStartTime) / 1000);
+        trackQuestionEnd(currentQuestionIndex, timeSpent);
+        currentQuestionIndex++;
+        updateQuestion();
+    }
+});
+
+// Track when user leaves the page
+window.addEventListener('beforeunload', () => {
+    if (typeof currentQuestionIndex !== 'undefined' && questionStartTime) {
+        const timeSpent = Math.floor((new Date() - questionStartTime) / 1000);
+        trackQuestionEnd(currentQuestionIndex, timeSpent);
+    }
+});
+
+// Initialize the first question
+updateQuestion();
+
+    </script>
+</body>
+</html>

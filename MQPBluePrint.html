@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KSEEB Question Paper Blueprint - SimplifiedMinds</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            padding: 20px;
+            color: #1a202c;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            font-size: 2.5rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .logo .simplified { color: #ffd700; }
+        .logo .minds { color: #ff0000; }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e40af, #1e3a8a);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .filter-section {
+            padding: 20px;
+            background-color: #f1f5f9;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        select {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            width: 200px;
+            font-size: 16px;
+            color: #1e293b;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:hover {
+            border-color: #94a3b8;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #1e40af;
+            color: white;
+            font-weight: 600;
+        }
+
+        .chapter-cell {
+            background-color: #f8fafc;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        /* Softer colors for MQP rows */
+        .mqp1-row { background-color: #f0fdf4; }
+        .mqp2-row { background-color: #f0f9ff; }
+        .mqp3-row { background-color: #fdf2f8; }
+        .mqp4-row { background-color: #faf5ff; }
+
+        .mqp1-row:hover { background-color: #dcfce7; }
+        .mqp2-row:hover { background-color: #e0f2fe; }
+        .mqp3-row:hover { background-color: #fce7f3; }
+        .mqp4-row:hover { background-color: #f3e8ff; }
+
+        .kannada-text {
+            font-size: 14px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        /* Learning Resources Section */
+        .learning-resources {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .resources-title {
+            font-size: 1.5rem;
+            color: #1e293b;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .resources-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .resource-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .whatsapp-button {
+            background-color: #25D366;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #22c55e;
+            transform: translateY(-2px);
+        }
+
+        .video-button {
+            background-color: #FF0000;
+        }
+
+        .video-button:hover {
+            background-color: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .button-icon {
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .header { font-size: 20px; }
+            .logo { font-size: 2rem; }
+            th, td { padding: 8px; font-size: 14px; }
+            .resources-buttons { flex-direction: column; }
+            .resource-button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo -->
+    <div class="logo-container">
+        <a href="https://rahulpattadi.github.io/simplifiedmindsSSLC/" class="logo">
+            <svg class="button-icon" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                <path d="M12 2L1 12h3v9h6v-6h4v6h6v-9h3L12 2zm0 2.84L19.5 12h-1.5v8h-3v-6h-6v6h-3v-8H4.5L12 4.84z"/>
+            </svg>
+            <span class="simplified">Simplified</span><span class="minds">Minds</span>
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            BLUE PRINT OF KSEEB MODEL QUESTION PAPER 1, 2, 3, 4
+        </div>
+
+        <div class="filter-section">
+            <select id="mqpFilter" onchange="filterTable()">
+                <option value="all">Show All Papers</option>
+                <option value="mqp1">MQP 1</option>
+                <option value="mqp2">MQP 2</option>
+                <option value="mqp3">MQP 3</option>
+                <option value="mqp4">MQP 4</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table id="blueprintTable">
+                <thead>
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>Name of the chapters</th>
+                        <th>Type of Q.P</th>
+                        <th>MCQ</th>
+                        <th>1M</th>
+                        <th>2M</th>
+                        <th>3M</th>
+                        <th>4M</th>
+                        <th>5M</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+<!-- Learning Resources Section -->
+    <div class="learning-resources">
+        <h2 class="resources-title">Learning Resources</h2>
+        <div class="resources-buttons">
+            <a href="https://www.whatsapp.com/channel/0029Vb3QDu17YSd1brABFi1d" class="resource-button whatsapp-button">
+                <svg class="button-icon" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+                Join WhatsApp Channel
+            </a>
+            <a href="https://www.youtube.com/@simplifiedmindssslc" class="resource-button video-button">
+                <svg class="button-icon" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 4-8 4z"/>
+                </svg>
+                Video Lectures
+            </a>
+        </div>
+    </div>
+
+
+    <script>
+        const blueprintData = [
+    {
+        slNo: 1,
+        chapter: "Real Numbers",
+        kannada: "ವಾಸ್ತವ ಸಂಖ್ಯೆಗಳು",
+        rows: [
+            { type: "MQP 1", mcq: "1", m1: "", m2: "", m3: "1+1", m4: "", m5: "", total: "5" },
+            { type: "MQP 2", mcq: "1", m1: "1", m2: "", m3: "1", m4: "", m5: "", total: "5" },
+            { type: "MQP 3", mcq: "1", m1: "1", m2: "", m3: "1*", m4: "", m5: "", total: "5" },
+            { type: "MQP 4", mcq: "1", m1: "1", m2: "", m3: "1", m4: "", m5: "", total: "5" }
+        ]
+    },
+    {
+        slNo: 2,
+        chapter: "Polynomials",
+        kannada: "ಬಹುಪದೋಕ್ತಿಗಳು",
+        rows: [
+            { type: "MQP 1", mcq: "", m1: "1", m2: "", m3: "1", m4: "", m5: "", total: "4" },
+            { type: "MQP 2", mcq: "1", m1: "1", m2: "", m3: "1", m4: "", m5: "", total: "5" },
+            { type: "MQP 3", mcq: "1", m1: "1", m2: "", m3: "1*", m4: "", m5: "", total: "5" },
+            { type: "MQP 4", mcq: "1", m1: "1", m2: "", m3: "1", m4: "", m5: "", total: "5" }
+        ]
+    },
+    {
+        slNo: 3,
+        chapter: "Pair of linear equations in two variables",
+        kannada: "ಎರಡು ಚರಾಕ್ಷರಗಳಿರುವ ರೇಖಾತ್ಮಕ ಸಮೀಕರಣಗಳ ಜೋಡಿಗಳು",
+        rows: [
+            { type: "MQP 1", mcq: "1+1", m1: "1", m2: "1", m3: "", m4: "1", m5: "", total: "9" },
+            { type: "MQP 2", mcq: "1", m1: "1", m2: "1*", m3: "", m4: "1", m5: "", total: "8" },
+            { type: "MQP 3", mcq: "1", m1: "", m2: "1", m3: "", m4: "1", m5: "", total: "7" },
+            { type: "MQP 4", mcq: "1", m1: "1", m2: "1", m3: "", m4: "1", m5: "", total: "8" }
+        ]
+    },
+    {
+        slNo: 4,
+        chapter: "Quadratic equations",
+        kannada: "ವರ್ಗಸಮೀಕರಣಗಳು",
+        rows: [
+            { type: "MQP 1", mcq: "1", m1: "1", m2: "1", m3: "1*", m4: "", m5: "", total: "7" },
+            { type: "MQP 2", mcq: "", m1: "1", m2: "1*", m3: "1+1", m4: "", m5: "", total: "9" },
+            { type: "MQP 3", mcq: "", m1: "", m2: "1+1", m3: "1*", m4: "", m5: "", total: "7" },
+            { type: "MQP 4", mcq: "1", m1: "1", m2: "1", m3: "1+1*", m4: "", m5: "", total: "10" }
+        ]
+    },
+    {
+        slNo: 5,
+        chapter: "Arithmetic progression",
+        kannada: "ಸಮಾಂತರ ಶ್ರೇಢಿಗಳು",
+        rows: [
+            { type: "MQP 1", mcq: "1", m1: "", m2: "", m3: "1", m4: "1", m5: "", total: "7" },
+            { type: "MQP 2", mcq: "1", m1: "1", m2: "", m3: "1", m4: "1*", m5: "", total: "8" },
+            { type: "MQP 3", mcq: "1", m1: "", m2: "", m3: "1*", m4: "", m5: "1", total: "8" },
+            { type: "MQP 4", mcq: "1", m1: "", m2: "", m3: "1", m4: "1*", m5: "", total: "7" }
+        ]
+    },
+    {
+        slNo: 6,
+        chapter: "Triangles",
+        kannada: "ತ್ರಿಭುಜಗಳು",
+        rows: [
+            { type: "MQP 1", mcq: "1", m1: "1", m2: "", m3: "1", m4: "1", m5: "", total: "9" },
+            { type: "MQP 2", mcq: "", m1: "", m2: "1", m3: "1", m4: "1", m5: "", total: "9" },
+            { type: "MQP 3", mcq: "", m1: "1", m2: "1*", m3: "1", m4: "1", m5: "", total: "10" },
+            { type: "MQP 4", mcq: "1", m1: "", m2: "", m3: "1", m4: "", m5: "1", total: "9" }
+        ]
+    },
+    {
+        slNo: 7,
+        chapter: "Coordinate geometry",
+        kannada: "ನಿರ್ದೇಶಾಂಕ ರೇಖಾಗಣಿತ",
+        rows: [
+            { type: "MQP 1", mcq: "", m1: "1", m2: "1", m3: "1*", m4: "", m5: "", total: "7" },
+            { type: "MQP 2", mcq: "", m1: "1", m2: "1", m3: "1*", m4: "", m5: "", total: "7" },
+            { type: "MQP 3", mcq: "1", m1: "", m2: "1", m3: "1", m4: "", m5: "", total: "7" },
+            { type: "MQP 4", mcq: "1", m1: "1", m2: "1+1*", m3: "", m4: "", m5: "", total: "6" }
+        ]
+    },
+    {
+        slNo: 8,
+        chapter: "Introduction to trigonometry",
+        kannada: "ತ್ರಿಕೋನಮಿತಿಯ ಪ್ರಸ್ತಾವನೆ",
+        rows: [
+            { type: "MQP 1", mcq: "1", m1: "1", m2: "", m3: "1", m4: "", m5: "", total: "5" },
+            { type: "MQP 2", mcq: "1", m1: "", m2: "", m3: "1", m4: "1*", m5: "", total: "6" },
+            { type: "MQP 3", mcq: "1", m1: "", m2: "", m3: "1", m4: "1*", m5: "", total: "6" },
+            { type: "MQP 4", mcq: "", m1: "1", m2: "1+1", m3: "1*", m4: "", m5: "", total: "8" }
+        ]
+    },
+    {
+        slNo: 9,
+        chapter: "Applications of trigonometry",
+        kannada: "ತ್ರಿಕೋನಮಿತಿಯ ಕೆಲವು ಅನ್ವಯಗಳು",
+        rows: [
+            { type: "MQP 1", mcq: "", m1: "", m2: "", m3: "", m4: "", m5: "1", total: "5" },
+            { type: "MQP 2", mcq: "", m1: "", m2: "", m3: "", m4: "", m5: "1", total: "5" },
+            { type: "MQP 3", mcq: "", m1: "", m2: "", m3: "", m4: "1", m5: "", total: "4" },
+            { type: "MQP 4", mcq: "", m1: "", m2: "", m3: "", m4: "1", m5: "", total: "4" }
+        ]
+    },
+    {
+        slNo: 10,
+        chapter: "Circles",
+        kannada: "ವೃತ್ತಗಳು",
+        rows: [
+            { type: "MQP 1", mcq: "", m1: "", m2: "1", m3: "1", m4: "", m5: "", total: "5" },
+            { type: "MQP 2", mcq: "", m1: "", m2: "", m3: "1", m4: "", m5: "", total: "3" },
+            { type: "MQP 3", mcq: "", m1: "1", m2: "", m3: "1", m4: "", m5: "", total: "4" },
+            { type: "MQP 4", mcq: "", m1: "", m2: "1", m3: "1", m4: "", m5: "", total: "5" }
+        ]
+    },
+    {
+        slNo: 11,
+        chapter: "Areas related to circles",
+        kannada: "ವೃತ್ತಗಳಿಗೆ ಸಂಬಂಧಿಸಿದ ವಿಸ್ತೀರ್ಣಗಳು",
+        rows: [
+            { type: "MQP 1", mcq: "", m1: "", m2: "", m3: "1*", m4: "", m5: "", total: "3" },
+            { type: "MQP 2", mcq: "1", m1: "1", m2: "", m3: "1*", m4: "", m5: "", total: "5" },
+            { type: "MQP 3", mcq: "", m1: "1", m2: "", m3: "1", m4: "", m5: "", total: "4" },
+            { type: "MQP 4", mcq: "", m1: "", m2: "", m3: "1", m4: "", m5: "", total: "3" }
+        ]
+    },
+    {
+        slNo: 12,
+        chapter: "Statistics",
+        kannada: "ಸಂಖ್ಯಾಶಾಸ್ತ್ರ",
+        rows: [
+            { type: "MQP 1", mcq: "", m1: "1", m2: "", m3: "1*", m4: "", m5: "", total: "4" },
+            { type: "MQP 2", mcq: "1", m1: "", m2: "", m3: "1*", m4: "", m5: "", total: "4" },
+            { type: "MQP 3", mcq: "1+1", m1: "", m2: "", m3: "1*", m4: "", m5: "", total: "5" },
+            { type: "MQP 4", mcq: "1", m1: "1", m2: "", m3: "1*", m4: "", m5: "", total: "5" }
+        ]
+    },
+    {
+        slNo: 13,
+        chapter: "Probability",
+        kannada: "ಸಂಭವನೀಯತೆ",
+        rows: [
+            { type: "MQP 1", mcq: "1", m1: "", m2: "", m3: "1", m4: "", m5: "", total: "4" },
+            { type: "MQP 2", mcq: "", m1: "", m2: "1+1", m3: "", m4: "", m5: "", total: "4" },
+            { type: "MQP 3", mcq: "1", m1: "", m2: "", m3: "", m4: "", m5: "", total: "3" },
+            { type: "MQP 4", mcq: "", m1: "1", m2: "1", m3: "", m4: "", m5: "", total: "3" }
+        ]
+    },
+    {
+        slNo: 14,
+        chapter: "Surface areas and volumes",
+        kannada: "ಮೇಲ್ಮೈ ವಿಸ್ತೀರ್ಣಗಳು ಮತ್ತು ಘನಫಲಗಳು",
+        rows: [
+            { type: "MQP 1", mcq: "", m1: "1", m2: "1*", m3: "", m4: "1*", m5: "", total: "7" },
+            { type: "MQP 2", mcq: "1", m1: "1", m2: "", m3: "", m4: "", m5: "1", total: "7" },
+            { type: "MQP 3", mcq: "1", m1: "1", m2: "", m3: "", m4: "1*", m5: "", total: "6" },
+            { type: "MQP 4", mcq: "", m1: "", m2: "", m3: "", m4: "1*", m5: "1", total: "7" }
+        ]
+    }
+];
+
+        function renderTable(filter = 'all') {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            blueprintData.forEach((chapter, index) => {
+                let filteredRows = chapter.rows;
+                if (filter !== 'all') {
+                    filteredRows = chapter.rows.filter(row => 
+                        row.type.toLowerCase().replace(/\s+/g, '') === filter
+                    );
+                }
+
+                filteredRows.forEach((row, rowIndex) => {
+                    const tr = document.createElement('tr');
+                    const mqpClass = row.type.toLowerCase().replace(/\s+/g, '') + '-row';
+                    tr.className = mqpClass;
+
+                    let html = '';
+                    if (rowIndex === 0) {
+                        html += `
+                            <td rowspan="${filteredRows.length}">${chapter.slNo}</td>
+                            <td rowspan="${filteredRows.length}" class="chapter-cell">
+                                ${chapter.chapter}<br>
+                                <span class="kannada-text">${chapter.kannada}</span>
+                            </td>
+                        `;
+                    }
+                    
+                    html += `
+                        <td>${row.type}</td>
+                        <td>${row.mcq}</td>
+                        <td>${row.m1}</td>
+                        <td>${row.m2}</td>
+                        <td>${row.m3}</td>
+                        <td>${row.m4}</td>
+                        <td>${row.m5}</td>
+                        <td>${row.total}</td>
+                    `;
+                    
+                    tr.innerHTML = html;
+                    tbody.appendChild(tr);
+                });
+            });
+        }
+
+        function filterTable() {
+            const filter = document.getElementById('mqpFilter').value;
+            renderTable(filter);
+        }
+
+        // Initial render
+        renderTable();
+    </script>
+</body>
+</html>

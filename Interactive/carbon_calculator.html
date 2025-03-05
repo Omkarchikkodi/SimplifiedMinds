@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Compounds - Interactive Guide</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/14.0.0/material-components-web.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root[data-theme="light"] {
+            --theme-primary: #2196f3;
+            --theme-background: #fafafa;
+            --theme-surface: #ffffff;
+            --theme-text: #000000;
+            --theme-secondary-text: #666666;
+            --theme-border: #e0e0e0;
+            --theme-hover: #f5f5f5;
+        }
+
+        :root[data-theme="dark"] {
+            --theme-primary: #90caf9;
+            --theme-background: #121212;
+            --theme-surface: #1e1e1e;
+            --theme-text: #ffffff;
+            --theme-secondary-text: #aaaaaa;
+            --theme-border: #333333;
+            --theme-hover: #2d2d2d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--theme-background);
+            color: var(--theme-text);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .top-bar {
+            background-color: var(--theme-primary);
+            color: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .main-content {
+            margin-top: 80px;
+            padding: 24px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: var(--theme-surface);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .chip {
+            padding: 8px 16px;
+            border-radius: 16px;
+            background: var(--theme-hover);
+            color: var(--theme-text);
+            border: 1px solid var(--theme-border);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chip.active {
+            background: var(--theme-primary);
+            color: white;
+            border-color: var(--theme-primary);
+        }
+
+        .reaction-card {
+            background: var(--theme-surface);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .reaction-equation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--theme-hover);
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 1.1em;
+        }
+
+        .arrow {
+            font-size: 1.5em;
+            color: var(--theme-primary);
+        }
+
+        .conditions {
+            color: var(--theme-primary);
+            font-size: 0.9em;
+            text-align: center;
+            margin: 4px 0;
+        }
+
+        .category-title {
+            color: var(--theme-primary);
+            margin: 32px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--theme-primary);
+        }
+
+        .compound-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .compound-item {
+            background: var(--theme-surface);
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid var(--theme-border);
+        }
+
+.logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            font-size: 2.5rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .logo:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .logo .simplified {
+            color: #ffd700;
+        }
+
+        .logo .minds {
+            color: #ff0000;
+        }
+
+        .home-icon {
+            font-size: 1.2rem;
+            margin-right: 10px;
+            color: #718096;
+            transition: color 0.3s ease;
+        }
+
+        .logo:hover .home-icon {
+            color: #2d3748;
+        }
+
+        /* Learning Resources Styles */
+        .learning-resources {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .resources-title {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .resources-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .resource-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            min-width: 200px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .whatsapp-button {
+            background-color: #25D366;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #22c55e;
+            box-shadow: 0 4px 6px rgba(37, 211, 102, 0.2);
+        }
+
+        .video-button {
+            background-color: #FF0000;
+        }
+
+        .video-button:hover {
+            background-color: #ef4444;
+            box-shadow: 0 4px 6px rgba(255, 0, 0, 0.2);
+        }
+
+        .button-icon {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .button-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .resources-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .resource-button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .reaction-equation {
+                flex-direction: column;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <header class="top-bar">
+        <h1>Carbon Compounds - SimplifiedMinds</h1>
+        <button class="theme-toggle" id="themeToggle">Switch Theme</button>
+    </header>
+
+    
+    <main class="main-content">
+        <div class="filter-chips">
+            <button class="chip active" data-filter="all">All Reactions</button>
+            <button class="chip" data-filter="combustion">Combustion</button>
+            <button class="chip" data-filter="oxidation">Oxidation</button>
+            <button class="chip" data-filter="substitution">Substitution</button>
+            <button class="chip" data-filter="elimination">Elimination</button>
+            <button class="chip" data-filter="esterification">Esterification</button>
+            <button class="chip" data-filter="acid-base">Acid-Base</button>
+        </div>
+
+        <!-- Combustion Reactions -->
+        <section class="category" data-category="combustion">
+            <h2 class="category-title">Combustion Reactions</h2>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>C + O₂</span>
+                    <span class="arrow">→</span>
+                    <span>CO₂ + heat and light</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>CH₄ + 2O₂</span>
+                    <span class="arrow">→</span>
+                    <span>CO₂ + 2H₂O + heat and light</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>CH₃CH₂OH + 3O₂</span>
+                    <span class="arrow">→</span>
+                    <span>2CO₂ + 3H₂O + heat and light</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>2C₂H₂ + 5O₂</span>
+                    <span class="arrow">→</span>
+                    <span>4CO₂ + 2H₂O</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Oxidation Reactions -->
+        <section class="category" data-category="oxidation">
+            <h2 class="category-title">Oxidation Reactions</h2>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>CH₃CH₂OH</span>
+                    <div>
+                        <div class="conditions">Alkaline KMnO₄ + Heat</div>
+                        <span class="arrow">→</span>
+                        <div class="conditions">Or Acidified K₂Cr₂O₇ + Heat</div>
+                    </div>
+                    <span>CH₃COOH</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Substitution Reactions -->
+        <section class="category" data-category="substitution">
+            <h2 class="category-title">Substitution Reactions</h2>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>CH₄ + Cl₂</span>
+                    <div>
+                        <span class="arrow">→</span>
+                        <div class="conditions">(in the presence of sunlight)</div>
+                    </div>
+                    <span>CH₃Cl + HCl</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Elimination Reactions -->
+        <section class="category" data-category="elimination">
+            <h2 class="category-title">Elimination Reactions</h2>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>CH₃CH₂OH</span>
+                    <div>
+                        <div class="conditions">Hot conc H₂SO₄</div>
+                        <span class="arrow">→</span>
+                    </div>
+                    <span>CH₂=CH₂ + H₂O</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Esterification Reactions -->
+        <section class="category" data-category="esterification">
+            <h2 class="category-title">Esterification Reactions</h2>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>CH₃COOH + CH₃CH₂OH</span>
+                    <div>
+                        <div class="conditions">Acid</div>
+                        <span class="arrow">→</span>
+                    </div>
+                    <span>CH₃COOC₂H₅</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>CH₃COOC₂H₅</span>
+                    <div>
+                        <div class="conditions">NaOH</div>
+                        <span class="arrow">→</span>
+                    </div>
+                    <span>C₂H₅OH + CH₃COOH</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Acid-Base Reactions -->
+        <section class="category" data-category="acid-base">
+            <h2 class="category-title">Acid-Base Reactions</h2>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>NaOH + CH₃COOH</span>
+                    <span class="arrow">→</span>
+                    <span>CH₃COONa + H₂O</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>2CH₃COOH + Na₂CO₃</span>
+                    <span class="arrow">→</span>
+                    <span>2CH₃COONa + H₂O + CO₂</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>CH₃COOH + NaHCO₃</span>
+                    <span class="arrow">→</span>
+                    <span>CH₃COONa + H₂O + CO₂</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Common Compounds -->
+        <section class="category">
+            <h2 class="category-title">Common Compounds</h2>
+            <div class="compound-list">
+                <div class="compound-item">Acetic acid/Ethanoic acid - CH₃COOH</div>
+                <div class="compound-item">Chloroform - CHCl₃</div>
+                <div class="compound-item">Ammonia - NH₃</div>
+                <div class="compound-item">Methane - CH₄</div>
+                <div class="compound-item">Ethane - C₂H₆</div>
+                <div class="compound-item">Propane - C₃H₈</div>
+                <div class="compound-item">Butane - C₄H₁₀</div>
+                <div class="compound-item">Pentane - C₅H₁₂</div>
+                <div class="compound-item">Hexane - C₆H₁₄</div>
+                <div class="compound-item">Cyclohexane - C₆H₁₂</div>
+                <div class="compound-item">Benzene - C₆H₆</div>
+                <div class="compound-item">Methanol - CH₃OH</div>
+                <div class="compound-item">Ethanol - CH₃CH₂OH</div>
+                <div class="compound-item">Propanol - C₃H₇OH</div>
+                <div class="compound-item">Butanol - C₄H₉OH</div>
+                <div class="compound-item">Cyclopentane - C₅H₁₀</div>
+                <div class="compound-item">Bromopentane - C₅H₁₁Br</div>
+                <div class="compound-item">Butanone - C₄H₈O</div>
+                <div class="compound-item">Hexanal - C₆H₁₂O</div>
+                <div class="compound-item">Sodium ethoxide - CH₃CH₂ONa</div>
+                <div class="compound-item">Sodium acetate - CH₃COONa</div>
+                <div class="compound-item">Ester - CH₃COOC₂H₅</div>
+            </div>
+        </section>
+
+<div class="learning-resources">
+        <h2 class="resources-title">Learning Resources</h2>
+        <div class="resources-buttons">
+            <a href="https://www.whatsapp.com/channel/0029Vb3QDu17YSd1brABFi1d" class="resource-button whatsapp-button">
+                <span class="button-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                </span>
+                Join WhatsApp Channel
+            </a>
+            <a href="https://www.youtube.com/@simplifiedmindssslc" class="resource-button video-button">
+                <span class="button-icon">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 4-8 4z"/>
+                    </svg>
+                </span>
+                Video Lectures
+            </a>
+        </div>
+    </div>
+    </main>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        function toggleTheme() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Filter Functionality
+        const chips = document.querySelectorAll('.chip');
+        const categories = document.querySelectorAll('.category');
+
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                // Remove active class from all chips
+                chips.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked chip
+                chip.classList.add('active');
+                
+                const filter = chip.getAttribute('data-filter');
+                
+                // Show/hide categories based on filter
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    if (filter === 'all' || categoryType === filter) {
+                        category.style.display = 'block';
+                    } else if (categoryType) { // Only hide if it has a category type
+                        category.style.display = 'none';
+                    }
+                });
+            });
+        });
+</script>
+</body>
+</html>

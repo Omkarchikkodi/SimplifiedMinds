@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemical Reactions - Interactive Guide</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/14.0.0/material-components-web.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root[data-theme="light"] {
+            --theme-primary: #2196f3;
+            --theme-background: #fafafa;
+            --theme-surface: #ffffff;
+            --theme-text: #000000;
+            --theme-secondary-text: #666666;
+            --theme-border: #e0e0e0;
+            --theme-hover: #f5f5f5;
+        }
+
+        :root[data-theme="dark"] {
+            --theme-primary: #90caf9;
+            --theme-background: #121212;
+            --theme-surface: #1e1e1e;
+            --theme-text: #ffffff;
+            --theme-secondary-text: #aaaaaa;
+            --theme-border: #333333;
+            --theme-hover: #2d2d2d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--theme-background);
+            color: var(--theme-text);
+            line-height: 1.6;
+        }
+
+        .top-bar {
+            background-color: var(--theme-primary);
+            color: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .theme-toggle {
+            background-color: var(--theme-surface);
+            color: var(--theme-primary);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .main-content {
+            margin-top: 80px;
+            padding: 24px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: var(--theme-surface);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .chip {
+            padding: 8px 16px;
+            border-radius: 16px;
+            background: var(--theme-hover);
+            color: var(--theme-text);
+            border: 1px solid var(--theme-border);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chip.active {
+            background: var(--theme-primary);
+            color: white;
+            border-color: var(--theme-primary);
+        }
+
+        .reaction-card {
+            background: var(--theme-surface);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .reaction-equation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--theme-hover);
+            border-radius: 4px;
+            font-size: 1.1em;
+        }
+
+        .conditions {
+            color: var(--theme-primary);
+            font-size: 0.9em;
+            text-align: center;
+            margin: 4px 0;
+        }
+
+        .category-title {
+            color: var(--theme-primary);
+            margin: 32px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--theme-primary);
+        }
+
+        .compound-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .compound-item {
+            background: var(--theme-surface);
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid var(--theme-border);
+        }
+
+        .arrow {
+            font-size: 1.5em;
+            color: var(--theme-primary);
+        }
+    </style>
+</head>
+<body>
+    <header class="top-bar">
+        <h1>Chemical Reactions Guide</h1>
+        <button class="theme-toggle" id="themeToggle">Switch Theme</button>
+    </header>
+
+    <main class="main-content">
+        <div class="filter-chips">
+            <button class="chip active" data-filter="all">All Reactions</button>
+            <button class="chip" data-filter="combination">Combination</button>
+            <button class="chip" data-filter="decomposition">Decomposition</button>
+            <button class="chip" data-filter="displacement">Displacement</button>
+            <button class="chip" data-filter="oxidation-reduction">Oxidation-Reduction</button>
+        </div>
+
+        <!-- Combination Reactions -->
+        <section class="category" data-category="general">
+            <h2 class="category-title">Important General Reactions</h2>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>2Mg + O₂</span>
+                    <span class="arrow">→</span>
+                    <span>2MgO</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>Zn + H₂SO₄</span>
+                    <span class="arrow">→</span>
+                    <span>ZnSO₄ + H₂</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>3Fe + 4H₂O</span>
+                    <span class="arrow">→</span>
+                    <span>Fe₃O₄ + 4H₂</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>CO(g) + 2H₂(g)</span>
+                    <div>
+                        <div class="conditions">340 atm</div>
+                        <span class="arrow">→</span>
+                    </div>
+                    <span>CH₃OH(l)</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>6CO₂(aq) + 6H₂O(l)</span>
+                    <div>
+                        <div class="conditions">Sunlight</div>
+                        <div class="conditions">Chlorophyll</div>
+                        <span class="arrow">→</span>
+                    </div>
+                    <span>C₆H₁₂O₆(aq) + 6O₂</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Combination Reactions -->
+        <section class="category" data-category="combination">
+            <h2 class="category-title">Combination Reactions</h2>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>2H₂(g) + O₂(g)</span>
+                    <span class="arrow">→</span>
+                    <span>2H₂O(l)</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>C(s) + O₂(g)</span>
+                    <span class="arrow">→</span>
+                    <span>CO₂(g)</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>CH₄(g) + 2O₂(g)</span>
+                    <span class="arrow">→</span>
+                    <span>CO₂(g) + 2H₂O(g)</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>CaO(s) + H₂O(l)</span>
+                    <span class="arrow">→</span>
+                    <span>Ca(OH)₂(aq)</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>Ca(OH)₂(aq) + CO₂(g)</span>
+                    <span class="arrow">→</span>
+                    <span>CaCO₃(s) + H₂O(l)</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>C₆H₁₂O₆(aq) + 6O₂(aq)</span>
+                    <span class="arrow">→</span>
+                    <span>6CO₂(aq) + 6H₂O(l) + energy</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Decomposition Reactions -->
+        <section class="category" data-category="decomposition">
+            <h2 class="category-title">Decomposition Reactions</h2>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>2FeSO₄(s)</span>
+                    <div>
+                        <div class="conditions">Heat</div>
+                        <span class="arrow">→</span>
+                    </div>
+                    <span>Fe₂O₃(s) + SO₂(g) + SO₃(g)</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>CaCO₃(s)</span>
+                    <div>
+                        <div class="conditions">Heat</div>
+                        <span class="arrow">→</span>
+                    </div>
+                    <span>CaO(s) + CO₂(g)</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>2Pb(NO₃)₂(s)</span>
+                    <div>
+                        <div class="conditions">Heat</div>
+                        <span class="arrow">→</span>
+                    </div>
+                    <span>2PbO(s) + 4NO₂(g) + O₂(g)</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>2AgCl(s)</span>
+                    <div>
+                        <div class="conditions">Sunlight</div>
+                        <span class="arrow">→</span>
+                    </div>
+                    <span>2Ag(s) + Cl₂(g)</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>2AgBr(s)</span>
+                    <div>
+                        <div class="conditions">Sunlight</div>
+                        <span class="arrow">→</span>
+                    </div>
+                    <span>2Ag(s) + Br₂(g)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Displacement Reactions -->
+        <section class="category" data-category="displacement">
+            <h2 class="category-title">Displacement Reactions</h2>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>Fe(s) + CuSO₄(aq)</span>
+                    <span class="arrow">→</span>
+                    <span>FeSO₄(aq) + Cu(s)</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>Zn(s) + CuSO₄(aq)</span>
+                    <span class="arrow">→</span>
+                    <span>ZnSO₄(aq) + Cu(s)</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>Pb(s) + CuCl₂(aq)</span>
+                    <span class="arrow">→</span>
+                    <span>PbCl₂(aq) + Cu(s)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Double Displacement Reactions -->
+        <section class="category" data-category="displacement">
+            <h2 class="category-title">Double Displacement Reactions</h2>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>Na₂SO₄(aq) + BaCl₂(aq)</span>
+                    <span class="arrow">→</span>
+                    <span>BaSO₄(s) + 2NaCl(aq)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Oxidation and Reduction Reactions -->
+        <section class="category" data-category="oxidation-reduction">
+            <h2 class="category-title">Oxidation and Reduction Reactions</h2>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>2Cu + O₂</span>
+                    <span class="arrow">→</span>
+                    <span>2CuO</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>CuO + H₂</span>
+                    <span class="arrow">→</span>
+                    <span>Cu + H₂O</span>
+                </div>
+            </div>
+            <div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>ZnO + C</span>
+                    <span class="arrow">→</span>
+                    <span>Zn + CO</span>
+                </div>
+            </div>
+<div class="reaction-card">
+                <div class="reaction-equation">
+                    <span>MnO₂ + 4HCl</span>
+                    <span class="arrow">→</span>
+                    <span>MnCl₂ + 2H₂O + Cl₂</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Common Compounds -->
+        <section class="category">
+            <h2 class="category-title">Common Compounds and Their Colors</h2>
+            <div class="compound-list">
+                <div class="compound-item">Quick lime - CaO</div>
+                <div class="compound-item">Slaked lime, Calcium hydroxide - Ca(OH)₂</div>
+                <div class="compound-item">Calcium carbonate - CaCO₃</div>
+                <div class="compound-item">Glucose - C₆H₁₂O₆</div>
+                <div class="compound-item">Ferrous sulphate crystals - FeSO₄.7H₂O (Green color)</div>
+                <div class="compound-item">Ferric oxide - Fe₂O₃</div>
+                <div class="compound-item">Sulphur dioxide - SO₂</div>
+                <div class="compound-item">Sulphur trioxide - SO₃</div>
+                <div class="compound-item">Lead nitrate - Pb(NO₃)₂</div>
+                <div class="compound-item">Lead oxide - PbO</div>
+                <div class="compound-item">Nitrogen dioxide - NO₂ (Brown fumes)</div>
+                <div class="compound-item">Silver chloride - AgCl</div>
+                <div class="compound-item">Silver bromide - AgBr</div>
+                <div class="compound-item">Copper sulphate - CuSO₄ (Blue color)</div>
+                <div class="compound-item">Iron sulphate - FeSO₄</div>
+                <div class="compound-item">Zinc sulphate - ZnSO₄</div>
+                <div class="compound-item">Copper chloride - CuCl₂</div>
+                <div class="compound-item">Lead chloride - PbCl₂</div>
+                <div class="compound-item">Sodium sulphate - Na₂SO₄</div>
+                <div class="compound-item">Barium chloride - BaCl₂</div>
+                <div class="compound-item">Barium sulphate - BaSO₄</div>
+                <div class="compound-item">Sodium chloride - NaCl</div>
+                <div class="compound-item">Copper(II) oxide - CuO</div>
+                <div class="compound-item">Zinc oxide - ZnO</div>
+                <div class="compound-item">Manganese(IV) oxide - MnO₂</div>
+                <div class="compound-item">Manganese(II) chloride - MnCl₂</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        function toggleTheme() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Filter Functionality
+        const chips = document.querySelectorAll('.chip');
+        const categories = document.querySelectorAll('.category');
+
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                
+                const filter = chip.getAttribute('data-filter');
+                
+                categories.forEach(category => {
+                    const categoryType = category.getAttribute('data-category');
+                    if (filter === 'all' || categoryType === filter) {
+                        category.style.display = 'block';
+                    } else if (categoryType) {
+                        category.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,528 @@
+:root {
+    --primary: #E67E22;
+    --light: #f3f4f6;
+    --dark: #1f2937;
+    --brand-yellow: #FFD700;
+    --brand-red: #FF0000;
+    --youtube: #FF0000;
+    --blue: #4285F4;
+    --carbon: #DB4437;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background: var(--light);
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.brand-header {
+    background: white;
+    padding: 1rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Ensures spacing between brand and buttons */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.5s ease-out;
+}
+
+.brand-container {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.brand-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+#auth-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Adds spacing between buttons */
+}
+
+#auth-button, 
+#user-info button {
+    background: #e63946;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+#auth-button:hover, 
+#user-info button:hover {
+    background: #d62839;
+}
+
+#user-info {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+#user-name {
+    font-weight: bold;
+}
+
+#user-email {
+    font-size: 14px;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+button {
+    all: unset; /* Removes all button styling */
+    cursor: pointer; /* Keeps the pointer cursor */
+}
+
+button:focus {
+    outline: none; /* Removes focus outline */
+}
+
+
+/* Dark mode options */
+
+/* Dark Mode Styles */
+.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+/* Dark mode for the header */
+.dark-mode .brand-header {
+    background-color: #1a1a1a; /* Darker shade for the header */
+    color: #ffffff;
+}
+
+.dark-mode .card {
+    background-color: #1a1a1a; /* Darker shade for the header */
+    color: #ffffff;
+}
+
+.dark-mode .chapter-card {
+    background-color: #3c3b3b; /* Darker shade for the header */
+    color: #ffffff;
+}
+
+.dark-mode .chapter-card:hover .chapter-name {
+    color: rgb(247, 245, 245);
+}
+
+/* Dark mode for h2 and h3 elements */
+.dark-mode h2 {
+    color: #f2f2f2; /* Light shade for headings */
+}
+
+.dark-mode h3 {
+    color: #d3d3d3; /* Slightly darker shade for subheadings */
+}
+
+.dark-mode p{
+    color: #b0afaf; /* Slightly darker shade for subheadings */
+}
+#dark-mode-toggle {
+    top: 20px;        /* Distance from the top */
+    right: 20px;      /* Distance from the right */
+    padding: 6px 12px;
+    background: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 15px;
+    transition: 0.3s;
+    z-index: 1000; /* Ensures it's above other elements */
+    width: auto;   /* Prevents it from stretching */
+    min-width: 100px;
+}
+
+#dark-mode-toggle:hover {
+    background: #d62839;
+}
+
+.brand-simplified {
+    color: var(--brand-yellow);
+}
+
+.brand-minds {
+    color: var(--brand-red);
+}
+
+.container {
+    width: 100%;
+    padding: 1rem;
+    margin: 0 auto;
+}
+
+.header {
+    background: linear-gradient(135deg, var(--primary) 0%, #F39C12 100%);
+    color: white;
+    padding: 2rem 1rem;
+    text-align: center;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+/* popup  containeer */
+
+
+/* Popup Container */
+.popup-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Popup Box */
+.popup-box {
+    background: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Popup Heading */
+.popup-box h2 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Popup Paragraph */
+.popup-box p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+/* Popup Buttons */
+.popup-buttons {
+    margin-top: 15px;
+}
+
+.popup-buttons button {
+    background: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.popup-buttons button:hover {
+    background: #0056b3;
+}
+
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    margin: 1rem 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 100%;
+}
+
+.section-title {
+    margin-bottom: 0.8rem;
+    font-size: 1.2rem;
+    color: var(--dark);
+}
+
+.chapter-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.chapter-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none !important;
+    color: inherit;
+}
+
+.chapter-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.chapter-card.math {
+    border-left: 3px solid var(--primary);
+}
+
+.chapter-card.electricity,
+.chapter-card.light {
+    border-left: 3px solid var(--blue);
+}
+
+.chapter-card.carbon {
+    border-left: 3px solid var(--carbon);
+}
+
+.chapter-name {
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+    color: var(--dark);
+    text-decoration: none;
+}
+
+.chapter-card:hover .chapter-name {
+    color: var(--dark);
+}
+
+.question-count {
+    font-size: 0.9rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.question-count::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--primary);
+    border-radius: 50%;
+}
+
+.tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.tab {
+    padding: 0.8rem;
+    border-radius: 8px;
+    background: var(--primary);
+    text-decoration: none;
+    color: white;
+    font-size: 0.9rem;
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+    transition: all 0.3s;
+    border-color: var(--primary);
+
+}
+
+.tabpyq {
+    padding: 0.8rem;
+    border-radius: 8px;
+    background: var(--blue);
+    text-decoration: none;
+    color: white;
+    font-size: 0.9rem;
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+    transition: all 0.3s;
+}
+
+.tabpyq:hover {
+    background: #42508e;
+    transform: translateY(-2px);
+}
+
+.tabdiagrams {
+    padding: 0.8rem;
+    border-radius: 8px;
+    background: var(--carbon);
+    text-decoration: none;
+    color: white;
+    font-size: 0.9rem;
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+    transition: all 0.3s;
+}
+
+.tabdiagrams:hover {
+    background: #f05d50;
+    transform: translateY(-2px);
+}
+
+.tabformulas {
+    padding: 0.8rem;
+    border-radius: 8px;
+    background: var(--dark);
+    text-decoration: none;
+    color: white;
+    font-size: 0.9rem;
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+    transition: all 0.3s;
+}
+
+.tabformulas:hover {
+    background: #3a4d68;
+    transform: translateY(-2px);
+}
+
+.tab:hover {
+    background: #d35400;
+    transform: translateY(-2px);
+}
+
+.resources {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+}
+
+.resource-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: transform 0.2s;
+}
+
+.resource-btn:hover {
+    transform: translateY(-2px);
+}
+
+.whatsapp-btn {
+    background: #25D366;
+    color: white;
+}
+
+.video-btn {
+    background: var(--youtube);
+    color: white;
+}
+
+.social-icon {
+    width: 24px;
+    height: 24px;
+}
+
+@media (min-width: 640px) {
+    .chapter-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .resources {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1024px;
+        margin: 0 auto;
+    }
+    
+    .chapter-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+}
+
+.countdown {
+display: flex;
+justify-content: center;
+gap: 1rem;
+margin: 1rem 0;
+}
+
+.countdown-item {
+display: flex;
+flex-direction: column;
+align-items: center;
+min-width: 60px;
+}
+
+.countdown-item span:first-child {
+font-size: 2rem;
+font-weight: bold;
+color: var(--primary);
+}
+
+.label {
+font-size: 0.8rem;
+color: #666;
+}
+.countdown-container {
+text-align: center;
+}
+
+.countdown-container .section-title {
+margin-bottom: 1.2rem;
+font-size: 1.4rem;
+}

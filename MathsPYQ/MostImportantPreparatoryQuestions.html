@@ -1,0 +1,2148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Quiz Application</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --share-color: #9b59b6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .quiz-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .question-container {
+            min-height: 200px;
+            margin-bottom: 20px;
+        }
+        
+        .question {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .options {
+            margin-bottom: 15px;
+        }
+        
+        .option-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            cursor: default;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option-label {
+            margin-left: 10px;
+            flex: 1;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .progress-container {
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align: right;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        
+        .section-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .section-btn {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .section-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .section-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* For mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .quiz-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* For math equations */
+        .math {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+        }
+        
+        .fraction {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+        }
+        
+        .fraction > span {
+            display: block;
+        }
+        
+        .fraction span.frac-line {
+            border-bottom: 1px solid;
+            margin: 0 3px;
+        }
+        
+        .fraction > span.frac-num {
+            border-bottom: 1px solid;
+        }
+        
+        .superscript {
+            position: relative;
+            top: -0.5em;
+            font-size: 0.8em;
+        }
+        
+        .subscript {
+            position: relative;
+            bottom: -0.5em;
+            font-size: 0.8em;
+        }
+        
+        .sqrt {
+            border-top: 1px solid;
+            padding: 0 3px;
+        }
+
+        .calculation-box {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* For two column layout in certain problems */
+        .two-column {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .column {
+            flex: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .two-column {
+                flex-direction: column;
+            }
+        }
+
+        /* Table styles for data problems */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 8px 12px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        /* Graph paper for graphical solutions */
+        .graph-paper {
+            width: 100%;
+            height: 300px;
+            background-color: #fff;
+            background-image:
+                linear-gradient(#eee 1px, transparent 1px),
+                linear-gradient(90deg, #eee 1px, transparent 1px);
+            background-size: 20px 20px;
+            border: 1px solid #ddd;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .graph-axis-x, .graph-axis-y {
+            position: absolute;
+            background-color: #000;
+        }
+        
+        .graph-axis-x {
+            width: 100%;
+            height: 2px;
+            top: 50%;
+        }
+        
+        .graph-axis-y {
+            height: 100%;
+            width: 2px;
+            left: 50%;
+        }
+        
+        /* Share button styles */
+        .share-btn {
+            background-color: var(--share-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .share-btn:hover {
+            background-color: #8e44ad;
+        }
+        
+        /* Share modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 550px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            transition: background-color 0.2s;
+        }
+        
+        .close:hover {
+            background-color: #e0e0e0;
+        }
+        
+        /* Question preview in modal */
+        .question-preview {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .question-preview h3 {
+            color: var(--dark-color);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .question-preview p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .modal-options {
+            margin-top: 10px;
+        }
+        
+        .modal-option {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+        
+        /* Share options */
+        .share-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        
+        .share-option {
+            flex: 1;
+            min-width: 100px;
+            max-width: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #eee;
+        }
+        
+        .share-option:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .share-option:active {
+            transform: translateY(0);
+        }
+        
+        .share-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+            transition: transform 0.2s;
+        }
+        
+        .share-option:hover .share-icon {
+            transform: scale(1.1);
+        }
+        
+        .share-whatsapp {
+            background-color: #25D366;
+        }
+        
+        .share-twitter {
+            background-color: #1DA1F2;
+        }
+        
+        .share-facebook {
+            background-color: #4267B2;
+        }
+        
+        .share-email {
+            background-color: #D44638;
+        }
+        
+        .share-copy {
+            background-color: #333;
+        }
+        
+        .share-qr {
+            background-color: #6c5ce7;
+        }
+        
+        /* QR Code container */
+        .qr-container {
+            margin-top: 20px;
+            text-align: center;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 15px auto;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        #download-qr {
+            background-color: var(--primary-color);
+            margin-top: 10px;
+        }
+        
+        /* Short URL container */
+        .short-url-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        
+        .url-box {
+            display: flex;
+            margin-top: 10px;
+        }
+        
+        .url-box input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 0.9rem;
+        }
+        
+        .url-box button {
+            border-radius: 0 4px 4px 0;
+            padding: 8px 15px;
+        }
+        
+        /* Copy message */
+        .copied-message {
+            display: none;
+            color: var(--success-color);
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            padding: 8px;
+            background-color: rgba(46, 204, 113, 0.1);
+            border-radius: 4px;
+        }
+        
+        /* Animation for copy feedback */
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        .fade-in-out {
+            animation: fadeInOut 2s ease-in-out;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .share-options {
+                gap: 8px;
+            }
+            
+            .share-option {
+                min-width: 80px;
+                padding: 8px 4px;
+                font-size: 0.8rem;
+            }
+            
+            .share-icon {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+                padding: 15px;
+            }
+            
+            .qr-code {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Math Quiz Application</h1>
+            <p>Self-study mathematics questions</p>
+        </header>
+
+        <div class="section-nav">
+            <button class="section-btn active" data-section="all">All Questions</button>
+            <button class="section-btn" data-section="mcq">Multiple Choice</button>
+            <button class="section-btn" data-section="short">Short Answer</button>
+            <button class="section-btn" data-section="calc">Calculations</button>
+            <button class="section-btn" data-section="proof">Proofs & Applications</button>
+            <button class="section-btn" data-section="complex">Complex Problems</button>
+        </div>
+
+        <button id="share-btn" class="btn share-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+            </svg>
+            Share Current Question
+        </button>
+
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h2 id="question-number">Question 1</h2>
+                <h3 id="question-type">Multiple Choice</h3>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="progress-bar"></div>
+                </div>
+                <div class="progress-text">Question <span id="current-question">1</span> of <span id="total-questions">0</span></div>
+            </div>
+
+            <div class="question-container">
+                <div class="question" id="question-text">
+                    Loading questions...
+                </div>
+
+                <div id="options-container" class="options">
+                    <!-- Options will be inserted here via JavaScript -->
+                </div>
+            </div>
+
+            <div class="navigation">
+                <button id="prev-btn" class="btn" disabled>Previous</button>
+                <button id="next-btn" class="btn">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="share-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Share This Question</h2>
+            <p>Choose how you'd like to share this math question:</p>
+            
+            <div class="question-preview">
+                <h3 id="modal-question-number">Question 1</h3>
+                <p id="modal-question-text"></p>
+                <div id="modal-options" class="modal-options"></div>
+            </div>
+            
+            <div class="share-options">
+                <div class="share-option" id="share-whatsapp">
+                    <div class="share-icon share-whatsapp">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+                        </svg>
+                    </div>
+                    WhatsApp
+                </div>
+                
+                <div class="share-option" id="share-twitter">
+                    <div class="share-icon share-twitter">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
+                        </svg>
+                    </div>
+                    Twitter
+                </div>
+                
+                <div class="share-option" id="share-facebook">
+                    <div class="share-icon share-facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+                        </svg>
+                    </div>
+                    Facebook
+                </div>
+                
+                <div class="share-option" id="share-email">
+                    <div class="share-icon share-email">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+                        </svg>
+                    </div>
+                    Email
+                </div>
+                
+                <div class="share-option" id="share-copy">
+                    <div class="share-icon share-copy">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                        </svg>
+                    </div>
+                    Copy Link
+                </div>
+                
+                <div class="share-option" id="share-qr">
+                    <div class="share-icon share-qr">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M6 0h4a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2zm1 1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H7zm1 9H2a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1zm7-9a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zm-1 9a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-2z"/>
+                        </svg>
+                    </div>
+                    Generate QR
+                </div>
+            </div>
+            
+            <div id="qr-container" class="qr-container" style="display: none;">
+                <h3>Scan QR Code to Share</h3>
+                <div id="qr-code" class="qr-code"></div>
+                <button id="download-qr" class="btn">Download QR Code</button>
+            </div>
+            
+            <div id="short-url-container" class="short-url-container" style="display: none;">
+                <h3>Shortened URL</h3>
+                <div class="url-box">
+                    <input id="short-url" type="text" readonly>
+                    <button id="copy-short-url" class="btn">Copy</button>
+                </div>
+            </div>
+            
+            <p id="copied-message" class="copied-message">Link copied to clipboard!</p>
+        </div>
+    </div>
+
+    <script>
+        // Quiz questions data (shortened version for brevity)
+        const quizData = [
+    // Section I: Multiple Choice Questions
+    {
+        question: "The rational number among the following is:",
+        options: [
+            "(A) √2",
+            "(B) √9",
+            "(C) √11",
+            "(D) √15"
+        ],
+        correctAnswer: "(B) √9",
+        explanation: "√9 = 3, which is a rational number because it can be expressed as a ratio of integers.",
+        type: "mcq",
+        section: "mcq"
+    },
+    {
+        question: "The graph of a quadratic polynomial passes through the points (1,0), (3,0), and (2,1). The polynomial is:",
+        options: [
+            "(A) P(x) = x² - 4x + 3",
+            "(B) P(x) = x² - 4x + 4",
+            "(C) P(x) = -x² + 4x - 3",
+            "(D) P(x) = x² - 2x"
+        ],
+        correctAnswer: "(A) P(x) = x² - 4x + 3",
+        explanation: "We can determine this by creating a system of equations and solving for the coefficients.",
+        type: "mcq",
+        section: "mcq"
+    },
+    {
+        question: "If one equation of a pair of linear equations is 2x + 3y - 8 = 0, then which of the following equations will form a pair of parallel lines?",
+        options: [
+            "(A) 4x + 6y - 16 = 0",
+            "(B) 6x + 9y - 18 = 0",
+            "(C) 2x - 3y + 4 = 0",
+            "(D) 4x - 6y + 12 = 0"
+        ],
+        correctAnswer: "(A) 4x + 6y - 16 = 0",
+        explanation: "For lines to be parallel, they must have the same slope but different y-intercepts.",
+        type: "mcq",
+        section: "mcq"
+    },
+    {
+        question: "The nth term of an arithmetic progression is 2n + 3. The sum of its first 10 terms is:",
+        options: [
+            "(A) 130",
+            "(B) 140",
+            "(C) 150",
+            "(D) 160"
+        ],
+        correctAnswer: "(B) 140",
+        explanation: "Using the formula for sum of first n terms of an AP.",
+        type: "mcq",
+        section: "mcq"
+    },
+    {
+        question: "The distance between the points (3, 4) and (6, 8) is:",
+        options: [
+            "(A) 3",
+            "(B) 4",
+            "(C) 5",
+            "(D) 6"
+        ],
+        correctAnswer: "(C) 5",
+        explanation: "Using the distance formula between two points.",
+        type: "mcq",
+        section: "mcq"
+    },
+    {
+        question: "If sin θ = 3/5, then the value of cos θ is:",
+        options: [
+            "(A) 4/5",
+            "(B) 3/5",
+            "(C) 5/3",
+            "(D) 5/4"
+        ],
+        correctAnswer: "(A) 4/5",
+        explanation: "Using the Pythagorean identity sin²θ + cos²θ = 1.",
+        type: "mcq",
+        section: "mcq"
+    },
+    {
+        question: "The surface area of a sphere of radius r units is:",
+        options: [
+            "(A) 4πr²",
+            "(B) 4πr³",
+            "(C) 4/3 πr³",
+            "(D) 2πr²"
+        ],
+        correctAnswer: "(A) 4πr²",
+        explanation: "The formula for the surface area of a sphere.",
+        type: "mcq",
+        section: "mcq"
+    },
+    {
+        question: "In ΔABC ~ ΔPQR, if AB = 3 cm, BC = 4 cm, AC = 5 cm and PQ = 6 cm, then QR equals:",
+        options: [
+            "(A) 5 cm",
+            "(B) 8 cm",
+            "(C) 10 cm",
+            "(D) 12 cm"
+        ],
+        correctAnswer: "(B) 8 cm",
+        explanation: "Using the property of similar triangles that corresponding sides are proportional.",
+        type: "mcq",
+        section: "mcq"
+    },
+    {
+        question: "The HCF of 84 and 108 is:",
+        options: [
+            "(A) 12",
+            "(B) 24",
+            "(C) 18",
+            "(D) 36"
+        ],
+        correctAnswer: "(A) 12",
+        explanation: "Find common factors of both numbers.",
+        type: "mcq",
+        section: "mcq"
+    },
+    {
+        question: "If the sum of the first 'n' natural numbers is n(n+1)/2, what is the sum of the first 10 natural numbers?",
+        options: [
+            "(A) 45",
+            "(B) 55",
+            "(C) 60",
+            "(D) 50"
+        ],
+        correctAnswer: "(B) 55",
+        explanation: "Substitute n = 10 into the formula.",
+        type: "mcq",
+        section: "mcq"
+    },
+    {
+        question: "The quadratic equation x² - 5x + 6 = 0 has roots:",
+        options: [
+            "(A) 1, 6",
+            "(B) 2, 3",
+            "(C) -2, -3",
+            "(D) 3, 6"
+        ],
+        correctAnswer: "(B) 2, 3",
+        explanation: "By factoring or using the quadratic formula.",
+        type: "mcq",
+        section: "mcq"
+    },
+    {
+        question: "If sin² A + cos² A = ?, then:",
+        options: [
+            "(A) 0",
+            "(B) 1",
+            "(C) 2",
+            "(D) None"
+        ],
+        correctAnswer: "(B) 1",
+        explanation: "This is a fundamental trigonometric identity.",
+        type: "mcq",
+        section: "mcq"
+    },
+    {
+        question: "The sum of the probability of all possible outcomes of an event is:",
+        options: [
+            "(A) 0",
+            "(B) 1",
+            "(C) 2",
+            "(D) Infinity"
+        ],
+        correctAnswer: "(B) 1",
+        explanation: "A fundamental rule of probability.",
+        type: "mcq",
+        section: "mcq"
+    },
+    {
+        question: "The number of zeroes of y = (x - 2)(x + 3)(x - 5) is:",
+        options: [
+            "(A) 1",
+            "(B) 2",
+            "(C) 3",
+            "(D) 4"
+        ],
+        correctAnswer: "(C) 3",
+        explanation: "Each factor corresponds to a zero of the polynomial.",
+        type: "mcq",
+        section: "mcq"
+    },
+
+    // Section II: Short Answer Questions
+    {
+        question: "Write the HCF of 36 and 48.",
+        shortAnswer: true,
+        correctAnswer: "12",
+        explanation: "Find the highest common factor by prime factorization or the Euclidean algorithm.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "Write the standard form of a quadratic equation.",
+        shortAnswer: true,
+        correctAnswer: "ax² + bx + c = 0",
+        explanation: "Where a, b, and c are constants, and a ≠ 0.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "If two linear equations have the same slope but different y-intercepts, how many solutions do they have?",
+        shortAnswer: true,
+        correctAnswer: "0",
+        explanation: "Parallel lines never intersect.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "Write the nature of roots of the quadratic equation x² - 16 = 0.",
+        shortAnswer: true,
+        correctAnswer: "real and distinct",
+        explanation: "The discriminant is positive.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "Find the coordinates of the midpoint of the line segment joining the points (2, 3) and (6, 7).",
+        shortAnswer: true,
+        correctAnswer: "(4, 5)",
+        explanation: "Using the midpoint formula.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "What is the value of tan 45° + cot 45°?",
+        shortAnswer: true,
+        correctAnswer: "2",
+        explanation: "Using properties of complementary angles.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "If P(E) = 0.35, find P(not E).",
+        shortAnswer: true,
+        correctAnswer: "0.65",
+        explanation: "The sum of the probabilities of an event and its complement is 1.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "If median = 24 and mode = 26, find the mean.",
+        shortAnswer: true,
+        correctAnswer: "23",
+        explanation: "Using the relationship: Mode = 3Median - 2Mean.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "Find the HCF of 18 and 24.",
+        shortAnswer: true,
+        correctAnswer: "6",
+        explanation: "Find the highest common factor by prime factorization or the Euclidean algorithm.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "Write the formula to find the sum of the first 'n' terms of an AP.",
+        shortAnswer: true,
+        correctAnswer: "S_n = n/2[2a + (n-1)d]",
+        explanation: "Where a is the first term and d is the common difference.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "Find the probability of rolling an even number on a die.",
+        shortAnswer: true,
+        correctAnswer: "1/2",
+        explanation: "There are 3 even numbers out of 6 possible outcomes.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "Convert x² + 3x - 10 = 0 into factored form.",
+        shortAnswer: true,
+        correctAnswer: "(x + 5)(x - 2) = 0",
+        explanation: "By factoring the quadratic expression.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "Find the distance between (2, 3) and (5, 7).",
+        shortAnswer: true,
+        correctAnswer: "5",
+        explanation: "Using the distance formula.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "Find the surface area of a sphere with radius 7 cm.",
+        shortAnswer: true,
+        correctAnswer: "616 cm²",
+        explanation: "Using the formula 4πr².",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "Find the roots of x² - 9 = 0.",
+        shortAnswer: true,
+        correctAnswer: "3, -3",
+        explanation: "By factoring or using the quadratic formula.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "Find the mean of: 5, 10, 15, 20, 25.",
+        shortAnswer: true,
+        correctAnswer: "15",
+        explanation: "Sum of values divided by the number of values.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "Find the volume of a cylinder with r = 7 cm, h = 10 cm.",
+        shortAnswer: true,
+        correctAnswer: "1540 cm³",
+        explanation: "Using the formula πr²h.",
+        type: "short",
+        section: "short"
+    },
+    {
+        question: "Find the mode of: 2, 3, 3, 4, 5, 3, 2, 3.",
+        shortAnswer: true,
+        correctAnswer: "3",
+        explanation: "The value that appears most frequently.",
+        type: "short",
+        section: "short"
+    },
+
+    // Section III: Calculation Questions
+    {
+        question: "Find the sum of the first 15 terms of the arithmetic progression 6, 9, 12, ...",
+        shortAnswer: true,
+        correctAnswer: "405",
+        explanation: "Using the formula for sum of AP with a=6 and d=3.",
+        type: "calculation",
+        section: "calc"
+    },
+    {
+        question: "Solve the following pair of linear equations: 3x + 2y = 14, 2x - 3y = -4",
+        shortAnswer: true,
+        correctAnswer: "x = 2, y = 4",
+        explanation: "Using elimination or substitution method.",
+        type: "calculation",
+        section: "calc"
+    },
+    {
+        question: "Find the roots of the quadratic equation 2x² - 7x + 6 = 0.",
+        shortAnswer: true,
+        correctAnswer: "x = 2, x = 3/2",
+        explanation: "Using the quadratic formula or factoring.",
+        type: "calculation",
+        section: "calc"
+    },
+    {
+        question: "Find the distance between the points (5, -1) and (2, 3).",
+        shortAnswer: true,
+        correctAnswer: "5",
+        explanation: "Using the distance formula.",
+        type: "calculation",
+        section: "calc"
+    },
+    {
+        question: "Find the coordinates of the point which divides the line joining (3, -5) and (7, 3) in the ratio 2:3 internally.",
+        shortAnswer: true,
+        correctAnswer: "(4.6, -1.8)",
+        explanation: "Using the section formula.",
+        type: "calculation",
+        section: "calc"
+    },
+    {
+        question: "In a triangle ABC, if sin A = 3/5, find the values of cos A and tan A.",
+        shortAnswer: true,
+        correctAnswer: "cos A = 4/5, tan A = 3/4",
+        explanation: "Using the Pythagorean identity and the definition of tangent.",
+        type: "calculation",
+        section: "calc"
+    },
+    {
+        question: "Solve the equation: x² + 5x + 6 = 0.",
+        shortAnswer: true,
+        correctAnswer: "x = -2, x = -3",
+        explanation: "By factoring or using the quadratic formula.",
+        type: "calculation",
+        section: "calc"
+    },
+    {
+        question: "In a triangle ABC, DE || BC where D is on AB and E is on AC. If AD = 4 cm, AB = 10 cm, and AE = 6 cm, find AC.",
+        shortAnswer: true,
+        correctAnswer: "15 cm",
+        explanation: "Using the basic proportionality theorem.",
+        type: "calculation",
+        section: "calc"
+    },
+    {
+        question: "Solve by elimination: 2x + y = 10, 3x - y = 5",
+        shortAnswer: true,
+        correctAnswer: "x = 3, y = 4",
+        explanation: "Add the equations to eliminate y.",
+        type: "calculation",
+        section: "calc"
+    },
+    {
+        question: "Solve x² - 5x + 6 = 0",
+        shortAnswer: true,
+        correctAnswer: "x = 2, x = 3",
+        explanation: "By factoring or using the quadratic formula.",
+        type: "calculation",
+        section: "calc"
+    },
+
+    // Section IV: Proof and Application Questions
+    {
+        question: "Find the zeroes of the polynomial P(x) = x² - 3x - 10 and verify the relationship between zeroes and coefficients.",
+        shortAnswer: true,
+        correctAnswer: "x = 5, x = -2",
+        explanation: "Find zeroes and verify that their sum and product match the coefficients.",
+        type: "proof",
+        section: "proof"
+    },
+    {
+        question: "The sum of two numbers is 27 and their product is 182. Find the numbers.",
+        shortAnswer: true,
+        correctAnswer: "13 and 14",
+        explanation: "Solve the system of equations x + y = 27 and xy = 182.",
+        type: "proof",
+        section: "proof"
+    },
+    {
+        question: "Prove that: (sin θ + cosec θ)² + (cos θ + sec θ)² = 7 + tan² θ + cot² θ",
+        shortAnswer: true,
+        correctAnswer: "Proof",
+        explanation: "Expand the left side and simplify using trigonometric identities.",
+        type: "proof",
+        section: "proof"
+    },
+    {
+        question: "Find the area of the triangle whose vertices are (2, 3), (4, 5), and (6, 1).",
+        shortAnswer: true,
+        correctAnswer: "10 square units",
+        explanation: "Using the formula for area of a triangle based on coordinates.",
+        type: "proof",
+        section: "proof"
+    },
+    {
+        question: "Calculate the mean of the following data: Class Interval: 10-20 (Frequency: 5), 20-30 (Frequency: 8), 30-40 (Frequency: 12), 40-50 (Frequency: 7), 50-60 (Frequency: 3)",
+        shortAnswer: true,
+        correctAnswer: "31.43",
+        explanation: "Using the formula for mean of grouped data.",
+        type: "proof",
+        section: "proof"
+    },
+    {
+        question: "A point P is 13 cm away from the center O of a circle of radius 5 cm. The length of the tangent drawn from P to the circle is:",
+        shortAnswer: true,
+        correctAnswer: "12 cm",
+        explanation: "Using the Pythagorean theorem in the right triangle formed.",
+        type: "proof",
+        section: "proof"
+    },
+    {
+        question: "Prove that the tangent at any point of a circle is perpendicular to the radius through the point of contact.",
+        shortAnswer: true,
+        correctAnswer: "Proof",
+        explanation: "Using properties of tangent lines and radii.",
+        type: "proof",
+        section: "proof"
+    },
+    {
+        question: "A box contains cards numbered from 1 to 25. If a card is drawn at random, find the probability of getting: i) a prime number ii) a multiple of 3",
+        shortAnswer: true,
+        correctAnswer: "i) 9/25 ii) 8/25",
+        explanation: "Count the number of favorable outcomes and divide by total outcomes.",
+        type: "proof",
+        section: "proof"
+    },
+    {
+        question: "In a triangle ABC, D is a point on BC such that ∠ADC = ∠BAC. Prove that AB · AC = BC · AD.",
+        shortAnswer: true,
+        correctAnswer: "Proof",
+        explanation: "Using similar triangles and angle properties.",
+        type: "proof",
+        section: "proof"
+    },
+
+    // Section V: Complex Problem-Solving Questions
+    {
+        question: "The 8th term of an arithmetic progression is 37 and the 15th term is 65. Find the AP and also find the sum of its first 20 terms.",
+        shortAnswer: true,
+        correctAnswer: "a = 9, d = 4, S₂₀ = 940",
+        explanation: "Find the first term and common difference, then calculate the sum.",
+        type: "complex",
+        section: "complex"
+    },
+    {
+        question: "Solve graphically the following system of linear equations: x + y = 5, 2x - y = 4",
+        shortAnswer: true,
+        correctAnswer: "x = 3, y = 2",
+        explanation: "Plot the lines and find the point of intersection.",
+        type: "complex",
+        section: "complex"
+    },
+    {
+        question: "A cylindrical tank has radius 7 m and height 6 m. Find the cost of painting its surface area (including top and bottom) at the rate of Rs. 5 per square meter.",
+        shortAnswer: true,
+        correctAnswer: "Rs. 2310",
+        explanation: "Calculate the total surface area (2πr² + 2πrh) and multiply by the rate.",
+        type: "complex",
+        section: "complex"
+    },
+    {
+        question: "From a point on the ground, the angles of elevation of the top and bottom of a flagstaff placed on the top of a 20 m high building are 60° and 45° respectively. Find the height of the flagstaff.",
+        shortAnswer: true,
+        correctAnswer: "11.7 m",
+        explanation: "Use trigonometry to find the height of the flagstaff.",
+        type: "complex",
+        section: "complex"
+    },
+    {
+        question: "State and prove the Basic Proportionality Theorem (Thales theorem).",
+        shortAnswer: true,
+        correctAnswer: "Proof",
+        explanation: "Statement and proof of the theorem about parallel lines cutting proportional segments.",
+        type: "complex",
+        section: "complex"
+    },
+    {
+        question: "The base of a triangle is 8 cm more than its height. If area = 60 cm², find base & height.",
+        shortAnswer: true,
+        correctAnswer: "h = 10 cm, b = 18 cm",
+        explanation: "Set up and solve the equation using the area formula.",
+        type: "complex",
+        section: "complex"
+    },
+    {
+        question: "A sector has radius 14 cm and angle 60°. Find the area.",
+        shortAnswer: true,
+        correctAnswer: "256.67 cm²",
+        explanation: "Using the formula for area of a sector: (θ/360) × πr².",
+        type: "complex",
+        section: "complex"
+    },
+    {
+        question: "The sum of the first 25 terms of an AP is 1000. Find the first term and common difference if the last term is 60.",
+        shortAnswer: true,
+        correctAnswer: "a = 20, d = 5/3",
+        explanation: "Set up and solve the system of equations using the sum formula and the last term.",
+        type: "complex",
+        section: "complex"
+    },
+    {
+        question: "Prove that the lengths of tangents drawn from an external point to a circle are equal.",
+        shortAnswer: true,
+        correctAnswer: "Proof",
+        explanation: "Using properties of tangents and congruent triangles.",
+        type: "complex",
+        section: "complex"
+    },
+    {
+        question: "A class has 50 students. Find the probability that a randomly chosen student has a birthday in January.",
+        shortAnswer: true,
+        correctAnswer: "1/12",
+        explanation: "Assuming uniform distribution of birthdays across months.",
+        type: "complex",
+        section: "complex"
+    },
+// Additional questions for the quizData array
+// Add these to your existing quizData array
+
+{
+    question: "Find the coordinates of the centroid of a triangle with vertices (2, 3), (4, 5), and (6, 7).",
+    shortAnswer: true,
+    correctAnswer: "(4, 5)",
+    explanation: "The centroid coordinates are found by averaging the x and y coordinates of the vertices.",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "Find the height of a cone with volume 314 cm³ and base radius 5 cm.",
+    shortAnswer: true,
+    correctAnswer: "12 cm",
+    explanation: "Using the formula for volume of a cone: V = (1/3)πr²h",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "The sum of two numbers is 30, and their product is 216. Find the numbers.",
+    shortAnswer: true,
+    correctAnswer: "12 and 18",
+    explanation: "Solving the system of equations x + y = 30 and xy = 216",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "Find the HCF of 52×2 and 25×5.",
+    shortAnswer: true,
+    correctAnswer: "5",
+    explanation: "Find the common prime factors with the lowest powers.",
+    type: "short",
+    section: "short"
+},
+{
+    question: "The sum of the first 'n' natural numbers is?",
+    shortAnswer: true,
+    correctAnswer: "n(n+1)/2",
+    explanation: "Using the formula for the sum of an arithmetic sequence.",
+    type: "short",
+    section: "short"
+},
+{
+    question: "If the HCF of two numbers is 1 and the product of the numbers is 20, then their LCM is?",
+    shortAnswer: true,
+    correctAnswer: "20",
+    explanation: "For any two numbers, product = HCF × LCM",
+    type: "short",
+    section: "short"
+},
+{
+    question: "The degree of the polynomial p(x)=x²−3x+2 is?",
+    shortAnswer: true,
+    correctAnswer: "2",
+    explanation: "The degree is determined by the highest power of the variable.",
+    type: "short",
+    section: "short"
+},
+{
+    question: "The zeroes of the polynomial x²−5x+6 are?",
+    shortAnswer: true,
+    correctAnswer: "2 and 3",
+    explanation: "By factoring the polynomial or using the quadratic formula.",
+    type: "short",
+    section: "short"
+},
+{
+    question: "If the common difference of an AP is 3, then what is a₁₀−a₅?",
+    shortAnswer: true,
+    correctAnswer: "15",
+    explanation: "Using the property that in an AP, aₙ - aₘ = (n-m)d",
+    type: "short",
+    section: "short"
+},
+{
+    question: "The nth term of an AP is given by aₙ=3n−1. Find the sum of the first 10 terms.",
+    shortAnswer: true,
+    correctAnswer: "145",
+    explanation: "Using the formula for sum of an AP: Sₙ = n/2[2a + (n-1)d]",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "Find the value of 'P' for which the quadratic equation Px²−2x+1=0 has no real roots.",
+    shortAnswer: true,
+    correctAnswer: "P < 1",
+    explanation: "For no real roots, the discriminant must be negative: b² - 4ac < 0",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "The distance between the points (2, 3) and (4, 1) is?",
+    shortAnswer: true,
+    correctAnswer: "2√2",
+    explanation: "Using the distance formula √[(x₂-x₁)² + (y₂-y₁)²]",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "The coordinates of the midpoint of the line segment joining the points (4, -2) and (6, 4) are?",
+    shortAnswer: true,
+    correctAnswer: "(5, 1)",
+    explanation: "Using the midpoint formula ((x₁+x₂)/2, (y₁+y₂)/2)",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "If the area of a triangle is 0, then the points are?",
+    shortAnswer: true,
+    correctAnswer: "collinear",
+    explanation: "When points are collinear, they form a line, not a triangle, so the area is 0.",
+    type: "short",
+    section: "short"
+},
+{
+    question: "In △ABC, DE∥BC. If AD=2 cm, DB=3 cm and AE=4 cm, then AC is?",
+    shortAnswer: true,
+    correctAnswer: "10 cm",
+    explanation: "Using the basic proportionality theorem (Thales theorem).",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "If sinθ=3/5, then the value of cosθ is?",
+    shortAnswer: true,
+    correctAnswer: "4/5",
+    explanation: "Using the Pythagorean identity sin²θ + cos²θ = 1",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "The value of tan45° is?",
+    shortAnswer: true,
+    correctAnswer: "1",
+    explanation: "A fundamental trigonometric value for 45 degrees.",
+    type: "short",
+    section: "short"
+},
+{
+    question: "If sin(90°−A)=cosA=1/2, then the value of A is?",
+    shortAnswer: true,
+    correctAnswer: "60°",
+    explanation: "Using the property sin(90°-A) = cosA and knowing cosA = 1/2",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "The angle of elevation of the top of a tower from a point on the ground is 30°. If the height of the tower is 10 m, then the distance of the point from the foot of the tower is?",
+    shortAnswer: true,
+    correctAnswer: "17.32 m",
+    explanation: "Using trigonometry in a right triangle: distance = height/tan(angle)",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "The radius of a circle is 7 cm. The area of the quadrant is?",
+    shortAnswer: true,
+    correctAnswer: "38.5 cm²",
+    explanation: "Using the formula for area of a quadrant: (1/4)πr²",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "The circumference of a circle is 88 cm. The radius of the circle is?",
+    shortAnswer: true,
+    correctAnswer: "14 cm",
+    explanation: "Using the formula for circumference: C = 2πr",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "The volume of a cylinder is 154 cm³. If the radius of the base is 7 cm, then the height of the cylinder is?",
+    shortAnswer: true,
+    correctAnswer: "1 cm",
+    explanation: "Using the formula for volume of a cylinder: V = πr²h",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "The surface area of a sphere is 616 cm². The radius of the sphere is?",
+    shortAnswer: true,
+    correctAnswer: "7 cm",
+    explanation: "Using the formula for surface area of a sphere: A = 4πr²",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "If the probability of an event is 0.7, then the probability of its complement is?",
+    shortAnswer: true,
+    correctAnswer: "0.3",
+    explanation: "The sum of the probabilities of an event and its complement is 1.",
+    type: "short",
+    section: "short"
+},
+{
+    question: "A die is thrown once. The probability of getting an even number is?",
+    shortAnswer: true,
+    correctAnswer: "1/2",
+    explanation: "There are 3 even numbers (2, 4, 6) out of 6 possible outcomes.",
+    type: "short",
+    section: "short"
+},
+{
+    question: "Two coins are tossed. The probability of getting at least one head is?",
+    shortAnswer: true,
+    correctAnswer: "3/4",
+    explanation: "The probability is 1 - P(no heads) = 1 - (1/4) = 3/4",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "Find the HCF and LCM of 12 and 18.",
+    shortAnswer: true,
+    correctAnswer: "HCF = 6, LCM = 36",
+    explanation: "Using prime factorization or the Euclidean algorithm.",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "Write the quadratic equation whose roots are 3 and -2.",
+    shortAnswer: true,
+    correctAnswer: "x² - x - 6 = 0",
+    explanation: "Using the formula (x - a)(x - b) = 0 where a and b are the roots.",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "Find the coordinates of the point which divides the line segment joining (1, 2) and (4, 5) in the ratio 2:1.",
+    shortAnswer: true,
+    correctAnswer: "(2, 3)",
+    explanation: "Using the section formula: ((mx₂ + nx₁)/(m+n), (my₂ + ny₁)/(m+n))",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "If tanθ=12/5, find sinθ.",
+    shortAnswer: true,
+    correctAnswer: "12/13",
+    explanation: "Using the relationship between sine and tangent.",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "The radius of a sphere is 7 cm. Find its surface area.",
+    shortAnswer: true,
+    correctAnswer: "616 cm²",
+    explanation: "Using the formula for surface area of a sphere: A = 4πr²",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "A die is thrown. Find the probability of getting a prime number.",
+    shortAnswer: true,
+    correctAnswer: "1/2",
+    explanation: "There are 3 prime numbers (2, 3, 5) out of 6 possible outcomes.",
+    type: "short",
+    section: "short"
+},
+{
+    question: "Find the 10th term of the AP: 2, 7, 12, ...",
+    shortAnswer: true,
+    correctAnswer: "47",
+    explanation: "Using the formula for the nth term of an AP: a₁ + (n-1)d",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "Solve graphically: x+y=6 and 2x−y=4",
+    shortAnswer: true,
+    correctAnswer: "x = 2, y = 4",
+    explanation: "Plot both lines and find the point of intersection.",
+    type: "complex",
+    section: "complex"
+},
+{
+    question: "Prove that the tangents drawn from an external point to a circle are equal.",
+    shortAnswer: true,
+    correctAnswer: "Proof",
+    explanation: "Using properties of tangents and congruent triangles.",
+    type: "proof",
+    section: "proof"
+},
+{
+    question: "Find the probability of getting a head when a coin is tossed twice.",
+    shortAnswer: true,
+    correctAnswer: "3/4",
+    explanation: "Probability of at least one head = 1 - P(no heads) = 1 - (1/2)² = 3/4",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "Find the area of a sector of a circle with radius 6 cm and angle 60°.",
+    shortAnswer: true,
+    correctAnswer: "6π cm²",
+    explanation: "Using the formula for area of a sector: (θ/360)πr²",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "Find the volume of a cone with radius 3 cm and height 7 cm.",
+    shortAnswer: true,
+    correctAnswer: "22 cm³",
+    explanation: "Using the formula for volume of a cone: V = (1/3)πr²h",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "A bag contains 3 red balls and 2 blue balls. Find the probability of drawing a red ball.",
+    shortAnswer: true,
+    correctAnswer: "3/5",
+    explanation: "Number of favorable outcomes divided by total number of outcomes.",
+    type: "short",
+    section: "short"
+},
+{
+    question: "Find the sum of the first 10 terms of the AP: 1, 3, 5, ...",
+    shortAnswer: true,
+    correctAnswer: "100",
+    explanation: "Using the formula Sₙ = n/2[2a + (n-1)d]",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "Find the 10th term of the AP: 2, 5, 8, ...",
+    shortAnswer: true,
+    correctAnswer: "29",
+    explanation: "Using the formula aₙ = a₁ + (n-1)d",
+    type: "calculation",
+    section: "calc"
+},
+{
+    question: "Solve the pair of linear equations by graphical method: x + y = 5 and 2x - y = 4",
+    shortAnswer: true,
+    correctAnswer: "x = 3, y = 2",
+    explanation: "Plot both lines and find the point of intersection.",
+    type: "complex",
+    section: "complex"
+},
+{
+    question: "The ratio of 11th and 8th terms of an arithmetic progression is 3:2. Find the ratio of the sum of the first 5 terms to the sum of the first 21 terms of it.",
+    shortAnswer: true,
+    correctAnswer: "5:42",
+    explanation: "First determine the relationship between a and d, then find the ratio of the sums.",
+    type: "complex",
+    section: "complex"
+},
+{
+    question: "Prove that 'If in two triangles, corresponding angles are equal, then their corresponding sides are in the same ratio (or in proportion) and hence the two triangles are similar'.",
+    shortAnswer: true,
+    correctAnswer: "Proof",
+    explanation: "Using properties of similar triangles and angle-side relationships.",
+    type: "proof",
+    section: "proof"
+},
+{
+    question: "State and prove Basic Proportionality theorem (Thales theorem).",
+    shortAnswer: true,
+    correctAnswer: "Proof",
+    explanation: "Statement and proof of the theorem about parallel lines cutting proportional segments.",
+    type: "proof",
+    section: "proof"
+},
+{
+    question: "Find the solution of the following pair of linear equations by the graphical method: x + y = 5 and x - y = 1",
+    shortAnswer: true,
+    correctAnswer: "x = 3, y = 2",
+    explanation: "Plot both lines and find the point of intersection.",
+    type: "complex",
+    section: "complex"
+}
+];
+
+        // Variables
+        let currentQuestionIndex = 0;
+        let currentSection = "all";
+
+        // DOM Elements
+        const questionNumberElement = document.getElementById("question-number");
+        const questionTypeElement = document.getElementById("question-type");
+        const questionElement = document.getElementById("question-text");
+        const optionsContainer = document.getElementById("options-container");
+        const nextButton = document.getElementById("next-btn");
+        const prevButton = document.getElementById("prev-btn");
+        const progressBar = document.getElementById("progress-bar");
+        const currentQuestionElement = document.getElementById("current-question");
+        const totalQuestionsElement = document.getElementById("total-questions");
+        const sectionButtons = document.querySelectorAll(".section-btn");
+        const shareButton = document.getElementById("share-btn");
+        const shareModal = document.getElementById("share-modal");
+        const closeModal = document.querySelector(".close");
+        const copiedMessage = document.getElementById("copied-message");
+        
+        // Share options
+        const shareWhatsApp = document.getElementById("share-whatsapp");
+        const shareTwitter = document.getElementById("share-twitter");
+        const shareFacebook = document.getElementById("share-facebook");
+        const shareEmail = document.getElementById("share-email");
+        const shareCopy = document.getElementById("share-copy");
+        const shareQR = document.getElementById("share-qr");
+        const downloadQRBtn = document.getElementById("download-qr");
+        const copyShortURLBtn = document.getElementById("copy-short-url");
+
+        // Initialize quiz
+        function initQuiz() {
+            displayQuestion();
+            updateProgressBar();
+            
+            // Set total questions
+            const filteredQuestions = getFilteredQuestions();
+            totalQuestionsElement.textContent = filteredQuestions.length;
+        }
+
+        // Get filtered questions based on current section
+        function getFilteredQuestions() {
+            if (currentSection === "all") {
+                return quizData;
+            } else {
+                return quizData.filter(question => question.section === currentSection);
+            }
+        }
+
+        // Display current question
+        function displayQuestion() {
+            const filteredQuestions = getFilteredQuestions();
+            
+            if (filteredQuestions.length === 0) {
+                questionElement.textContent = "No questions available in this section.";
+                optionsContainer.innerHTML = "";
+                nextButton.disabled = true;
+                prevButton.disabled = true;
+                return;
+            }
+            
+            // Make sure current index is valid
+            if (currentQuestionIndex >= filteredQuestions.length) {
+                currentQuestionIndex = filteredQuestions.length - 1;
+            }
+            
+            const currentQuestion = filteredQuestions[currentQuestionIndex];
+            
+            // Set question number and text
+            questionNumberElement.textContent = `Question ${currentQuestionIndex + 1}`;
+            questionElement.textContent = currentQuestion.question;
+            currentQuestionElement.textContent = currentQuestionIndex + 1;
+            
+            // Set question type
+            let typeText = "Multiple Choice";
+            if (currentQuestion.type === "short") typeText = "Short Answer";
+            if (currentQuestion.type === "calculation") typeText = "Calculation";
+            if (currentQuestion.type === "proof") typeText = "Proof/Application";
+            if (currentQuestion.type === "complex") typeText = "Complex Problem";
+            questionTypeElement.textContent = typeText;
+            
+            // Clear previous question content
+            optionsContainer.innerHTML = "";
+            
+            // Handle question display
+            if (currentQuestion.options) {
+                optionsContainer.style.display = "block";
+                
+                // Create options for multiple choice
+                currentQuestion.options.forEach((option) => {
+                    const optionElement = document.createElement("div");
+                    optionElement.classList.add("option-item");
+                    optionElement.innerHTML = `
+                        <span class="option-label">${option}</span>
+                    `;
+                    optionsContainer.appendChild(optionElement);
+                });
+            } else {
+                optionsContainer.style.display = "none";
+            }
+            
+            // Update navigation buttons
+            prevButton.disabled = currentQuestionIndex === 0;
+            nextButton.disabled = currentQuestionIndex === filteredQuestions.length - 1;
+        }
+
+        // Navigate to next question
+        function nextQuestion() {
+            const filteredQuestions = getFilteredQuestions();
+            if (currentQuestionIndex < filteredQuestions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+                updateProgressBar();
+            }
+        }
+
+        // Navigate to previous question
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+                updateProgressBar();
+            }
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const filteredQuestions = getFilteredQuestions();
+            const progressPercentage = ((currentQuestionIndex + 1) / filteredQuestions.length) * 100;
+            progressBar.style.width = progressPercentage + "%";
+        }
+
+        // Change question section
+        function changeSection(section) {
+            currentSection = section;
+            currentQuestionIndex = 0;
+            
+            // Update active section button
+            sectionButtons.forEach(btn => {
+                if (btn.dataset.section === section) {
+                    btn.classList.add("active");
+                } else {
+                    btn.classList.remove("active");
+                }
+            });
+            
+            initQuiz();
+        }
+        
+        // Get current question data for sharing
+        function getCurrentQuestionData() {
+            const filteredQuestions = getFilteredQuestions();
+            return filteredQuestions[currentQuestionIndex];
+        }
+        
+        // Generate share text
+        function generateShareText() {
+            const question = getCurrentQuestionData();
+            let shareText = `Math Quiz Question: ${question.question}`;
+            
+            if (question.options) {
+                shareText += "\n\nOptions:";
+                question.options.forEach(option => {
+                    shareText += `\n${option}`;
+                });
+            }
+            
+            shareText += `\n\nTest your math skills at: Math Quiz App`;
+            
+            return encodeURIComponent(shareText);
+        }
+        
+        // Generate share URL
+        function generateShareURL() {
+            // In a real app, this would generate a unique URL for the question
+            // For now, we'll just create a dummy URL with the question index as a parameter
+            const baseURL = window.location.href.split('?')[0];
+            return `${baseURL}?section=${currentSection}&q=${currentQuestionIndex}`;
+        }
+        
+        // Update modal with current question
+        function updateShareModal() {
+            const question = getCurrentQuestionData();
+            
+            // Update question preview in modal
+            document.getElementById('modal-question-number').textContent = `Question ${currentQuestionIndex + 1}`;
+            document.getElementById('modal-question-text').textContent = question.question;
+            
+            // Clear previous options
+            const modalOptions = document.getElementById('modal-options');
+            modalOptions.innerHTML = '';
+            
+            // Add options if they exist
+            if (question.options) {
+                question.options.forEach(option => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'modal-option';
+                    optionElement.textContent = option;
+                    modalOptions.appendChild(optionElement);
+                });
+            }
+            
+            // Hide QR code and short URL containers initially
+            document.getElementById('qr-container').style.display = 'none';
+            document.getElementById('short-url-container').style.display = 'none';
+        }
+        
+        // Share functions
+        function shareToWhatsApp() {
+            const text = generateShareText();
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
+        
+        function shareToTwitter() {
+            const text = generateShareText();
+            window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+        }
+        
+        function shareToFacebook() {
+            const url = generateShareURL();
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+        }
+        
+        function shareByEmail() {
+            const subject = "Math Quiz Question";
+            const body = decodeURIComponent(generateShareText());
+            window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+        
+        function copyToClipboard() {
+            const text = decodeURIComponent(generateShareText());
+            
+            // Using the modern clipboard API
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text)
+                    .then(() => {
+                        showCopiedMessage();
+                    })
+                    .catch(err => {
+                        console.error('Could not copy text: ', err);
+                        fallbackCopyToClipboard(text);
+                    });
+            } else {
+                fallbackCopyToClipboard(text);
+            }
+        }
+        
+        // Fallback method for clipboard
+        function fallbackCopyToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            
+            // Make the textarea out of viewport
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            textArea.style.top = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopiedMessage();
+                }
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        // Generate and display QR code
+        function generateQRCode() {
+            const qrContainer = document.getElementById('qr-container');
+            const qrCodeElement = document.getElementById('qr-code');
+            const shareURL = generateShareURL();
+            
+            // Clear previous QR code
+            qrCodeElement.innerHTML = '';
+            
+            // Check if QR code library is available
+            if (typeof QRCode !== 'undefined') {
+                new QRCode(qrCodeElement, {
+                    text: shareURL,
+                    width: 200,
+                    height: 200,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+                
+                // Show QR container
+                qrContainer.style.display = 'block';
+            } else {
+                // If QR library not available, create a simple placeholder
+                qrCodeElement.style.display = 'flex';
+                qrCodeElement.style.alignItems = 'center';
+                qrCodeElement.style.justifyContent = 'center';
+                qrCodeElement.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <p>QR Code Generation</p>
+                        <p style="font-size: 0.9rem; color: #666;">Would display QR code for: ${shareURL}</p>
+                    </div>
+                `;
+                
+                // Show QR container
+                qrContainer.style.display = 'block';
+            }
+            
+            // Ensure short URL container is hidden
+            document.getElementById('short-url-container').style.display = 'none';
+        }
+        
+        // Download QR code as image
+        function downloadQRCode() {
+            const qrCanvas = document.querySelector('#qr-code canvas');
+            
+            if (qrCanvas) {
+                const link = document.createElement('a');
+                link.download = 'math-quiz-question-qr.png';
+                link.href = qrCanvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+                link.click();
+            }
+        }
+        
+        // Generate a short URL (mock implementation)
+        function generateShortURL() {
+            const shortUrlContainer = document.getElementById('short-url-container');
+            const shortUrlInput = document.getElementById('short-url');
+            const fullUrl = generateShareURL();
+            
+            // In a real app, this would call a URL shortening service API
+            // For demonstration, we'll create a mock shortened URL
+            const mockShortUrl = `https://short.url/${Math.random().toString(36).substring(2, 8)}`;
+            
+            // Set the shortened URL
+            shortUrlInput.value = mockShortUrl;
+            
+            // Show the short URL container
+            shortUrlContainer.style.display = 'block';
+            
+            // Ensure QR container is hidden
+            document.getElementById('qr-container').style.display = 'none';
+        }
+        
+        // Copy short URL
+        function copyShortURL() {
+            const shortUrlInput = document.getElementById('short-url');
+            shortUrlInput.select();
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shortUrlInput.value)
+                    .then(() => {
+                        showCopiedMessage();
+                    })
+                    .catch(err => {
+                        console.error('Could not copy URL: ', err);
+                        document.execCommand('copy');
+                        showCopiedMessage();
+                    });
+            } else {
+                document.execCommand('copy');
+                showCopiedMessage();
+            }
+        }
+        
+        // Show copied message with animation
+        function showCopiedMessage() {
+            const copiedMessage = document.getElementById('copied-message');
+            copiedMessage.style.display = 'block';
+            
+            // Remove existing animation class if present
+            copiedMessage.classList.remove('fade-in-out');
+            
+            // Trigger reflow
+            void copiedMessage.offsetWidth;
+            
+            // Add animation class
+            copiedMessage.classList.add('fade-in-out');
+            
+            // Hide after animation completes
+            setTimeout(() => {
+                copiedMessage.style.display = 'none';
+            }, 2000);
+        }
+        
+        // Open share modal
+        function openShareModal() {
+            updateShareModal();
+            shareModal.style.display = 'block';
+        }
+        
+        // Close share modal
+        function closeShareModal() {
+            shareModal.style.display = 'none';
+        }
+        
+        // Close modal if clicked outside content
+        window.onclick = function(event) {
+            if (event.target === shareModal) {
+                closeShareModal();
+            }
+        }
+
+        // Add event listeners
+        nextButton.addEventListener('click', nextQuestion);
+        prevButton.addEventListener('click', prevQuestion);
+        shareButton.addEventListener('click', openShareModal);
+        closeModal.addEventListener('click', closeShareModal);
+        
+        // Share option event listeners
+        shareWhatsApp.addEventListener('click', shareToWhatsApp);
+        shareTwitter.addEventListener('click', shareToTwitter);
+        shareFacebook.addEventListener('click', shareToFacebook);
+        shareEmail.addEventListener('click', shareByEmail);
+        shareCopy.addEventListener('click', copyToClipboard);
+        
+        // QR code features
+        document.getElementById('share-qr').addEventListener('click', generateQRCode);
+        document.getElementById('download-qr').addEventListener('click', downloadQRCode);
+        
+        // Short URL copy feature
+        document.getElementById('copy-short-url').addEventListener('click', copyShortURL);
+        
+        // Section button listeners
+        sectionButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                changeSection(btn.dataset.section);
+            });
+        });
+
+        // Initialize the quiz
+        initQuiz();
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            // Left arrow key
+            if (event.key === 'ArrowLeft' || event.key === 'a') {
+                if (!prevButton.disabled) {
+                    prevQuestion();
+                }
+            }
+            // Right arrow key
+            else if (event.key === 'ArrowRight' || event.key === 'd') {
+                if (!nextButton.disabled) {
+                    nextQuestion();
+                }
+            }
+            // Escape key to close modal
+            else if (event.key === 'Escape') {
+                closeShareModal();
+            }
+        });
+        
+        // Check for URL parameters
+        function loadFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sectionParam = urlParams.get('section');
+            const questionParam = urlParams.get('q');
+            
+            if (sectionParam && sectionParam !== currentSection) {
+                changeSection(sectionParam);
+            }
+            
+            if (questionParam) {
+                const questionIndex = parseInt(questionParam);
+                if (!isNaN(questionIndex) && questionIndex >= 0) {
+                    currentQuestionIndex = Math.min(questionIndex, getFilteredQuestions().length - 1);
+                    displayQuestion();
+                    updateProgressBar();
+                }
+            }
+        }
+        
+        // Load from URL parameters if present
+        loadFromURL();
+        
+        // Add QR Code library dynamically
+        function loadQRCodeLibrary() {
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+            script.async = true;
+            document.body.appendChild(script);
+        }
+        
+        // Load necessary libraries
+        loadQRCodeLibrary();
+    </script>
+</body>
+</html>

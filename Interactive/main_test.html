@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimplifiedMinds - Learning Resources</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6B6B;
+            --light: #F8F9FA;
+            --dark: #2C3E50;
+            --gradient-bg: linear-gradient(135deg, #6C63FF, #FF6B6B);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--gradient-bg);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: var(--card-bg);
+            padding: 1rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .youtube-short {
+            max-width: 300px; /* Adjust based on your preference */
+            margin: 1rem auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .youtube-short iframe {
+            width: 100%;
+            height: 500px; /* Adjust height for YouTube Short */
+            border: none;
+        }
+
+        .main-content {
+            flex: 1;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            width: 90%;
+        }
+
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .chapter-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .chapter-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .chapter-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .physics {
+            border-bottom: 4px solid #4285F4;
+        }
+
+        .chemistry {
+            border-bottom: 4px solid #DB4437;
+        }
+
+        .math {
+            border-bottom: 4px solid #6C63FF;
+        }
+
+        .learning-resources {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .learning-resources h2 {
+            font-size: 2rem;
+            color: var(--light);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .resource-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .resource-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            color: white;
+            gap: 0.5rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background: var(--card-bg);
+            color: var(--dark);
+            border: 2px solid var(--primary);
+        }
+
+        .resource-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: var(--primary);
+            color: white;
+        }
+
+        .resource-button i {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .chapters-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .resource-buttons {
+                flex-direction: column;
+                padding: 0 1rem;
+            }
+
+            .resource-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="../index.html" class="logo">
+            <span>Simplified</span>Minds
+        </a>
+    </header>
+
+    
+
+    <main class="main-content">
+        <div class="chapters-grid">
+            <a href="arithmetic_progression_calculator.html" class="chapter-card math">
+                <div class="chapter-icon"><i class="fas fa-calculator"></i></div>
+                <h2 class="chapter-name">Arithmetic Progression</h2>
+            </a>
+
+            <a href="carbon_calculator.html" class="chapter-card chemistry">
+                <div class="chapter-icon"><i class="fas fa-atom"></i></div>
+                <h2 class="chapter-name">Carbon Compounds</h2>
+            </a>
+
+            <a href="electricity_calculator.html" class="chapter-card physics">
+                <div class="chapter-icon"><i class="fas fa-bolt"></i></div>
+                <h2 class="chapter-name">Electricity</h2>
+            </a>
+
+            <a href="trigonometry_calculator.html" class="chapter-card math">
+                <div class="chapter-icon"><i class="fas fa-shapes"></i></div>
+                <h2 class="chapter-name">Trigonometry</h2>
+            </a>
+
+<a href="quadratic_equation_calculator.html" class="chapter-card math">
+        <div class="chapter-icon"><i class="fas fa-square-root-alt"></i></div>
+        <h2 class="chapter-name">Quadratic Equation</h2>
+    </a>
+
+<a href="acids_bases_salts_formulas.html" class="chapter-card chemistry">
+    <div class="chapter-icon"><i class="fas fa-vial"></i></div>
+    <h2 class="chapter-name">Acids, Bases and Salts</h2>
+</a>
+
+<a href="chemical_reactions_and_equations_formulas.html" class="chapter-card chemistry">
+    <div class="chapter-icon"><i class="fas fa-fire"></i></div>
+    <h2 class="chapter-name">Chemical Reactions</h2>
+</a>
+        </div>
+
+<!-- YouTube Short Embed at the Top -->
+    <div class="youtube-short">
+        <iframe
+            src="https://www.youtube.com/embed/3o0DnyGLUFU" 
+            title="YouTube Short"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+
+        <div class="learning-resources">
+            <h2>Learning Resources</h2>
+            <div class="resource-buttons">
+                <a href="https://www.whatsapp.com/channel/0029Vb3QDu17YSd1brABFi1d" class="resource-button">
+                    <i class="fab fa-whatsapp"></i>
+                    Join WhatsApp Channel
+                </a>
+                <a href="https://www.youtube.com/@simplifiedmindssslc" class="resource-button">
+                    <i class="fab fa-youtube"></i>
+                    Video Lectures
+                </a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

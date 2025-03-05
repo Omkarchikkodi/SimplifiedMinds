@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light - Reflection and Refraction Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        padding: 20px;
+        background-color: #f5f5f5;
+    }
+
+    .container {
+        max-width: 64rem;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    .logo {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .logo a {
+        font-size: 2.5rem;
+        font-weight: bold;
+        text-decoration: none;
+        color: inherit;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .logo .yellow {
+        color: #facc15;
+    }
+
+    .logo .red {
+        color: #dc2626;
+    }
+
+    .card {
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+        color: #1d4ed8;
+        margin-bottom: 1.5rem;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 0.5rem;
+        border-bottom: 1px solid #e5e7eb;
+        margin-bottom: 1.5rem;
+    }
+
+    .tab {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.5rem 0.5rem 0 0;
+        cursor: pointer;
+        background: #f3f4f6;
+    }
+
+    .tab.active {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .calculator-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .input-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    @media (min-width: 768px) {
+        .input-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    .input-group {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    select, input {
+        padding: 0.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.25rem;
+        font-size: 1rem;
+    }
+
+    select {
+        width: 6rem;
+    }
+
+    input {
+        flex: 1;
+    }
+
+    .results {
+        background: #eff6ff;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .results-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .results-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .result-card {
+        background: white;
+        padding: 0.75rem;
+        border-radius: 0.25rem;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .result-label {
+        font-size: 0.875rem;
+        color: #4b5563;
+        margin-bottom: 0.25rem;
+    }
+
+    .result-param {
+        font-size: 0.75rem;
+        color: #6b7280;
+        margin-bottom: 0.25rem;
+    }
+
+    .result-value {
+        font-size: 1.125rem;
+        font-weight: bold;
+    }
+
+    .info-section {
+        background: #f9fafb;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .info-content {
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+
+    .property-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .property-item {
+        background: white;
+        padding: 0.75rem;
+        border-radius: 0.25rem;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .property-label {
+        font-size: 0.875rem;
+        color: #4b5563;
+        margin-bottom: 0.25rem;
+    }
+
+    .property-value {
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    .resource-buttons {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .resource-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 9999px;
+        color: white;
+        text-decoration: none;
+        transition: background-color 0.2s;
+    }
+
+    .resource-button svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-right: 0.5rem;
+    }
+
+    .whatsapp-button {
+        background-color: #22c55e;
+    }
+
+    .whatsapp-button:hover {
+        background-color: #16a34a;
+    }
+
+    .youtube-button {
+        background-color: #dc2626;
+    }
+
+    .youtube-button:hover {
+        background-color: #b91c1c;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <a href="../index.html">
+                <span>🏠</span>
+                <span class="yellow">Simplified</span>
+                <span class="red">Minds</span>
+            </a>
+        </div>
+<div class="card">
+        <h1 class="card-title">Light - Reflection and Refraction Calculator</h1>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="mirror">Mirror Formula</button>
+            <button class="tab" data-tab="lens">Lens Formula</button>
+        </div>
+
+        <div class="calculator-section" id="calculator">
+            <div class="input-grid">
+                <div class="input-group">
+                    <select name="firstParameter">
+                        <option value="u">Object Distance (u)</option>
+                        <option value="v">Image Distance (v)</option>
+                        <option value="f">Focal Length (f)</option>
+                    </select>
+                    <input type="number" name="firstValue" value="20">
+                    <span>cm</span>
+                </div>
+
+                <div class="input-group">
+                    <select name="secondParameter">
+                        <option value="u">Object Distance (u)</option>
+                        <option value="v">Image Distance (v)</option>
+                        <option value="f" selected>Focal Length (f)</option>
+                    </select>
+                    <input type="number" name="secondValue" value="10">
+                    <span>cm</span>
+                </div>
+
+                <div class="input-group">
+                    <label>Object Height (h)</label>
+                    <input type="number" name="objectHeight" value="5">
+                    <span>cm</span>
+                </div>
+
+                <div class="input-group">
+                <label>Mirror Type</label>
+                <select name="mirrorType">
+                    <option value="concave">Concave</option>
+                    <option value="convex">Convex</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="results" id="results">
+            <h3 class="results-title">Results:</h3>
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-label" id="parameterLabel">Focal Length (f)</div>
+                    <div class="result-param">Calculated Value</div>
+                    <div class="result-value" id="thirdParam">0.00 cm</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Magnification (m)</div>
+                    <div class="result-value" id="magnification">0.00</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">Image Height (h')</div>
+                    <div class="result-value" id="imageHeight">0.00 cm</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-section">
+        <h3 class="info-title">Mirror Formula and Magnification</h3>
+        <div class="info-content">
+            <p id="mirrorFormula"></p>
+            <p id="magnificationFormula"></p>
+        </div>
+    </div>
+
+    <script>
+        let activeType = 'mirror';
+        const mirrorInputs = {
+            firstValue: 20,
+            secondValue: 10,
+            firstParameter: 'u',
+            secondParameter: 'f',
+            objectHeight: 5,
+            mirrorType: 'concave'
+        };
+        const lensInputs = {
+            firstValue: 20,
+            secondValue: 10,
+            firstParameter: 'u',
+            secondParameter: 'f',
+            objectHeight: 5
+        };
+
+        function getParameterLabel(param) {
+            switch(param) {
+                case 'u': return 'Object Distance (u)';
+                case 'v': return 'Image Distance (v)';
+                case 'f': return 'Focal Length (f)';
+                default: return 'Parameter';
+            }
+        }
+
+        function calculateThirdParameter(inputs) {
+            const { firstValue: val1, secondValue: val2, firstParameter: param1, secondParameter: param2, mirrorType } = inputs;
+            let f, u, v;
+
+            try {
+                if (mirrorType === 'concave') {
+                    if ((param1 === 'u' && param2 === 'v') || (param1 === 'v' && param2 === 'u')) {
+                        f = 1 / (1/val1 - 1/val2);
+                        if (val1 < 0 && val2 > 0) {
+                            f = -f;
+                        }
+                        return { value: f, parameter: 'f' };
+                    } else if ((param1 === 'v' && param2 === 'f') || (param1 === 'f' && param2 === 'v')) {
+                        u = 1 / (1/val2 - 1/val1);
+                        return { value: u, parameter: 'u' };
+                    }
+                } else if (mirrorType === 'convex') {
+                    if ((param1 === 'u' && param2 === 'v') || (param1 === 'v' && param2 === 'u')) {
+                        f = 1 / (1/val1 + 1/val2);
+                        return { value: f, parameter: 'f' };
+                    } else if ((param1 === 'v' && param2 === 'f') || (param1 === 'f' && param2 === 'v')) {
+                        u = 1 / (1/val2 + 1/val1);
+                        return { value: u, parameter: 'u' };
+                    }
+                }
+            } catch (error) {
+                console.error('Calculation error:', error);
+            }
+            return { value: 0, parameter: '' };
+        }
+
+        function calculateMagnification(inputs, thirdParam) {
+            let u = 0, v = 0;
+            const { firstValue, secondValue, firstParameter, secondParameter, mirrorType } = inputs;
+            
+            if (firstParameter === 'u') u = firstValue;
+            if (secondParameter === 'u') u = secondValue;
+            if (firstParameter === 'v') v = firstValue;
+            if (secondParameter === 'v') v = secondValue;
+            if (thirdParam?.parameter === 'u') u = thirdParam.value;
+            if (thirdParam?.parameter === 'v') v = thirdParam.value;
+
+            if (mirrorType === 'concave') {
+                return -v/u;
+            } else {
+                return v/u;
+            }
+        }
+
+        function updateResults() {
+            const inputs = activeType === 'mirror' ? mirrorInputs : lensInputs;
+            const thirdParam = calculateThirdParameter(inputs);
+            const magnification = thirdParam ? calculateMagnification(inputs, thirdParam) : null;
+            const imageHeight = magnification ? Math.abs(magnification * inputs.objectHeight) : null;
+
+            // Update the parameter label
+            document.getElementById('parameterLabel').textContent = getParameterLabel(thirdParam.parameter);
+
+            // Update the results display
+            document.getElementById('thirdParam').textContent = `${thirdParam.value.toFixed(2)} cm`;
+            document.getElementById('magnification').textContent = magnification.toFixed(2);
+            document.getElementById('imageHeight').textContent = `${imageHeight.toFixed(2)} cm`;
+
+            // Update the mirror formula and magnification
+            if (inputs.mirrorType === 'concave') {
+                document.getElementById('mirrorFormula').innerHTML = `
+                    <p>For concave mirror (negative sign):</p>
+                    <p>1/v - 1/u = 1/f</p>
+                    <p>m = (h'/h) = -v/u</p>
+                `;
+            } else {
+                document.getElementById('mirrorFormula').innerHTML = `
+                    <p>For convex mirror (positive sign):</p>
+                    <p>1/v + 1/u = 1/f</p>
+                    <p>m = (h'/h) = v/u</p>
+                `;
+            }
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                activeType = e.target.dataset.tab;
+                const inputs = activeType === 'mirror' ? mirrorInputs : lensInputs;
+                document.querySelector('[name="firstParameter"]').value = inputs.firstParameter;
+                document.querySelector('[name="secondParameter"]').value = inputs.secondParameter;
+                document.querySelector('[name="firstValue"]').value = inputs.firstValue;
+                document.querySelector('[name="secondValue"]').value = inputs.secondValue;
+                document.querySelector('[name="objectHeight"]').value = inputs.objectHeight;
+                document.querySelector('[name="mirrorType"]').value = inputs.mirrorType;
+                updateResults();
+            });
+        });
+
+        // Input change handlers
+        const inputElements = document.querySelectorAll('select, input');
+        inputElements.forEach(input => {
+            input.addEventListener('change', (e) => {
+                const inputs = activeType === 'mirror' ? mirrorInputs : lensInputs;
+                const name = e.target.name;
+                const value = e.target.type === 'number' ? parseFloat(e.target.value) || 0 : e.target.value;
+                inputs[name] = value;
+                updateResults();
+            });
+        });
+
+        // Initial calculation
+        updateResults();
+    </script>
+</div>

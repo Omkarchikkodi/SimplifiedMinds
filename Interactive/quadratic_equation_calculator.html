@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadratic Equation Calculator - SimplifiedMinds</title>
+    <style>
+        /* Modern Gradient Background */
+        body {
+            background: linear-gradient(135deg, #1a365f 0%, #0a192f 100%);
+            color: #e6f1ff;
+            min-height: 100vh;
+            padding: 2rem;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 2.5rem;
+            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-field {
+            position: relative;
+        }
+
+        .input-field label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+            color: #89b8ff;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(0, 210, 255, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-field input:focus {
+            background: rgba(0, 210, 255, 0.1);
+            border-color: #00d2ff;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .calc-button {
+            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            flex: 1;
+        }
+
+        .calc-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.3);
+        }
+
+        .visualization-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .formula-card {
+            background: rgba(0, 210, 255, 0.08);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 4px solid #00d2ff;
+        }
+
+        .result-card {
+            background: rgba(0, 210, 255, 0.15);
+            padding: 2rem;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .discriminant-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .root-results {
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .complex-root {
+            color: #00ff88;
+        }
+
+        .real-root {
+            color: #ff9a00;
+        }
+
+        .steps-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        .step {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(0, 210, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+
+            .visualization-section {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quadratic Equation Explorer</h1>
+
+        <div class="input-group">
+            <div class="input-field">
+                <label for="coefA">𝑎x² +</label>
+                <input type="number" id="coefA" value="1" step="any" placeholder="Enter a">
+            </div>
+            <div class="input-field">
+                <label for="coefB">𝑏x +</label>
+                <input type="number" id="coefB" value="0" step="any" placeholder="Enter b">
+            </div>
+            <div class="input-field">
+                <label for="coefC">𝑐 = 0</label>
+                <input type="number" id="coefC" value="0" step="any" placeholder="Enter c">
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="calc-button" onclick="calculateRoots()">Calculate Solutions</button>
+            <button class="calc-button" onclick="fillExample()">Show Example</button>
+        </div>
+
+        <div class="visualization-section">
+            <div class="formula-card">
+                <h3>Quadratic Formula</h3>
+                <p class="math-formula">𝑥 = −𝑏 ± √(𝑏² − 4𝑎𝑐)<br>──────────────<br>      2𝑎</p>
+            </div>
+
+            <div class="result-card">
+                <div class="discriminant-badge" id="discBadge">D = 0</div>
+                <div class="root-results">
+                    <div id="rootType" class="root-type"></div>
+                    <div id="roots"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="steps-card" id="solutionSteps">
+            <h3>Step-by-Step Solution</h3>
+            <div class="step" id="step1">1. Identify coefficients: 𝑎 = ..., 𝑏 = ..., 𝑐 = ...</div>
+            <div class="step" id="step2">2. Calculate discriminant: D = 𝑏² - 4𝑎𝑐</div>
+            <div class="step" id="step3">3. Determine root type based on discriminant</div>
+            <div class="step" id="step4">4. Apply quadratic formula</div>
+        </div>
+    </div>
+
+    <script>
+        function calculateRoots() {
+            const a = parseFloat(document.getElementById('coefA').value);
+            const b = parseFloat(document.getElementById('coefB').value);
+            const c = parseFloat(document.getElementById('coefC').value);
+
+            if (isNaN(a) || isNaN(b) || isNaN(c)) {
+                showError("Please enter valid numbers for all coefficients");
+                return;
+            }
+
+            if (a === 0) {
+                showError("Coefficient '𝑎' cannot be zero");
+                return;
+            }
+
+            const discriminant = b*b - 4*a*c;
+            const discriminantText = `D = ${b}² - 4×${a}×${c} = ${discriminant}`;
+            
+            // Update solution steps
+            document.getElementById('step1').innerHTML = `1. Coefficients: 𝑎 = ${a}, 𝑏 = ${b}, 𝑐 = ${c}`;
+            document.getElementById('step2').innerHTML = `2. Discriminant: ${discriminantText}`;
+            document.getElementById('discBadge').textContent = discriminantText;
+
+            let rootType, rootsHTML, rootClass;
+            const precision = 4;
+
+            if (discriminant > 0) {
+                rootType = "Two Distinct Real Roots";
+                rootClass = "real-root";
+                const sqrtD = Math.sqrt(discriminant);
+                const root1 = (-b + sqrtD)/(2*a);
+                const root2 = (-b - sqrtD)/(2*a);
+                rootsHTML = `
+                    𝑥₁ = ${root1.toFixed(precision)}<br>
+                    𝑥₂ = ${root2.toFixed(precision)}
+                `;
+                document.getElementById('step3').innerHTML = "3. D > 0 → Two real roots";
+                document.getElementById('step4').innerHTML = `4. Solutions: (${-b} ± ${sqrtD.toFixed(precision)})/(2×${a})`;
+            } else if (discriminant === 0) {
+                rootType = "One Repeated Real Root";
+                rootClass = "real-root";
+                const root = -b/(2*a);
+                rootsHTML = `𝑥 = ${root.toFixed(precision)}`;
+                document.getElementById('step3').innerHTML = "3. D = 0 → One repeated root";
+                document.getElementById('step4').innerHTML = `4. Solution: ${-b}/(2×${a})`;
+            } else {
+                rootType = "Complex Conjugate Roots";
+                rootClass = "complex-root";
+                const real = -b/(2*a);
+                const imag = Math.sqrt(-discriminant)/(2*a);
+                rootsHTML = `
+                    𝑥₁ = ${real.toFixed(precision)} + ${imag.toFixed(precision)}𝑖<br>
+                    𝑥₂ = ${real.toFixed(precision)} - ${imag.toFixed(precision)}𝑖
+                `;
+                document.getElementById('step3').innerHTML = "3. D < 0 → Complex roots";
+                document.getElementById('step4').innerHTML = `4. Solutions: (${-b} ± ${Math.sqrt(-discriminant).toFixed(precision)}𝑖)/${2*a}`;
+            }
+
+            document.getElementById('rootType').innerHTML = rootType;
+            document.getElementById('roots').className = rootClass;
+            document.getElementById('roots').innerHTML = rootsHTML;
+        }
+
+        function showError(message) {
+            const resultCard = document.querySelector('.result-card');
+            resultCard.innerHTML = `<div class="error-message">${message}</div>`;
+            setTimeout(() => calculateRoots(), 2000);
+        }
+
+        function fillExample() {
+            document.getElementById('coefA').value = 2;
+            document.getElementById('coefB').value = -5;
+            document.getElementById('coefC').value = 3;
+            calculateRoots();
+        }
+
+        // Initial calculation
+        calculateRoots();
+    </script>
+</body>
+</html>

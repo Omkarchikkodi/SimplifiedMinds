@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Quiz Application</title>
+    <style>
+        /* Import Inter font for modern, clean typography */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        /* Reset default styles and set up base styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Main layout styling */
+        body {
+            background-color: #f0fdf4;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Header section styling */
+        .header-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .chapter-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        /* Timer card styling */
+        .timer-card {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timer-warning {
+            background: #fee2e2;
+            animation: pulse 1s infinite;
+        }
+
+        .timer-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Question card styling */
+        .question-card {
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .question-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* Badge styling */
+        .badge-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .subject-badge {
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 14px;
+            background: #4338ca;
+            color: white;
+        }
+
+        .type-badge {
+            background: #f3f4f6;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        /* Question content and image styling */
+        .question-content {
+            font-size: 18px;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .question-image-container,
+        .solution-image-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .question-image,
+        .solution-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .image-caption {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        /* MCQ options styling */
+        .mcq-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 16px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .option:hover:not(.selected):not(.correct):not(.incorrect) {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.selected {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.correct {
+            border-color: #059669;
+            background: #d1fae5;
+        }
+
+        .option.incorrect {
+            border-color: #dc2626;
+            background: #fee2e2;
+        }
+
+        /* Button styling */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            background: #4338ca;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Solution section styling */
+        .solution {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 16px;
+            display: none;
+            background: #eef2ff;
+        }
+
+        .solution-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .formula-box {
+            background: #fff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Navigation styling */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #4338ca;
+        }
+
+.video-solution {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .video-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+        background: white;
+        border: 1px solid #e5e7eb;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .video-button:hover {
+        background: #f9fafb;
+        transform: translateY(-1px);
+    }
+
+    .video-icon {
+        color: #ef4444;
+    }
+
+        /* Animation keyframes */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .badge-container {
+                flex-wrap: wrap;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .dots {
+                order: -1;
+            }
+
+            .mcq-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header section -->
+        <div class="header-section">
+            <span class="chapter-name" id="chapter-name">Physics Quiz</span>
+        </div>
+
+        <!-- Timer section -->
+        <div class="timer-card">
+            <div class="timer-text">
+                ⏰ Time Left: <span id="time-display">1:00</span>
+            </div>
+        </div>
+
+        <!-- Question card -->
+        <div class="question-card">
+            <div class="question-header">
+                <h2 class="question-number" id="question-number">Question 1</h2>
+                <div class="badge-container">
+                    <span id="subject-badge" class="subject-badge">Physics</span>
+                    <span id="type-badge" class="type-badge">Conceptual</span>
+                </div>
+            </div>
+
+            <div id="question-content" class="question-content">
+                <!-- Question content will be dynamically inserted here -->
+            </div>
+
+            <button id="solution-btn" class="btn">
+                <span>Show Solution</span>
+            </button>
+
+            <div id="solution-content" class="solution">
+    <div class="solution-header">
+        📝 Solution
+    </div>
+    <div id="solution-text"></div>
+    <div id="formula-box" class="formula-box"></div>
+    <div class="video-solution">
+        <a id="video-link" href="#" target="_blank" class="video-button">
+            <span class="video-icon">▶</span>
+            Watch Video Solution
+        </a>
+    </div>
+</div>
+
+        <!-- Navigation section -->
+        <div class="navigation">
+            <button id="prev-btn" class="btn" disabled>← Previous</button>
+            <div id="dots" class="dots"></div>
+            <button id="next-btn" class="btn">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        // Quiz data
+        const questions = {
+            "exam_questions": [
+                {
+  "question_number": 16,
+  "question": "What type of current is induced in the coil by doing the experiment related to the given figure? Give reason for your answer.",
+  "options": null,
+  "correct_option": null,
+  "solution_step": "1. Alternating current is induced\n2. This is because the galvanometer deflections are in opposite directions\n3. When magnet moves towards/away from coil, direction of induced current changes\n4. This changing direction of current is characteristic of AC",
+  "time": 60,
+  "video_url": null,
+  "formula_box": "Induced EMF = -N(dΦ/dt)\nwhere Φ is magnetic flux",
+  "subject": "Physics [1M]",
+  "chapter": "Electromagnetic Induction",
+  "type": "Conceptual",
+  "difficulty": "Medium",
+  "misconceptions": "Students often confuse why the current direction changes with magnet motion",
+  "prerequisites": "Understanding of electromagnetic induction and Faraday's laws",
+  "year": 2020,
+  "question_image": true,
+  "options_image": false
+},
+
+{
+  "question_number": 24,
+  "question": "Draw the diagram of a simple electric generator. Label the following parts: i) Brushes ii) Rings.",
+  "options": null,
+  "correct_option": null,
+  "solution_step": "1. Draw basic generator structure\n2. Label brushes (B₁, B₂)\n3. Label slip rings (R₁, R₂)\n4. Show armature coil\n5. Indicate N-S poles of magnet",
+  "time": 120,
+  "video_url": null,
+  "formula_box": "Induced EMF = NBA ω sin(ωt)\nwhere N = number of turns\nB = magnetic field\nA = area\nω = angular velocity",
+  "subject": "Physics [2M]",
+  "chapter": "Electromagnetic Induction",
+  "type": "Conceptual",
+  "difficulty": "Medium",
+  "misconceptions": "Students often confuse slip rings with split rings (commutator)",
+  "prerequisites": "Understanding of electromagnetic induction and AC generation",
+  "year": 2020,
+  "question_image": true,
+  "options_image": false
+},
+
+{
+  "question_number": 46,
+  "question": "How do you trace the magnetic field lines around a bar magnet using compass needle? Explain. Write the properties of magnetic field lines.",
+  "options": null,
+  "correct_option": null,
+  "solution_step": "Tracing procedure:\n1. Place magnet on paper on drawing board\n2. Mark magnet boundary\n3. Place compass near north pole\n4. Mark needle positions\n5. Move compass, keeping S pole where N pole was\n6. Continue till south pole\n7. Connect points for field line\n\nProperties:\n1. Field lines emerge from N pole and merge at S pole\n2. Field lines are crowded at poles\n3. Field lines never intersect",
+  "time": 450,
+  "video_url": null,
+  "formula_box": "Magnetic field strength ∝ 1/r²\nwhere r is distance from magnet",
+  "subject": "Physics [4M]",
+  "chapter": "Magnetism",
+  "type": "Conceptual",
+  "difficulty": "Medium",
+  "misconceptions": "Students often draw incorrect field line patterns and forget they never cross",
+  "prerequisites": "Understanding of magnetic fields and compass behavior",
+  "year": 2020,
+  "question_image": false,
+  "options_image": false
+},
+
+{
+  "question_number": 5,
+  "question": "Observe the diagram. The magnetic poles represented by P and Q respectively are",
+  "options": {
+    "A": "south (S) and south (S)",
+    "B": "north (N) and south (S)",
+    "C": "north (N) and north (N)",
+    "D": "south (S) and north (N)"
+  },
+  "correct_option": "A",
+  "solution_step": "Based on the diagram showing magnetic field lines between two poles, we can see repulsion occurring. Since like poles repel each other, and the field lines show repulsion, both P and Q must be south poles (S).",
+  "time": 60,
+  "video_url": null,
+  "formula_box": "Like poles repel, Unlike poles attract",
+  "subject": "Physics [1M]",
+  "chapter": "Magnetism",
+  "type": "Conceptual",
+  "difficulty": "Medium",
+  "misconceptions": "Students often forget that repelling poles must be like poles and may misinterpret magnetic field line patterns",
+  "prerequisites": "Understanding of magnetic poles and field line patterns",
+  "year": 2020,
+  "question_image": true,
+  "options_image": false
+},
+
+{
+  "question_number": 36,
+  "question": "Observe the given diagram. Explain the experiment related to this diagram. What conclusions can be drawn from this experiment?",
+  "options": null,
+  "correct_option": null,
+  "solution_step": "1. Demonstrates electromagnetic induction\n2. Moving magnet near coil induces current (shown by galvanometer)\n3. Direction of induced current depends on motion direction\n4. Faster movement induces larger current\n5. Stationary magnet produces no current",
+  "time": 240,
+  "video_url": null,
+  "formula_box": "Induced EMF = -N(dΦ/dt)\nwhere Φ is magnetic flux",
+  "subject": "Physics [4M]",
+  "chapter": "Electromagnetic Induction",
+  "type": "Experimental",
+  "difficulty": "Hard",
+  "misconceptions": "Students often miss the relationship between motion and induced current",
+  "prerequisites": "Understanding of magnetic fields and electromagnetic induction",
+  "year": 2020,
+  "question_image": true,
+  "options_image": false
+}
+            ]
+        };
+
+        // Initialize variables
+        let currentQuestionIndex = 0;
+        let timeLeft = 60;
+        let timerInterval;
+        let savedTimes = {};
+
+        // Get DOM elements
+        const timeDisplay = document.getElementById('time-display');
+        const questionNumber = document.getElementById('question-number');
+        const subjectBadge = document.getElementById('subject-badge');
+        const typeBadge = document.getElementById('type-badge');
+        const questionContent = document.getElementById('question-content');
+        const solutionBtn = document.getElementById('solution-btn');
+        const solutionContent = document.getElementById('solution-content');
+        const solutionText = document.getElementById('solution-text');
+        const formulaBox = document.getElementById('formula-box');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const dots = document.getElementById('dots');
+        const timer = document.querySelector('.timer-card');
+        const chapterName = document.getElementById('chapter-name');
+
+        // Helper function to format time
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Timer update function
+function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timeDisplay.textContent = formatTime(timeLeft);
+                // Add warning class when time is running low (5 seconds or less)
+                if (timeLeft <= 5) {
+                    timer.classList.add('timer-warning');
+                }
+            }
+        }
+
+        // Main function to update question content and related elements
+        function updateQuestion() {
+            const question = questions.exam_questions[currentQuestionIndex];
+            
+            // Update header information
+            questionNumber.textContent = `Question ${question.question_number}`;
+            subjectBadge.textContent = question.subject;
+            typeBadge.textContent = question.type;
+            chapterName.textContent = question.chapter;
+            
+            // Build question content with text and image if present
+            let content = `<p>${question.question}</p>`;
+            
+            // Add question image if available
+            if (question.question_image) {
+                content += `
+                    <div class="question-image-container">
+                        <img src="${question.question_image.url}" 
+                             alt="${question.question_image.alt}" 
+                             class="question-image">
+                        ${question.question_image.caption ? 
+                          `<p class="image-caption">${question.question_image.caption}</p>` : ''}
+                    </div>`;
+}
+            
+            // Add MCQ options if present
+            if (question.options) {
+                content += '<div class="mcq-options">';
+                Object.entries(question.options).forEach(([key, value]) => {
+                    content += `
+                        <div class="option" data-id="${key}">
+                            ${key}. ${value}
+                        </div>
+                    `;
+                });
+                content += '</div>';
+            }
+         
+            questionContent.innerHTML = content;
+
+            // Update solution content with step-by-step explanation and image
+            let solutionHtml = question.solution_step;
+            
+            // Add solution image if present
+            if (question.solution_image) {
+                solutionHtml += `
+                    <div class="solution-image-container">
+                        <img src="${question.solution_image.url}" 
+                             alt="${question.solution_image.alt}" 
+                             class="solution-image">
+                        <p class="image-caption">${question.solution_image.caption}</p>
+                    </div>`;
+            }
+
+            // Update solution and formula content
+            solutionText.innerHTML = solutionHtml;
+            formulaBox.innerHTML = question.formula_box ? 
+                `<strong>Formulas:</strong><br>${question.formula_box}` : '';
+
+// Update video link visibility and URL
+    const videoLink = document.getElementById('video-link');
+    if (question.video_url) {
+        videoLink.href = question.video_url;
+        videoLink.style.display = 'inline-flex';
+    } else {
+        videoLink.style.display = 'none';
+    }
+            
+            // Update navigation buttons state
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = currentQuestionIndex === questions.exam_questions.length - 1;
+            
+            // Update progress dots
+            dots.innerHTML = questions.exam_questions.map((_, index) => `
+                <span class="dot ${index === currentQuestionIndex ? 'active' : ''}"></span>
+            `).join('');
+
+            // Reset solution visibility
+            solutionContent.style.display = 'none';
+            solutionBtn.innerHTML = '<span>Show Solution</span>';
+
+            // Reset and start timer for new question
+            clearInterval(timerInterval);
+            timer.classList.remove('timer-warning');
+            timeLeft = savedTimes[currentQuestionIndex] || question.time;
+            timeDisplay.textContent = formatTime(timeLeft);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Event handler for MCQ option selection
+        questionContent.addEventListener('click', (e) => {
+            const optionElement = e.target.closest('.option');
+            if (!optionElement) return;
+            
+            const question = questions.exam_questions[currentQuestionIndex];
+            if (!question.options) return;
+
+            // Remove previous selection and result classes
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            // Add selected class to clicked option
+            optionElement.classList.add('selected');
+            
+            // If solution is visible, show correct/incorrect indicators
+            if (solutionContent.style.display === 'block') {
+                const selectedOptionId = optionElement.dataset.id;
+                
+                document.querySelectorAll('.option').forEach(opt => {
+                    const optionId = opt.dataset.id;
+                    if (optionId === question.correct_option) {
+                        opt.classList.add('correct');
+                    } else if (optionId === selectedOptionId) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            }
+        });
+
+        // Event handler for solution button
+        solutionBtn.addEventListener('click', () => {
+            const isShowing = solutionContent.style.display === 'block';
+            solutionContent.style.display = isShowing ? 'none' : 'block';
+            solutionBtn.innerHTML = isShowing ? 
+                '<span>Show Solution</span>' : '<span>Hide Solution</span>';
+
+            // Show correct/incorrect indicators for MCQ when solution is displayed
+            const question = questions.exam_questions[currentQuestionIndex];
+            if (question.options) {
+                const selectedOption = document.querySelector('.option.selected');
+                
+                document.querySelectorAll('.option').forEach(opt => {
+                    if (opt.dataset.id === question.correct_option) {
+                        opt.classList.add('correct');
+                    } else if (selectedOption && opt === selectedOption) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            }
+        });
+
+        // Event handlers for navigation buttons
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                savedTimes[currentQuestionIndex] = timeLeft;
+                currentQuestionIndex--;
+                updateQuestion();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.exam_questions.length - 1) {
+                savedTimes[currentQuestionIndex] = timeLeft;
+                currentQuestionIndex++;
+                updateQuestion();
+            }
+        });
+
+        // Initialize the quiz with the first question
+        updateQuestion();
+</script>
+</body>
+</html>

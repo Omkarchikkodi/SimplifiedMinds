@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Quiz Application</title>
+    <!-- Include MathJax for formula rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* Import Inter font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f0fdf4;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Header styling */
+        .header-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 16px 24px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .chapter-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        /* Timer styling */
+        .timer-card {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timer-warning {
+            background: #fee2e2;
+            animation: pulse 1s infinite;
+        }
+
+        .timer-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Question card styling */
+        .question-card {
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .question-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* Badge styling */
+        .badge-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .subject-badge {
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 14px;
+            background: #4338ca;
+            color: white;
+        }
+
+        .type-badge {
+            background: #f3f4f6;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        /* Question content styling */
+        .question-content {
+            font-size: 18px;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        /* MCQ options styling */
+        .mcq-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 16px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .option:hover:not(.selected):not(.correct):not(.incorrect) {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.selected {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.correct {
+            border-color: #059669;
+            background: #d1fae5;
+        }
+
+        .option.incorrect {
+            border-color: #dc2626;
+            background: #fee2e2;
+        }
+
+        /* Enhanced solution section styling */
+        .solution {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 16px;
+            background: #f8fafc;
+            display: none;
+        }
+
+        .solution-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .solution-section {
+            margin-bottom: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .difficulty-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .difficulty-badge {
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .difficulty-easy {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .difficulty-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .difficulty-hard {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .difficulty-description {
+            color: #4b5563;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .step-container {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-left: 4px solid #4338ca;
+        }
+
+        .step-number {
+            font-weight: 600;
+            color: #4338ca;
+            margin-right: 8px;
+        }
+
+        .prerequisites-list, .misconceptions-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .prerequisites-list li, .misconceptions-list li {
+            position: relative;
+            padding: 8px 0 8px 28px;
+            margin-bottom: 8px;
+            color: #4b5563;
+            line-height: 1.5;
+        }
+
+        .prerequisites-list li:before {
+            content: "📚";
+            position: absolute;
+            left: 0;
+            top: 8px;
+        }
+
+        .misconceptions-list li:before {
+            content: "⚠️";
+            position: absolute;
+            left: 0;
+            top: 8px;
+        }
+
+        .concept-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #e0e7ff;
+            color: #4338ca;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 500;
+            margin: 4px;
+        }
+
+        .formula-box {
+            background: #f1f5f9;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            border-left: 4px solid #4338ca;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Button styling */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            background: #4338ca;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Navigation styling */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #4338ca;
+        }
+
+        /* Image handling */
+        .question-image-container,
+        .solution-image-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .question-image,
+        .solution-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .image-caption {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        /* Animation keyframes */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .badge-container {
+                flex-wrap: wrap;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .dots {
+                order: -1;
+            }
+
+            .mcq-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header section -->
+        <div class="header-section">
+            <span class="chapter-name" id="chapter-name">Physics Quiz</span>
+        </div>
+
+        <!-- Timer section -->
+        <div class="timer-card">
+            <div class="timer-text">
+                ⏰ Time Left: <span id="time-display">1:00</span>
+            </div>
+        </div>
+
+        <!-- Question card -->
+        <div class="question-card">
+            <div class="question-header">
+                <h2 class="question-number" id="question-number">Question 1</h2>
+                <div class="badge-container">
+                    <span id="subject-badge" class="subject-badge">Physics</span>
+                    <span id="type-badge" class="type-badge">Conceptual</span>
+                </div>
+            </div>
+
+            <div id="question-content" class="question-content">
+                <!-- Question content will be dynamically inserted here -->
+            </div>
+
+            <button id="solution-btn" class="btn">
+                <span>Show Solution</span>
+            </button>
+
+            <div id="solution-content" class="solution">
+                <div class="solution-header">
+                    <h3>📝 Complete Solution Guide</h3>
+                </div>
+                
+                <!-- Difficulty Section -->
+                <div class="solution-section">
+                    <div class="section-title">
+                        <div class="icon-container">🎯</div>
+                        <span>Difficulty Analysis</span>
+                    </div>
+                    <div class="difficulty-container">
+                        <span id="difficulty-badge" class="difficulty-badge"></span>
+                        <span id="difficulty-description" class="difficulty-description"></span>
+                    </div>
+                </div>
+
+                <!-- Main Solution -->
+                <div class="solution-section">
+                    <div class="section-title">
+                        <div class="icon-container">✍️</div>
+                        <span>Step-by-Step Solution</span>
+                    </div>
+                    <div id="solution-text" class="step-by-step"></div>
+                </div>
+
+                <!-- Prerequisites -->
+                <div class="solution-section">
+                    <div class="section-title">
+                        <div class="icon-container">📚</div>
+                        <span>Required Concepts</span>
+                    </div>
+                    <div id="prerequisites-content">
+                        <div class="concept-tags"></div>
+                        <ul class="prerequisites-list"></ul>
+                    </div>
+                </div>
+
+                <!-- Common Misconceptions -->
+                <div class="solution-section">
+                    <div class="section-title">
+                        <div class="icon-container">⚠️</div>
+                        <span>Common Mistakes to Avoid</span>
+                    </div>
+                    <div id="misconceptions-content">
+                        <ul class="misconceptions-list"></ul>
+                    </div>
+                </div>
+
+                <!-- Formula Box -->
+                <div class="solution-section">
+                    <div class="section-title">
+                        <div class="icon-container">📐</div>
+                        <span>Key Formulas & Concepts</span>
+                    </div>
+                    <div id="formula-box" class="formula-box"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation section -->
+        <div class="navigation">
+            <button id="prev-btn" class="btn" disabled>← Previous</button>
+            <div id="dots" class="dots"></div>
+<button id="next-btn" class="btn">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        // Sample question data structure
+        const questions = {
+            "exam_questions": [
+                {
+      "questionNumber": 1,
+      "question": "The inner surface of solar cooker is coated with black paint to",
+      "option1": "absorb more heat",
+      "option2": "reflect light",
+      "option3": "prevent rusting",
+      "option4": "converge the light rays",
+      "correctOption": "A",
+      "solutionStep": "Black surfaces are good absorbers of heat radiation. The black coating helps absorb maximum solar radiation, converting it to heat energy for cooking.",
+      "time": 60,
+      "videoUrl": "",
+      "formulaBox": "Absorption of radiation depends on surface color and texture",
+      "subject": "Physics",
+      "chapter": "Heat and Light",
+      "type": "Conceptual",
+      "difficulty": "Easy",
+      "misconceptions": "Students often confuse reflection with absorption properties of black surfaces",
+      "prerequisites": "Basic concepts of heat absorption and radiation",
+      "year": 2020,
+      "questionImage": "No",
+      "optionsImage": "No"
+    },
+    {
+      "questionNumber": 4,
+      "question": "An object is kept at the centre of curvature of a concave mirror. The position and nature of the image formed is",
+      "option1": "between F and C and inverted",
+      "option2": "behind the mirror and erect",
+      "option3": "between F and P and erect",
+      "option4": "at the centre of curvature and inverted",
+      "correctOption": "D",
+      "solutionStep": "When object is at C (center of curvature): 1) Image forms at C 2) Image is real and inverted 3) Same size as object 4) This is because all rays from object return along same path",
+      "time": 60,
+      "videoUrl": "",
+      "formulaBox": "u = -C, v = -C, m = -1",
+      "subject": "Physics",
+      "chapter": "Light - Reflection and Refraction",
+      "type": "Conceptual",
+      "difficulty": "Medium",
+      "misconceptions": "Students often confuse image positions for different object positions in concave mirrors",
+      "prerequisites": "Understanding of image formation in concave mirrors, ray diagrams",
+      "year": 2020,
+      "questionImage": "No",
+      "optionsImage": "No"
+    },
+    {
+      "questionNumber": 5,
+      "question": "The power plant in which natural source of energy is directly used to rotate turbines is",
+      "option1": "thermal power plant",
+      "option2": "hydro-electric power plant",
+      "option3": "nuclear power plant",
+      "option4": "solar power plant",
+      "correctOption": "B",
+      "solutionStep": "In hydroelectric power plants, the kinetic energy of falling water directly rotates the turbines. Other plants use intermediate processes to generate steam first.",
+      "time": 60,
+      "videoUrl": "",
+      "formulaBox": "Power = mass flow rate × g × height × efficiency",
+      "subject": "Physics",
+      "chapter": "Sources of Energy",
+      "type": "Memory-based",
+      "difficulty": "Easy",
+      "misconceptions": "Students often confuse the direct vs indirect use of natural energy in different power plants",
+      "prerequisites": "Basic knowledge of energy conversion in power plants",
+      "year": 2020,
+      "questionImage": "No",
+      "optionsImage": "No"
+    }
+            ]
+        };
+
+        // Initialize variables
+        let currentQuestionIndex = 0;
+        let timeLeft = 60;
+        let timerInterval;
+        let savedTimes = {};
+
+        // Get DOM elements
+        const timeDisplay = document.getElementById('time-display');
+        const questionNumber = document.getElementById('question-number');
+        const subjectBadge = document.getElementById('subject-badge');
+        const typeBadge = document.getElementById('type-badge');
+        const questionContent = document.getElementById('question-content');
+        const solutionBtn = document.getElementById('solution-btn');
+        const solutionContent = document.getElementById('solution-content');
+        const solutionText = document.getElementById('solution-text');
+        const formulaBox = document.getElementById('formula-box');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const dots = document.getElementById('dots');
+        const timer = document.querySelector('.timer-card');
+        const chapterName = document.getElementById('chapter-name');
+
+        // Helper function to format time
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Timer update function
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timeDisplay.textContent = formatTime(timeLeft);
+                if (timeLeft <= 5) {
+                    timer.classList.add('timer-warning');
+                }
+            }
+        }
+
+        // Function to update solution content
+        function updateSolutionContent(question) {
+            // Update difficulty badge and description
+            const difficultyBadge = document.getElementById('difficulty-badge');
+            const difficultyDesc = document.getElementById('difficulty-description');
+            
+            const difficultyDescriptions = {
+                'Easy': 'Fundamental concepts, straightforward application',
+                'Medium': 'Multiple concepts or steps required',
+                'Hard': 'Complex problem solving, advanced concepts required'
+            };
+
+            difficultyBadge.className = `difficulty-badge difficulty-${question.difficulty.toLowerCase()}`;
+            difficultyBadge.textContent = question.difficulty;
+            difficultyDesc.textContent = difficultyDescriptions[question.difficulty] || '';
+
+            // Update solution steps with improved formatting
+            const solutionText = document.getElementById('solution-text');
+            const steps = question.solution_step.split('\n').filter(step => step.trim());
+            solutionText.innerHTML = steps.map((step, index) => `
+                <div class="step-container">
+                    <span class="step-number">Step ${index + 1}</span>
+                    ${step}
+                </div>
+            `).join('');
+
+            // Update prerequisites with concept tags
+            const prerequisitesContent = document.getElementById('prerequisites-content');
+            const prerequisites = question.prerequisites.split(', ');
+            prerequisitesContent.innerHTML = `
+                <div class="concept-tags">
+                    ${prerequisites.map(prereq => `<span class="concept-tag">${prereq}</span>`).join('')}
+                </div>
+                <ul class="prerequisites-list">
+                    ${prerequisites.map(prereq => `<li>${prereq}</li>`).join('')}
+                </ul>
+            `;
+
+            // Update misconceptions with improved formatting
+            const misconceptionsContent = document.getElementById('misconceptions-content');
+            const misconceptions = question.misconceptions.split('. ').filter(m => m.length > 0);
+            misconceptionsContent.innerHTML = `
+                <ul class="misconceptions-list">
+                    ${misconceptions.map(misc => `
+                        <li>
+                            <div class="misconception-item">
+                                <span class="misconception-text">${misc}</span>
+                            </div>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+
+            // Update formula box
+            if (question.formula_box) {
+                formulaBox.innerHTML = question.formula_box;
+                formulaBox.style.display = 'block';
+                if (window.MathJax) {
+                    MathJax.typeset([formulaBox]);
+                }
+            } else {
+                formulaBox.style.display = 'none';
+            }
+        }
+
+        // Function to update question content
+        function updateQuestion() {
+            const question = questions.exam_questions[currentQuestionIndex];
+            
+            // Update header information
+            questionNumber.textContent = `Question ${question.question_number}`;
+            subjectBadge.textContent = question.subject;
+            typeBadge.textContent = question.type;
+            chapterName.textContent = question.chapter;
+            
+            // Build question content
+            let content = `<p>${question.question}</p>`;
+            
+            if (question.question_image) {
+                content += `
+                    <div class="question-image-container">
+                        <img src="${question.question_image.url}" 
+                             alt="${question.question_image.alt}" 
+                             class="question-image">
+                        ${question.question_image.caption ? 
+                          `<p class="image-caption">${question.question_image.caption}</p>` : ''}
+                    </div>`;
+            }
+            
+            if (question.options) {
+                content += '<div class="mcq-options">';
+                Object.entries(question.options).forEach(([key, value]) => {
+                    content += `
+                        <div class="option" data-id="${key}">
+                            ${key}. ${value}
+                        </div>
+                    `;
+                });
+                content += '</div>';
+            }
+            
+            questionContent.innerHTML = content;
+
+            // Update solution content
+            updateSolutionContent(question);
+
+            // Update navigation
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = currentQuestionIndex === questions.exam_questions.length - 1;
+            
+            // Update progress dots
+            updateProgressDots();
+
+            // Reset solution visibility
+            solutionContent.style.display = 'none';
+            solutionBtn.innerHTML = '<span>Show Solution</span>';
+
+            // Reset and start timer
+            resetTimer(question.time);
+        }
+
+        // Function to update progress dots
+        function updateProgressDots() {
+            const totalQuestions = questions.exam_questions.length;
+            dots.innerHTML = Array(totalQuestions)
+                .fill()
+                .map((_, index) => `
+                    <span class="dot ${index === currentQuestionIndex ? 'active' : ''}"
+                          title="Question ${index + 1}"></span>
+                `).join('');
+        }
+
+        // Function to reset timer
+        function resetTimer(time) {
+            clearInterval(timerInterval);
+            timer.classList.remove('timer-warning');
+            timeLeft = savedTimes[currentQuestionIndex] || time;
+            timeDisplay.textContent = formatTime(timeLeft);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Function to show correct answer
+        function showCorrectAnswer() {
+            const question = questions.exam_questions[currentQuestionIndex];
+            if (!question.options) return;
+
+            const selectedOption = document.querySelector('.option.selected');
+            
+            document.querySelectorAll('.option').forEach(opt => {
+                if (opt.dataset.id === question.correct_option) {
+                    opt.classList.add('correct');
+                } else if (selectedOption && opt === selectedOption && 
+                         opt.dataset.id !== question.correct_option) {
+                    opt.classList.add('incorrect');
+                }
+            });
+        }
+
+        // Event Listeners
+        questionContent.addEventListener('click', (e) => {
+            const optionElement = e.target.closest('.option');
+            if (!optionElement) return;
+            
+            const question = questions.exam_questions[currentQuestionIndex];
+            if (!question.options) return;
+
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            optionElement.classList.add('selected');
+            
+            if (solutionContent.style.display === 'block') {
+                showCorrectAnswer();
+            }
+        });
+
+        solutionBtn.addEventListener('click', () => {
+            const isShowing = solutionContent.style.display === 'block';
+            solutionContent.style.display = isShowing ? 'none' : 'block';
+            solutionBtn.innerHTML = isShowing ? 
+                '<span>Show Solution</span>' : '<span>Hide Solution</span>';
+
+            if (!isShowing) {
+                showCorrectAnswer();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                savedTimes[currentQuestionIndex] = timeLeft;
+                currentQuestionIndex--;
+                updateQuestion();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.exam_questions.length - 1) {
+                savedTimes[currentQuestionIndex] = timeLeft;
+                currentQuestionIndex++;
+                updateQuestion();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && !prevBtn.disabled) {
+                prevBtn.click();
+            } else if (e.key === 'ArrowRight' && !nextBtn.disabled) {
+                nextBtn.click();
+            } else if (e.key === 'Space' || e.key === 'Enter') {
+                solutionBtn.click();
+                e.preventDefault();
+            }
+        });
+
+        // Initialize the quiz
+        updateQuestion();
+    </script>
+</body>
+</html>

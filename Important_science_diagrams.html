@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science Diagrams - SimplifiedMinds</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+
+        /* Logo Styles */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            font-size: 2.5rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .logo:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .logo .simplified {
+            color: #ffd700;
+        }
+
+        .logo .minds {
+            color: #ff0000;
+        }
+
+        .home-icon {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 12px;
+            color: #4a5568;
+            transition: color 0.3s ease;
+        }
+        
+        .home-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .logo:hover .home-icon {
+            color: #2d3748;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3748;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .logo:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* Container Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* Header Styles */
+        h1 {
+            background: #1a5f7a;
+            color: white;
+            padding: 20px;
+            margin: 0;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            margin: 20px;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: #1a5f7a;
+            color: white;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .diagram-link {
+            color: #2c7da0;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+        
+        .diagram-link:hover {
+            background-color: #e3f2fd;
+            color: #1a5f7a;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5vh auto;
+            padding: 25px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 900px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            color: #666;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .close:hover {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .modal-image {
+            width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        
+        .modal-title {
+            color: #1a5f7a;
+            font-size: 1.3em;
+            font-weight: 500;
+            margin-bottom: 15px;
+            padding-right: 40px;
+        }
+
+        /* Resource Buttons Styles */
+        .resources-section {
+            padding: 20px;
+            margin: 20px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+
+        .section-title {
+            color: #1a5f7a;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .resources {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .resource-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: opacity 0.2s ease;
+            width: 300px;
+            justify-content: center;
+            flex: none;
+        }
+
+        .resource-btn:hover {
+            opacity: 0.9;
+        }
+
+        .whatsapp-btn {
+            background-color: #25D366;
+        }
+
+        .video-btn {
+            background-color: #FF0000;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                border-radius: 5px;
+            }
+
+            h1 {
+                font-size: 20px;
+                padding: 15px;
+            }
+
+            th, td {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 2vh auto;
+                padding: 15px;
+            }
+
+            .modal-title {
+                font-size: 1.1em;
+            }
+
+            .logo {
+                font-size: 2rem;
+                padding: 8px 16px;
+            }
+
+            .home-icon svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .tooltip {
+                display: none;
+            }
+
+            .resources {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .resource-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.8rem;
+            }
+
+            .home-icon {
+                margin-right: 8px;
+            }
+
+            .home-icon svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .table-container {
+                margin: 10px;
+            }
+
+            th, td {
+                padding: 8px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="logo-container">
+        <a href="./index.html" class="logo">
+            <span class="home-icon">🏠</span>
+            <span class="simplified">Simplified</span><span class="minds">Minds</span>
+            <span class="tooltip">Go to Homepage</span>
+        </a>
+    </div>
+    <div class="container">
+        <h1>List of Science Diagrams - 10th Standard</h1>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sl. No.</th>
+                        <th>Chapter</th>
+                        <th>Figure No.</th>
+                        <th>Name of Diagram</th>
+                        <th>Page No.</th>
+                    </tr>
+                </thead>
+                <tbody id="diagramTableBody">
+                    <!-- Table content will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-title" id="modalTitle"></div>
+            <img id="modalImage" class="modal-image" src="" alt="Diagram">
+        </div>
+    </div>
+
+<div class="resources-section">
+    <h2 class="section-title">Learning Resources</h2>
+    <div class="resources">
+        <a href="https://whatsapp.com/channel/0029Vb3QDu17YSd1brABFi1d" class="resource-btn whatsapp-btn">
+            <svg class="social-icon" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Join WhatsApp Channel
+        </a>
+        <a href="https://www.youtube.com/@simplifiedmindssslc" class="resource-btn video-btn">
+            <svg class="social-icon" viewBox="0 0 24 24">
+                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+            </svg>
+            Video Lectures
+        </a>
+    </div>
+</div>
+
+    <script>
+        const diagrams = [
+            
+            {
+                slNo: "01",
+                chapter: "Chemical Reactions and Equation",
+                figureNo: "1.6",
+                diagramName: "Electrolysis of Water",
+                pageNo: "9",
+                imageSrc: "./Diagrams/diagrams_1.jpg"
+            },
+            {
+                slNo: "02",
+                chapter: "Acids, Bases and Salts",
+                figureNo: "2.1",
+                diagramName: "Reaction of zinc granules with dilute sulphuric acid and testing hydrogen gas by burning",
+                pageNo: "19",
+                imageSrc: "./Diagrams/diagrams_2.jpg"
+            },
+            {
+                slNo: "03",
+                chapter: "Acids, Bases and Salts",
+                figureNo: "2.3",
+                diagramName: "Acid solution in water conducts electricity",
+                pageNo: "22",
+                imageSrc: "./Diagrams/diagrams_3.jpg"
+            },
+            {
+                slNo: "04",
+                chapter: "Metals and Nonmetals",
+                figureNo: "3.3",
+                diagramName: "Action of steam on a metal",
+                pageNo: "7",
+                imageSrc: "./Diagrams/diagrams_4.jpg"
+            },
+            {
+                slNo: "05",
+                chapter: "Metals and Nonmetals",
+                figureNo: "3.8",
+                diagramName: "Testing the conductivity of a salt solution",
+                pageNo: "12",
+                imageSrc: "./Diagrams/diagrams_5.jpg"
+            },
+            {
+                slNo: "06",
+                chapter: "Metals and Nonmetals",
+                figureNo: "3.12",
+                diagramName: "Electrolytic refining of copper",
+                pageNo: "16",
+                imageSrc: "./Diagrams/diagrams_6.jpg"
+            },
+            {
+                slNo: "07",
+                chapter: "Life Processes",
+                figureNo: "6.3",
+                diagramName: "a) Open and b) Closed stomatal pore",
+                pageNo: "41",
+                imageSrc: "./Diagrams/diagrams_7.jpg"
+            },
+            {
+                slNo: "08",
+                chapter: "Life Processes",
+                figureNo: "6.6",
+                diagramName: "Human alimentary canal",
+                pageNo: "43",
+                imageSrc: "./Diagrams/diagrams_8.jpg"
+            },
+            {
+                slNo: "09",
+                chapter: "Life Processes",
+                figureNo: "6.10",
+                diagramName: "Schematic Sectional view of the human heart",
+                pageNo: "50",
+                imageSrc: "./Diagrams/diagrams_9.jpg"
+            },
+            {
+                slNo: "10",
+                chapter: "Life Processes",
+                figureNo: "6.13",
+                diagramName: "Excretory system in human beings",
+                pageNo: "54",
+                imageSrc: "./Diagrams/diagrams_10.jpg"
+            },
+            {
+                slNo: "11",
+                chapter: "Life Processes",
+                figureNo: "6.14",
+                diagramName: "Structure of a nephron",
+                pageNo: "55",
+                imageSrc: "./Diagrams/diagrams_11.jpg"
+            },
+            {
+                slNo: "12",
+                chapter: "Control and Coordination",
+                figureNo: "7.1(a)",
+                diagramName: "Structure of neuron",
+                pageNo: "59",
+                imageSrc: "./Diagrams/diagrams_12.jpg"
+            },
+            {
+                slNo: "13",
+                chapter: "Control and Coordination",
+                figureNo: "7.3",
+                diagramName: "Human brain",
+                pageNo: "62",
+                imageSrc: "./Diagrams/diagrams_13.jpg"
+            },
+            {
+                slNo: "14",
+                chapter: "Electricity",
+                figureNo: "12.1",
+                diagramName: "A Schematic diagram of an electric circuit",
+                pageNo: "72",
+                imageSrc: "./Diagrams/diagrams_14.jpg"
+            },
+            {
+                slNo: "15",
+                chapter: "Electricity",
+                figureNo: "--",
+                diagramName: "Table 12.1 Symbols of some commonly used components in circuit diagrams",
+                pageNo: "74",
+                imageSrc: "./Diagrams/diagrams_15.jpg"
+            },
+            {
+                slNo: "16",
+                chapter: "Electricity",
+                figureNo: "12.2",
+                diagramName: "Electric circuit for studying ohm's law",
+                pageNo: "75",
+                imageSrc: "./Diagrams/diagrams_16.jpg"
+            },
+            {
+                slNo: "17",
+                chapter: "Electricity",
+                figureNo: "12.6",
+                diagramName: "Resistors in series",
+                pageNo: "81",
+                imageSrc: "./Diagrams/diagrams_17.jpg"
+            },
+            {
+                slNo: "18",
+                chapter: "Electricity",
+                figureNo: "12.7",
+                diagramName: "Resistors in parallel",
+                pageNo: "82",
+                imageSrc: "./Diagrams/diagrams_18.jpg"
+            },
+            {
+                slNo: "19",
+                chapter: "Magnetic effects of Electric Current",
+                figureNo: "13.6(a)",
+                diagramName: "A pattern of Concentric circles indicating the field lines of a magnetic field around a straight conducting wire",
+                pageNo: "121",
+                imageSrc: "./Diagrams/diagrams_19.jpg"
+            },
+                        {
+                slNo: "20",
+                chapter: "How do organisms reproduce",
+                figureNo: "8.7",
+                diagramName: "Longitudinal section of flower",
+                pageNo: "50",
+                imageSrc: "./Diagrams/diagrams_20.jpg"
+            },
+            {
+                slNo: "21",
+                chapter: "How do organisms reproduce",
+                figureNo: "8.8",
+                diagramName: "Germination of pollen on stigma",
+                pageNo: "51",
+                imageSrc: "./Diagrams/diagrams_21.jpg"
+            },
+            {
+                slNo: "22",
+                chapter: "Light Reflection and Refraction",
+                figureNo: "10.7",
+                diagramName: "(a) (b) (c) (d) (e) (f), Ray diagrams for the image formation by a concave mirror",
+                pageNo: "76",
+                imageSrc: "./Diagrams/diagrams_concave_mirror.jpg"
+            },
+{
+                slNo: "23",
+                chapter: "Light Reflection and Refraction",
+                figureNo: "10.7",
+                diagramName: "(a) (b), Ray diagrams for the image formation by a convex mirror",
+                pageNo: "76",
+                imageSrc: "./Diagrams/diagrams_convex_mirror.jpg"
+            },
+            {
+                slNo: "24",
+                chapter: "Light Reflection and Refraction",
+                figureNo: "10.16",
+                diagramName: "(a) (b) (c) (d) (e) (f) The position size and the nature of the image formed by a convex lens for various positions of the object",
+                pageNo: "90",
+                imageSrc: "./Diagrams/diagrams_convex_lens.jpg"
+            },
+            {
+                slNo: "25",
+                chapter: "Light Reflection and Refraction",
+                figureNo: "10.17",
+                diagramName: "(a) (b) Nature, position and relative size of the image formed by a concave lens",
+                pageNo: "91",
+                imageSrc: "./Diagrams/diagrams_concave_lens.jpg"
+            },
+            {
+                slNo: "26",
+                chapter: "The Human Eye and the colorful world",
+                figureNo: "11.2",
+                diagramName: "a) Far point of a myopic eye b) Myopic Eye c) Correction for myopia",
+                pageNo: "93",
+                imageSrc: "./Diagrams/diagrams_25.jpg"
+            },
+            {
+                slNo: "27",
+                chapter: "The Human Eye and the colourful world",
+                figureNo: "11.3",
+                diagramName: "a) Near point of a Hypermetropic eye b) Hypermetropic eye c) Correction for Hypermetropic eye",
+                pageNo: "93",
+                imageSrc: "./Diagrams/diagrams_26.jpg"
+            },
+            {
+                slNo: "28",
+                chapter: "The Human Eye and the Colourful world",
+                figureNo: "11.6",
+                diagramName: "Recombination of the spectrum of white light",
+                pageNo: "97",
+                imageSrc: "./Diagrams/diagrams_27.jpg"
+            }        ];
+
+        // Populate table
+        const tableBody = document.getElementById('diagramTableBody');
+        diagrams.forEach(diagram => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${diagram.slNo}</td>
+                <td>${diagram.chapter}</td>
+                <td>${diagram.figureNo}</td>
+                <td><span class="diagram-link" onclick="showDiagram('${diagram.diagramName}', '${diagram.imageSrc}')">${diagram.diagramName}</span></td>
+                <td>${diagram.pageNo}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        // Modal functionality
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImage");
+        const modalTitle = document.getElementById("modalTitle");
+        const span = document.getElementsByClassName("close")[0];
+
+        function showDiagram(title, imageSrc) {
+            modal.style.display = "block";
+            modalTitle.textContent = title;
+            modalImg.src = imageSrc;
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+        }
+
+        span.onclick = function() {
+            closeModal();
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape" && modal.style.display === "block") {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

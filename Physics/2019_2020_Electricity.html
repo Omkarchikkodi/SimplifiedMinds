@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Quiz Application</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f0fdf4;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Header styles */
+        .header-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .chapter-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        /* Timer styles */
+        .timer-card {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timer-warning {
+            background: #fee2e2;
+            animation: pulse 1s infinite;
+        }
+
+        .timer-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Question card styles */
+        .question-card {
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .question-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* Badge styles */
+        .badge-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .subject-badge {
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 14px;
+            background: #4338ca;
+            color: white;
+        }
+
+        .type-badge {
+            background: #f3f4f6;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .difficulty-badge {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Content styles */
+        .question-content {
+            font-size: 18px;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        /* Image container styles */
+        .question-image-container,
+        .solution-image-container {
+            margin: 20px 0;
+            text-align: center;
+            max-width: 100%;
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .question-image,
+        .solution-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin: 0 auto;
+            display: block;
+            max-height: 400px;
+            object-fit: contain;
+        }
+
+        .placeholder {
+            background: #e2e8f0;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-style: italic;
+            border-radius: 4px;
+        }
+
+        .image-caption {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        /* MCQ options styles */
+        .mcq-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 16px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .option:hover:not(.selected):not(.correct):not(.incorrect) {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.selected {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.correct {
+            border-color: #059669;
+            background: #d1fae5;
+        }
+
+        .option.incorrect {
+            border-color: #dc2626;
+            background: #fee2e2;
+        }
+
+        /* Button styles */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            background: #4338ca;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Solution styles */
+        .solution {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 16px;
+            display: none;
+            background: #eef2ff;
+        }
+
+        .solution-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .solution-content {
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        .formula-box {
+            background: #fff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Video solution styles */
+        .video-solution {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .video-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            background: white;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .video-button:hover {
+            background: #f9fafb;
+            transform: translateY(-1px);
+        }
+
+        .video-icon {
+            color: #ef4444;
+        }
+
+        /* Navigation styles */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #4338ca;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .badge-container {
+                flex-wrap: wrap;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .dots {
+                order: -1;
+            }
+
+            .mcq-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <span class="chapter-name" id="chapter-name">Physics Quiz</span>
+        </div>
+
+        <div class="timer-card">
+            <div class="timer-text">
+                ⏰ Time Left: <span id="time-display">1:00</span>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-header">
+                <h2 class="question-number" id="question-number">Question 1</h2>
+                <div class="badge-container">
+                    <span id="subject-badge" class="subject-badge">Physics</span>
+                    <span id="type-badge" class="type-badge">Conceptual</span>
+                    <span id="difficulty-badge" class="difficulty-badge">Medium</span>
+                </div>
+            </div>
+
+            <div id="question-content" class="question-content"></div>
+
+            <button id="solution-btn" class="btn">
+                <span>Show Solution</span>
+            </button>
+
+            <div id="solution-content" class="solution">
+                <div class="solution-header">
+                    📝 Solution
+                </div>
+                <div id="solution-text" class="solution-content"></div>
+                <div id="formula-box" class="formula-box"></div>
+                <div class="video-solution">
+                    <a id="video-link" href="#" target="_blank" class="video-button">
+                        <span class="video-icon">▶</span>
+                        Watch Video Solution
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button id="prev-btn" class="btn" disabled>← Previous</button>
+            <div id="dots" class="dots"></div>
+            <button id="next-btn" class="btn">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        // Questions data
+        const questions = {
+            "exam_questions": [
+                
+{
+"question_number": 4,
+"question": "The resistance of a conductor is 27 Ω. If it is cut into three equal parts and connected in parallel, then its total resistance is",
+"options": {
+"A": "6 Ω",
+"B": "3 Ω",
+"C": "9 Ω",
+"D": "27 Ω"
+},
+"correct_option": "B",
+"solution_step": "1) When cut into three equal parts, each part has resistance = 27/3 = 9Ω\n2) For parallel combination: 1/R_total = 1/R₁ + 1/R₂ + 1/R₃\n3) 1/R_total = 1/9 + 1/9 + 1/9 = 3/9\n4) Therefore R_total = 3Ω",
+"time": 60,
+"formula_box": "1/R_total = 1/R₁ + 1/R₂ + 1/R₃ (Parallel combination)\nR ∝ l (Resistance proportional to length)",
+"subject": "Physics [1M]",
+"chapter": "Electricity",
+"type": "Numerical",
+"difficulty": "Medium",
+"misconceptions": "Students often forget to first divide the original resistance by 3 before applying parallel combination formula",
+"prerequisites": "Understanding of parallel circuits and resistance"
+},
+{
+"question_number": 19,
+"question": "Draw the diagram of an electric circuit in which the resistors R₁, R₂ and R₃ are connected in parallel including an ammeter and a voltmeter and mark the direction of the current.",
+"solution_step": "1) Draw parallel branches for R₁, R₂, R₃\n2) Connect battery in series with ammeter\n3) Connect voltmeter across parallel combination\n4) Mark conventional current direction from positive to negative\n5) Label all components and show proper connections",
+"solution_image": {
+"url": "../2019/2019_M_P_Q19.jpg",
+"alt": "Circuit diagram with parallel resistors",
+"caption": "Circuit diagram showing parallel connection with ammeter and voltmeter"
+},
+"time": 120,
+"video_url": null,
+"formula_box": "For parallel circuits:\nV = V₁ = V₂ = V₃\nI = I₁ + I₂ + I₃\n1/R = 1/R₁ + 1/R₂ + 1/R₃",
+"subject": "Physics [2M]",
+"chapter": "Electricity",
+"type": "Drawing",
+"difficulty": "Medium",
+"misconceptions": "Students often make mistakes in ammeter and voltmeter connections",
+"prerequisites": "Understanding of parallel circuits, measuring instruments"
+},
+{
+"question_number": 19,
+"question": "A bulb is marked 220 V and 40 W. Calculate the current flowing through the bulb and it's resistance.",
+"solution_step": "1) Current calculation using P = VI:\nI = P/V = 40/220 = 2/11 A (or 0.18 A)\n2) Resistance calculation using V = IR:\nR = V/I = 220/(2/11) = 1210 Ω",
+"time": 120,
+"formula_box": "P = VI\nV = IR\nR = V/I\nI = P/V",
+"subject": "Physics [2M]",
+"chapter": "Electricity",
+"type": "Numerical",
+"difficulty": "Medium",
+"misconceptions": "Students often forget to convert watts to proper units",
+"prerequisites": "Understanding of Ohm's law and electrical power"
+},
+{
+"question_number": 26,
+"question": "It is advantageous to connect electric devices in parallel instead of connecting them in series. Why?",
+"solution_step": "1) In parallel circuits, each appliance receives the same voltage as the source\n2) Devices can operate independently - if one fails, others continue working\n3) Current divides according to the resistance of each device\n4) Each device can have different resistance values and still function properly\n5) Devices can be turned on/off independently without affecting others",
+"time": 120,
+"formula_box": "For parallel circuits:\nV = V₁ = V₂ = V₃ (Voltage same across all branches)\nI = I₁ + I₂ + I₃ (Total current is sum of branch currents)",
+"subject": "Physics [2M]",
+"chapter": "Electricity",
+"type": "Conceptual",
+"difficulty": "Medium",
+"misconceptions": "Students often confuse parallel and series connections, and may not understand why household circuits are wired in parallel",
+"prerequisites": "Understanding of series and parallel circuits, Ohm's law"
+},
+{
+"question_number": 31,
+"question": "An electric refrigerator rated 400 W is used for 8 hours a day. An electric iron box rated 750 W is used for 2 hours a day. Calculate the cost of using these appliances for 30 days, if the cost of 1 kWh is Rs. 3/-.",
+"solution_step": "1) Energy consumed by refrigerator in 30 days = 400W × 8h × 30 = 96000 Wh = 96 kWh\n2) Energy consumed by iron box in 30 days = 750W × 2h × 30 = 45000 Wh = 45 kWh\n3) Total energy = 96 + 45 = 141 kWh\n4) Cost = 141 kWh × Rs. 3/kWh = Rs. 423",
+"time": 120,
+"formula_box": "Energy (in kWh) = Power (in kW) × Time (in hours)\nCost = Energy consumed × Rate per unit",
+"subject": "Physics [2M]",
+"chapter": "Electricity",
+"type": "Numerical",
+"difficulty": "Medium",
+"misconceptions": "Students often forget to convert watts to kilowatts or miscalculate the total time period",
+"prerequisites": "Understanding of electrical power, energy calculation, unit conversions"
+},
+{
+"question_number": 40,
+"question": "(i) Define electric potential difference. How is ammeter connected in an electric circuit?\n(ii) Explain the application of heating effect of electric current in an electric bulb and the fuse used in an electric circuit.",
+"solution_step": "Part (i):\n1) Electric potential difference: Work done to move unit charge between two points\n2) Ammeter connection: Always in series with the circuit\n\nPart (ii):\n1) Electric bulb: Uses tungsten filament that gets hot and emits light\n2) Fuse: Melts and breaks circuit when current exceeds safe limit",
+"time": 240,
+"formula_box": "Potential difference V = Work done/Charge\nHeating effect: H = I²Rt\nPower P = VI = I²R",
+"subject": "Physics [4M]",
+"chapter": "Electricity",
+"type": "Conceptual",
+"difficulty": "Hard",
+"misconceptions": "Students often confuse series and parallel connections, or misunderstand fuse working",
+"prerequisites": "Understanding of electric circuits, potential difference, and heating effects"
+},
+{
+"question_number": 50,
+"question": "(i) How does overload and short-circuit occur in an electric circuit? Explain. What is the function of fuse during this situation?",
+"solution_step": "1) Overload occurs when too many appliances draw excessive current\n2) Short-circuit occurs when live wire directly contacts neutral wire\n3) Both situations cause dangerous current flow\n4) Fuse contains wire that melts when current exceeds safe limit\n5) Fuse breaks circuit, preventing damage and accidents",
+"time": 240,
+"formula_box": "Safe current = Fuse rating",
+"subject": "Physics [4M]",
+"chapter": "Electricity",
+"type": "Conceptual",
+"difficulty": "Hard",
+"misconceptions": "Students often confuse overload with short-circuit, or don't understand how fuses protect circuits",
+"prerequisites": "Understanding of electric circuits, current flow, safety devices"
+},
+{
+"question_number": 10,
+"question": "What is the SI unit of potential difference? Name the device used to measure the potential difference.",
+"options": null,
+"correct_option": null,
+"solution_step": "1. SI unit of potential difference is Volt (V)\n2. Potential difference is measured using a Voltmeter\n3. Voltmeter is always connected in parallel across components",
+"time": 60,
+"formula_box": "V = Work done/Charge = W/Q\nUnit: 1 Volt = 1 Joule/Coulomb",
+"subject": "Physics [1M]",
+"chapter": "Electricity",
+"type": "Memory-based",
+"difficulty": "Easy",
+"misconceptions": "Students often confuse voltmeter connection (parallel) with ammeter connection (series)",
+"prerequisites": "Basic electrical quantities and their measurements",
+"year": 2020,
+"question_image": false,
+"options_image": false
+},
+{
+"question_number": 16,
+"question": "Suggest any two measures to avoid overloading in domestic circuits.",
+"options": null,
+"correct_option": null,
+"solution_step": "1. Live and neutral wires should not come into direct contact\n2. Too many appliances should not be connected to a single socket\n3. Should always use quality wires and good quality electrical appliances",
+"time": 60,
+"formula_box": "Power (P) = VI, where V is voltage and I is current",
+"subject": "Physics [1M]",
+"chapter": "Electricity",
+"type": "Conceptual",
+"difficulty": "Easy",
+"misconceptions": "Students often underestimate the importance of circuit safety measures",
+"prerequisites": "Understanding of electric circuits and current flow",
+"year": 2020,
+"question_image": false,
+"options_image": false
+},
+{
+"question_number": 20,
+"question": "The resistivity of manganese wire of length 1 m is 1.84 × 10⁻⁶ Ωm at 20°C. If the diameter of the wire is 3 × 10⁻⁴ m, what will be the resistance of the wire at that temperature?",
+"solution_step": "1. Given:\n   - ρ = 1.84 × 10⁻⁶ Ωm\n   - l = 1 m\n   - d = 3 × 10⁻⁴ m\n2. Calculate area: A = πr² = π(d/2)² = (π/4)d²\n3. A = (22/7) × (3 × 10⁻⁴)² / 4\n4. Apply R = ρl/A\n5. Final answer: R = 26.02 Ω",
+"solution_image": {
+"url": "../2020/2020_S_P_Q23.jpg"
+},
+"time": 300,
+"formula_box": "R = ρl/A\nA = πr² = π(d/2)²",
+"subject": "Physics [3M]",
+"chapter": "Current Electricity",
+"type": "Numerical",
+"difficulty": "Hard",
+"misconceptions": "Students often forget to convert diameter to radius when calculating area",
+"prerequisites": "Understanding of resistance, resistivity, and circular cross-sectional area",
+"year": 2020,
+"question_image": false,
+"options_image": false
+},
+{
+"question_number": 20,
+"question": "Observe the given circuit. Calculate the total resistance in the circuit and the total current flowing in the circuit.",
+"question_image": {
+"url": "../2020/2020_M_P_Q20.jpg",
+"alt": "Circuit diagram showing three parallel resistors (2Ω, 4Ω, 4Ω) in series with a 5Ω resistor and battery V",
+"caption": "Circuit with parallel and series combination of resistors"
+},
+"solution_step": "1) For parallel combination of three resistors:\n   1/Rp = 1/R₁ + 1/R₂ + 1/R₃\n   1/Rp = 1/2 + 1/4 + 1/4\n   1/Rp = 2/4 + 1/4 + 1/4 = 4/4\n   Rp = 1Ω\n\n2) Total resistance in circuit:\n   R = Rp + R₄\n   R = 1 + 5 = 6Ω\n\n3) Current calculation:\n   I = V/R = 6/6 = 1A",
+"solution_image": {
+"url": "../2020/2020_M_P_Q20.jpg",
+"alt": "Solution steps showing parallel resistance calculation and total current",
+"caption": "Step-by-step solution for circuit analysis"
+},
+"time": 180,
+"formula_box": "For parallel resistors: 1/Rₜ = 1/R₁ + 1/R₂ + 1/R₃\nFor series resistors: Rₜ = R₁ + R₂\nOhm's Law: I = V/R",
+"subject": "Physics [3M]",
+"chapter": "Electricity",
+"type": "Numerical",
+"difficulty": "Hard",
+"misconceptions": "Students often forget to:\n1) First calculate parallel combination before adding series resistance\n2) Convert the parallel combination to equivalent resistance\n3) Apply Ohm's law correctly with total resistance",
+"prerequisites": "Understanding of:\n1) Series and parallel combinations of resistors\n2) Ohm's law\n3) Current calculation in circuits"
+},
+{
+"question_number": 23,
+"question": "Observe the given circuit diagram. Calculate the total resistance and the total current flowing through the circuit.",
+"question_image": {
+"url": "../2020/2020_S_P_Q23.jpg",
+"alt": "Circuit diagram showing three parallel resistors (2Ω, 4Ω, 4Ω) in series with a 5Ω resistor and battery V",
+"caption": "Circuit with parallel and series combination of resistors"
+},
+"solution_step": "1. Given: R1 = 5Ω, R2 = 4Ω, R3 = 12Ω, V = 24V\n2. For parallel combination of R2 and R3: 1/Rp = 1/4 + 1/12 = 4/12 = 1/3\n3. Total resistance RT = R1 + Rp = 5 + 3 = 8Ω\n4. Total current I = V/RT = 24/8 = 3A",
+"solution_image": {
+"url": "../2020/2020_S_P_Q23.jpg"
+},
+"time": 120,
+"formula_box": "For parallel resistors: 1/RT = 1/R1 + 1/R2\nOhm's Law: I = V/R",
+"subject": "Physics [2M]",
+"chapter": "Electricity",
+"type": "Numerical",
+"difficulty": "Hard",
+"misconceptions": "Students often confuse series and parallel combinations and their respective formulas",
+"prerequisites": "Understanding of series and parallel circuits, Ohm's law"
+},
+{
+"question_number": 34,
+"question": "In domestic wiring electrical appliances are not connected in series. Why?",
+"options": null,
+"correct_option": null,
+"solution_step": "Series connections are avoided because:\n1. If one appliance fails, entire circuit breaks\n2. All appliances would draw same current\n3. Voltage gets divided across appliances\n4. Appliances won't operate at rated voltage\n5. Inefficient power distribution",
+"time": 120,
+"formula_box": "In series: I_total = I_1 = I_2 = I_3\nV_total = V_1 + V_2 + V_3",
+"subject": "Physics [2M]",
+"chapter": "Electricity",
+"type": "Conceptual",
+"difficulty": "Medium",
+"misconceptions": "Students often don't understand why same current in series is problematic",
+"prerequisites": "Understanding of series circuits and voltage division",
+"year": 2020,
+"question_image": false,
+"options_image": false
+},
+{
+"question_number": 35,
+"question": "State Joule's law of heating. Explain the working of electric filament bulb.",
+"options": null,
+"correct_option": null,
+"solution_step": "Joule's Law:\n1. Heat produced ∝ square of current (I²)\n2. Heat produced ∝ resistance (R)\n3. Heat produced ∝ time (t)\n\nFilament Bulb Working:\n1. Tungsten used due to high melting point\n2. Filled with inert gases (N₂, Ar)\n3. Gases prevent filament oxidation\n4. Current heats filament to incandescence\n5. Most energy as heat, small part as light",
+"time": 300,
+"formula_box": "H = I²Rt\nwhere H = Heat produced\nI = Current\nR = Resistance\nt = Time",
+"subject": "Physics [3M]",
+"chapter": "Electricity",
+"type": "Conceptual",
+"difficulty": "Medium",
+"misconceptions": "Students often forget that heat produced depends on square of current",
+"prerequisites": "Understanding of electrical energy and heating effect",
+"year": 2020,
+"question_image": false,
+"options_image": false
+},
+{
+"question_number": 38,
+"question": "What is the meaning of the statement 'The potential difference between two points is 1 V'? Name the device used to measure potential difference. What is resistance of a conductor? What is electric power? Write three formulae used to find it.",
+"options": null,
+"correct_option": null,
+"solution_step": "1. 1V means 1 joule work done to move 1 coulomb charge\n2. Voltmeter measures potential difference\n3. Resistance is opposition to current flow\n4. Electric power is rate of electrical energy consumption\n5. Formulas: P=VI, P=I²R, P=V²/R",
+"time": 300,
+"formula_box": "V = W/Q\nP = VI\nP = I²R\nP = V²/R",
+"subject": "Physics [5M]",
+"chapter": "Electricity",
+"type": "Conceptual",
+"difficulty": "Medium",
+"misconceptions": "Students often confuse voltage, current, and power relationships",
+"prerequisites": "Understanding of electric potential, current, and power",
+"year": 2020,
+"question_image": false,
+"options_image": false
+}
+                // Add more questions here as needed
+            ]
+        };
+
+        // Initialize variables
+        let currentQuestionIndex = 0;
+        let timeLeft = 60;
+        let timerInterval;
+        let savedTimes = {};
+
+        // Get DOM elements
+        const timeDisplay = document.getElementById('time-display');
+        const questionNumber = document.getElementById('question-number');
+        const subjectBadge = document.getElementById('subject-badge');
+        const typeBadge = document.getElementById('type-badge');
+        const questionContent = document.getElementById('question-content');
+        const solutionBtn = document.getElementById('solution-btn');
+        const solutionContent = document.getElementById('solution-content');
+        const solutionText = document.getElementById('solution-text');
+        const formulaBox = document.getElementById('formula-box');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const dots = document.getElementById('dots');
+        const timer = document.querySelector('.timer-card');
+        const chapterName = document.getElementById('chapter-name');
+
+        // Helper function to format time
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+        // Timer update function
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timeDisplay.textContent = formatTime(timeLeft);
+                if (timeLeft <= 5) {
+                    timer.classList.add('timer-warning');
+                }
+            }
+        }
+
+        // Function to handle image errors
+        function handleImageError(img, type = 'question') {
+            console.error(`Failed to load ${type} image:`, img.src);
+            img.onerror = null;
+            img.classList.add('placeholder');
+            const placeholder = document.createElement('div');
+            placeholder.className = `${type}-image placeholder`;
+            placeholder.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} image not available`;
+            img.parentElement.replaceChild(placeholder, img);
+        }
+
+        // Main function to update question content
+        function updateQuestion() {
+            const question = questions.exam_questions[currentQuestionIndex];
+            
+            // Update header information
+            questionNumber.textContent = `Question ${question.question_number}`;
+            subjectBadge.textContent = question.subject;
+            typeBadge.textContent = question.type;
+            chapterName.textContent = question.chapter;
+            document.getElementById('difficulty-badge').textContent = question.difficulty;
+            
+            // Build question content
+            let content = `<p>${question.question}</p>`;
+            
+            // Add question image if present
+            if (question.question_image) {
+                content += `
+                    <div class="question-image-container">
+                        <img 
+                            src="${question.question_image.url}" 
+                            alt="${question.question_image.alt || `Image for Question ${question.question_number}`}"
+                            class="question-image"
+                            onerror="handleImageError(this, 'question')"
+                        >
+                        ${question.question_image.caption ? 
+                            `<p class="image-caption">${question.question_image.caption}</p>` : ''}
+                    </div>`;
+            }
+            
+            // Add MCQ options if present
+            if (question.options) {
+                content += '<div class="mcq-options">';
+                Object.entries(question.options).forEach(([key, value]) => {
+                    content += `
+                        <div class="option" data-id="${key}">
+                            ${key}. ${value}
+                        </div>
+                    `;
+                });
+                content += '</div>';
+            }
+            
+            questionContent.innerHTML = content;
+
+            // Update solution content
+            let solutionHtml = question.solution_step;
+            
+            // Add solution image if present
+            if (question.solution_image) {
+                solutionHtml += `
+                    <div class="solution-image-container">
+                        <img 
+                            src="${question.solution_image.url}" 
+                            alt="${question.solution_image.alt || 'Solution illustration'}"
+                            class="solution-image"
+                            onerror="handleImageError(this, 'solution')"
+                        >
+                        ${question.solution_image.caption ? 
+                            `<p class="image-caption">${question.solution_image.caption}</p>` : ''}
+                    </div>`;
+            }
+            
+            // Add misconceptions and prerequisites
+            if (question.misconceptions) {
+                solutionHtml += `\n\n<strong>Common Misconceptions:</strong>\n${question.misconceptions}`;
+            }
+            if (question.prerequisites) {
+                solutionHtml += `\n\n<strong>Prerequisites:</strong>\n${question.prerequisites}`;
+            }
+            
+            solutionText.innerHTML = solutionHtml;
+            formulaBox.innerHTML = question.formula_box ? 
+                `<strong>Formulas:</strong><br>${question.formula_box}` : '';
+
+            // Update video link
+            const videoLink = document.getElementById('video-link');
+            if (question.video_url) {
+                videoLink.href = question.video_url;
+                videoLink.style.display = 'inline-flex';
+            } else {
+                videoLink.style.display = 'none';
+            }
+            
+            // Update navigation buttons state
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = currentQuestionIndex === questions.exam_questions.length - 1;
+            
+            // Update progress dots
+            dots.innerHTML = questions.exam_questions.map((_, index) => `
+                <span class="dot ${index === currentQuestionIndex ? 'active' : ''}"></span>
+            `).join('');
+
+            // Reset solution visibility
+            solutionContent.style.display = 'none';
+            solutionBtn.innerHTML = '<span>Show Solution</span>';
+
+            // Reset and start timer for new question
+            clearInterval(timerInterval);
+            timer.classList.remove('timer-warning');
+            timeLeft = savedTimes[currentQuestionIndex] || question.time;
+            timeDisplay.textContent = formatTime(timeLeft);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Function to preload images
+        function preloadImages() {
+            questions.exam_questions.forEach(question => {
+                // Preload question images
+                if (question.question_image && question.question_image.url) {
+                    const img = new Image();
+                    img.onerror = () => console.error('Failed to preload question image:', img.src);
+                    img.src = question.question_image.url;
+                }
+                // Preload solution images
+                if (question.solution_image && question.solution_image.url) {
+                    const img = new Image();
+                    img.onerror = () => console.error('Failed to preload solution image:', img.src);
+                    img.src = question.solution_image.url;
+                }
+            });
+        }
+
+        // Event handler for MCQ option selection
+        questionContent.addEventListener('click', (e) => {
+            const optionElement = e.target.closest('.option');
+            if (!optionElement) return;
+            
+            const question = questions.exam_questions[currentQuestionIndex];
+            if (!question.options) return;
+
+            // Remove previous selection and result classes
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            // Add selected class to clicked option
+            optionElement.classList.add('selected');
+            
+            // If solution is visible, show correct/incorrect indicators
+            if (solutionContent.style.display === 'block') {
+                const selectedOptionId = optionElement.dataset.id;
+                
+                document.querySelectorAll('.option').forEach(opt => {
+                    const optionId = opt.dataset.id;
+                    if (optionId === question.correct_option) {
+                        opt.classList.add('correct');
+                    } else if (optionId === selectedOptionId) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            }
+        });
+
+        // Event handler for solution button
+        solutionBtn.addEventListener('click', () => {
+            const isShowing = solutionContent.style.display === 'block';
+            solutionContent.style.display = isShowing ? 'none' : 'block';
+            solutionBtn.innerHTML = isShowing ? 
+                '<span>Show Solution</span>' : '<span>Hide Solution</span>';
+
+            // Show correct/incorrect indicators for MCQ when solution is displayed
+            const question = questions.exam_questions[currentQuestionIndex];
+            if (question.options) {
+                const selectedOption = document.querySelector('.option.selected');
+                
+                document.querySelectorAll('.option').forEach(opt => {
+                    if (opt.dataset.id === question.correct_option) {
+                        opt.classList.add('correct');
+                    } else if (selectedOption && opt === selectedOption) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            }
+        });
+
+        // Event handlers for navigation buttons
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                savedTimes[currentQuestionIndex] = timeLeft;
+                currentQuestionIndex--;
+                updateQuestion();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.exam_questions.length - 1) {
+                savedTimes[currentQuestionIndex] = timeLeft;
+                currentQuestionIndex++;
+                updateQuestion();
+            }
+        });
+
+        // Initialize the quiz
+        preloadImages();
+        updateQuestion();
+    </script>
+</body>
+</html>

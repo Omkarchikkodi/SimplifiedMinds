@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Quiz Application</title>
+    <style>
+        /* Import Inter font for modern, clean typography */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        /* Reset default styles and set up base styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Main layout styling */
+        body {
+            background-color: #f0fdf4;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Header section styling */
+        .header-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .chapter-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        /* Timer card styling */
+        .timer-card {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timer-warning {
+            background: #fee2e2;
+            animation: pulse 1s infinite;
+        }
+
+        .timer-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Question card styling */
+        .question-card {
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .question-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* Badge styling */
+        .badge-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .subject-badge {
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 14px;
+            background: #4338ca;
+            color: white;
+        }
+
+        .type-badge {
+            background: #f3f4f6;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        /* Question content and image styling */
+        .question-content {
+            font-size: 18px;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .question-image-container,
+        .solution-image-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .question-image,
+        .solution-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .image-caption {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        /* MCQ options styling */
+        .mcq-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 16px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .option:hover:not(.selected):not(.correct):not(.incorrect) {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.selected {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.correct {
+            border-color: #059669;
+            background: #d1fae5;
+        }
+
+        .option.incorrect {
+            border-color: #dc2626;
+            background: #fee2e2;
+        }
+
+        /* Button styling */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            background: #4338ca;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Solution section styling */
+        .solution {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 16px;
+            display: none;
+            background: #eef2ff;
+        }
+
+        .solution-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .formula-box {
+            background: #fff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Navigation styling */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #4338ca;
+        }
+
+.video-solution {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .video-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+        background: white;
+        border: 1px solid #e5e7eb;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .video-button:hover {
+        background: #f9fafb;
+        transform: translateY(-1px);
+    }
+
+    .video-icon {
+        color: #ef4444;
+    }
+
+        /* Animation keyframes */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .badge-container {
+                flex-wrap: wrap;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .dots {
+                order: -1;
+            }
+
+            .mcq-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header section -->
+        <div class="header-section">
+            <span class="chapter-name" id="chapter-name">Physics Quiz</span>
+        </div>
+
+        <!-- Timer section -->
+        <div class="timer-card">
+            <div class="timer-text">
+                ⏰ Time Left: <span id="time-display">1:00</span>
+            </div>
+        </div>
+
+        <!-- Question card -->
+        <div class="question-card">
+            <div class="question-header">
+                <h2 class="question-number" id="question-number">Question 1</h2>
+                <div class="badge-container">
+                    <span id="subject-badge" class="subject-badge">Physics</span>
+                    <span id="type-badge" class="type-badge">Conceptual</span>
+                </div>
+            </div>
+
+            <div id="question-content" class="question-content">
+                <!-- Question content will be dynamically inserted here -->
+            </div>
+
+            <button id="solution-btn" class="btn">
+                <span>Show Solution</span>
+            </button>
+
+            <div id="solution-content" class="solution">
+    <div class="solution-header">
+        📝 Solution
+    </div>
+    <div id="solution-text"></div>
+    <div id="formula-box" class="formula-box"></div>
+    <div class="video-solution">
+        <a id="video-link" href="#" target="_blank" class="video-button">
+            <span class="video-icon">▶</span>
+            Watch Video Solution
+        </a>
+    </div>
+</div>
+
+        <!-- Navigation section -->
+        <div class="navigation">
+            <button id="prev-btn" class="btn" disabled>← Previous</button>
+            <div id="dots" class="dots"></div>
+            <button id="next-btn" class="btn">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        // Quiz data
+        const questions = {
+            "exam_questions": [
+                {
+      "question_number": 3,
+      "question": "The sky as seen from the surface of the moon appears dark because,",
+      "options": {
+        "A": "only a little of the blue and violet colours are scattered",
+        "B": "all the colours are absorbed by the atmosphere present in the moon",
+        "C": "all the colours are scattered",
+        "D": "atmospheric particles needed to scatter the light are not present"
+      },
+      "correct_option": "D",
+      "solution_step": "The sky appears dark from the moon's surface because there is no atmosphere. Without atmospheric particles, there is no scattering of sunlight. This is different from Earth where our atmosphere scatters sunlight, making the sky appear blue due to Rayleigh scattering.",
+      "time": 60,
+      "video_url": null,
+      "formula_box": "No specific formula required",
+      "subject": "Physics [1M]",
+      "chapter": "Light - Scattering of Light",
+      "type": "Conceptual",
+      "difficulty": "Easy",
+      "misconceptions": "Students often incorrectly assume the moon has an atmosphere or that the darkness is due to absorption rather than lack of scattering",
+      "prerequisites": "Understanding of light scattering and atmospheric effects on light",
+      "year": 2020,
+      "question_image": false,
+      "options_image": false
+    },
+    {
+      "question_number": 5,
+      "question": "Observe the diagram. The magnetic poles represented by P and Q respectively are",
+      "options": {
+        "A": "south (S) and south (S)",
+        "B": "north (N) and south (S)",
+        "C": "north (N) and north (N)",
+        "D": "south (S) and north (N)"
+      },
+      "correct_option": "A",
+      "solution_step": "Based on the diagram showing magnetic field lines between two poles, we can see repulsion occurring. Since like poles repel each other, and the field lines show repulsion, both P and Q must be south poles (S).",
+      "time": 60,
+      "video_url": null,
+      "formula_box": "Like poles repel, Unlike poles attract",
+      "subject": "Physics [1M]",
+      "chapter": "Magnetism",
+      "type": "Conceptual",
+      "difficulty": "Medium",
+      "misconceptions": "Students often forget that repelling poles must be like poles and may misinterpret magnetic field line patterns",
+      "prerequisites": "Understanding of magnetic poles and field line patterns",
+      "year": 2020,
+      "question_image": true,
+      "options_image": false
+    },
+{
+      "question_number": 11,
+      "question": "Observe the given incomplete diagram. [Ray diagram for lens]",
+"question_image": {
+           "url": "./2020/2020_S_P_Q5.jpg",
+                        "alt": "Diagram showing eye defect myopia",
+                        "caption": "Figure: Light rays focusing before retina in myopia"
+      },
+      "options": {
+        "A": "Ray diagram showing refraction through convex lens",
+        "B": "Ray diagram showing focal points",
+        "C": "Ray diagram showing image formation",
+        "D": "Ray diagram showing object position"
+      },
+      "correct_option": "C",
+      "solution_step": "The diagram shows ray diagram for image formation in a convex lens. The ray passing through focal point F1 and principal axis helps determine image position.",
+"solution_image": {
+                        "url": "./2020/2020_S_P_Q11_2.jpg",
+                        },
+      "time": 60,
+      "video_url": null,
+      "formula_box": "1/f = 1/v + 1/u where f is focal length, v is image distance, u is object distance",
+      "subject": "Physics [1M]",
+      "chapter": "Light - Refraction through Lenses",
+      "type": "Conceptual",
+      "difficulty": "Medium",
+      "misconceptions": "Students often confuse between real and virtual image formation and the rays used for ray diagrams",
+      "prerequisites": "Understanding of ray diagrams and image formation in convex lenses",
+      "year": 2020,
+      "question_image": true,
+      "options_image": true
+    },
+    {
+      "question_number": 14,
+      "question": "A student sitting in the last bench has difficulty in reading the blackboard writing. Which is the defect of vision the student has? How can it be corrected?",
+      "options": {},
+      "correct_option": "Descriptive",
+      "solution_step": "1. The student is suffering from Myopia (near-sightedness)\n2. This defect can be corrected by using a concave lens of suitable power",
+      "time": 60,
+      "video_url": null,
+      "formula_box": "Power of lens (P) = -1/focal length (in meters)",
+      "subject": "Physics [1M]",
+      "chapter": "Light - Human Eye and Defects of Vision",
+      "type": "Conceptual",
+      "difficulty": "Easy",
+      "misconceptions": "Students often confuse myopia with hypermetropia and the type of corrective lens needed",
+      "prerequisites": "Understanding of vision defects and corrective measures",
+      "year": 2020,
+      "question_image": false,
+      "options_image": false
+    },
+    {
+      "question_number": 16,
+      "question": "Suggest any two measures to avoid overloading in domestic circuits.",
+      "options": {},
+      "correct_option": "Descriptive",
+      "solution_step": "1. Live and neutral wires should not come into direct contact\n2. Too many appliances should not be connected to a single socket\n3. Should always use quality wires and good quality electrical appliances",
+      "time": 60,
+      "video_url": null,
+      "formula_box": "Power (P) = VI, where V is voltage and I is current",
+      "subject": "Physics [1M]",
+      "chapter": "Electricity",
+      "type": "Conceptual",
+      "difficulty": "Easy",
+      "misconceptions": "Students often underestimate the importance of circuit safety measures",
+      "prerequisites": "Understanding of electric circuits and current flow",
+      "year": 2020,
+      "question_image": false,
+      "options_image": false
+    },
+    {
+      "question_number": 20,
+      "question": "Object distance and image distance of a lens are –30 cm and –10 cm respectively. Find the magnification and decide the type of lens used and nature of the image.",
+      "options": {},
+      "correct_option": "Descriptive",
+      "solution_step": "1. Given: u = -30 cm, v = -10 cm\n2. Magnification m = -v/u = -(-10)/(-30) = +0.33\n3. Negative v indicates concave lens\n4. Positive magnification < 1 indicates erect, virtual, and diminished image",
+      "time": 120,
+      "video_url": null,
+      "formula_box": "Magnification (m) = -v/u\nwhere v is image distance and u is object distance",
+      "subject": "Physics [2M]",
+      "chapter": "Light - Refraction through Lenses",
+      "type": "Numerical",
+      "difficulty": "Medium",
+      "misconceptions": "Students often get confused with sign conventions and interpretation of magnification",
+      "prerequisites": "Understanding of lens formula and sign conventions",
+      "year": 2020,
+      "question_image": false,
+      "options_image": false
+    },
+    {
+      "question_number": 23,
+      "question": "Observe the given circuit diagram. Calculate the total resistance and the total current flowing through the circuit.",
+      "options": {},
+      "correct_option": "Descriptive",
+      "solution_step": "1. Given: R1 = 5Ω, R2 = 4Ω, R3 = 12Ω, V = 24V\n2. For parallel combination of R2 and R3: 1/Rp = 1/4 + 1/12 = 4/12 = 1/3\n3. Total resistance RT = R1 + Rp = 5 + 3 = 8Ω\n4. Total current I = V/RT = 24/8 = 3A",
+"solution_image": {
+                        "url": "./2020/2020_S_P_Q23.jpg",
+                        },
+      "time": 120,
+      "video_url": null,
+      "formula_box": "For parallel resistors: 1/RT = 1/R1 + 1/R2\nOhm's Law: I = V/R",
+      "subject": "Physics [2M]",
+      "chapter": "Electricity",
+      "type": "Numerical",
+      "difficulty": "Hard",
+      "misconceptions": "Students often confuse series and parallel combinations and their respective formulas",
+      "prerequisites": "Understanding of series and parallel circuits, Ohm's law",
+      "year": 2020,
+      "question_image": true,
+      "options_image": false
+    },
+    {
+      "question_number": 25,
+      "question": "a) State the laws of refraction of light.\nb) In the given figure, AB is the incident ray, BC is the refracted ray and MN is the normal at the point of incidence. Which medium is more denser? Why?",
+      "options": {},
+      "correct_option": "Descriptive",
+      "solution_step": "Laws of refraction:\n1. The incident ray, refracted ray, and normal all lie in the same plane\n2. sin(i)/sin(r) = constant (Snell's law)\n\nMedium analysis:\n1. Medium 1 is denser\n2. When light travels from rarer to denser medium, it bends towards normal",
+"solution_image": {
+                        "url": "./2020/2020_S_P_Q25.jpg",
+                        },
+      "time": 180,
+      "video_url": null,
+      "formula_box": "Snell's Law: n1sin(i) = n2sin(r)\nwhere n1, n2 are refractive indices",
+      "subject": "Physics [3M]",
+      "chapter": "Light - Refraction",
+      "type": "Conceptual",
+      "difficulty": "Medium",
+      "misconceptions": "Students often confuse the relationship between angle of incidence and refraction with medium density",
+      "prerequisites": "Understanding of light refraction and Snell's law",
+      "year": 2020,
+      "question_image": true,
+      "options_image": false
+    },
+    {
+      "question_number": 28,
+      "question": "a) Explain how is nuclear energy generated in power reactors. How is electricity produced from nuclear energy?\nb) Mention two hazards of nuclear power reactor.",
+      "options": {},
+      "correct_option": "Descriptive",
+      "solution_step": "1. Nuclear fission of heavy atoms (uranium/plutonium) occurs when bombarded with neutrons\n2. Energy released is used to produce steam\n3. Steam drives turbines to generate electricity\n\nHazards:\n1. Risk of radiation leakage\n2. Disposal of nuclear waste",
+      "time": 180,
+      "video_url": null,
+      "formula_box": "E = mc²\nwhere E is energy, m is mass difference, c is speed of light",
+      "subject": "Physics [3M]",
+      "chapter": "Nuclear Energy",
+      "type": "Conceptual",
+      "difficulty": "Medium",
+      "misconceptions": "Students often confuse nuclear fission with fusion and underestimate safety concerns",
+      "prerequisites": "Understanding of nuclear reactions and energy conversion",
+      "year": 2020,
+      "question_image": false,
+      "options_image": false
+    },
+    {
+      "question_number": 31,
+      "question": "Draw the diagram to show the recombination of the spectrum of white light and label the following parts:\na) The ray of light that bends the most\nb) The ray of light that bends the least",
+      "options": {},
+      "correct_option": "Descriptive",
+      "solution_step": "Draw diagram showing:\n1. Two prisms in inverted position\n2. Violet ray bends most (label)\n3. Red ray bends least (label)\n4. White light emerging after recombination",
+"solution_image": {
+                        "url": "./2020/2020_S_P_Q31.jpg",
+                        },
+      "time": 180,
+      "video_url": null,
+      "formula_box": "n = sin(i)/sin(r)\nwhere n varies with wavelength",
+      "subject": "Physics [3M]",
+      "chapter": "Light - Dispersion",
+      "type": "Drawing",
+      "difficulty": "Medium",
+      "misconceptions": "Students often confuse the order of colors and their relative bending",
+      "prerequisites": "Understanding of dispersion and recombination of light",
+      "year": 2020,
+      "question_image": false,
+      "options_image": false
+    },
+    {
+      "question_number": 36,
+      "question": "Observe the given diagram. Explain the experiment related to this diagram. What conclusions can be drawn from this experiment?",
+      "options": {},
+      "correct_option": "Descriptive",
+      "solution_step": "1. Demonstrates electromagnetic induction\n2. Moving magnet near coil induces current (shown by galvanometer)\n3. Direction of induced current depends on motion direction\n4. Faster movement induces larger current\n5. Stationary magnet produces no current",
+"solution_image": {
+                        "url": "./2020/2020_S_P_Q36.jpg",
+                        },
+      "time": 240,
+      "video_url": null,
+      "formula_box": "Induced EMF = -N(dΦ/dt)\nwhere Φ is magnetic flux",
+      "subject": "Physics [4M]",
+      "chapter": "Electromagnetic Induction",
+      "type": "Experimental",
+      "difficulty": "Hard",
+      "misconceptions": "Students often miss the relationship between motion and induced current",
+      "prerequisites": "Understanding of magnetic fields and electromagnetic induction",
+      "year": 2020,
+      "question_image": true,
+      "options_image": false
+    },
+    {
+      "question_number": 38,
+      "question": "What is the meaning of the statement 'The potential difference between two points is 1 V'? Name the device used to measure potential difference. What is resistance of a conductor? What is electric power? Write three formulae used to find it.",
+      "options": {},
+      "correct_option": "Descriptive",
+      "solution_step": "1. 1V means 1 joule work done to move 1 coulomb charge\n2. Voltmeter measures potential difference\n3. Resistance is opposition to current flow\n4. Electric power is rate of electrical energy consumption\n5. Formulas: P=VI, P=I²R, P=V²/R",
+      "time": 300,
+      "video_url": null,
+      "formula_box": "V = W/Q\nP = VI\nP = I²R\nP = V²/R",
+      "subject": "Physics [5M]",
+      "chapter": "Electricity",
+      "type": "Conceptual",
+      "difficulty": "Medium",
+      "misconceptions": "Students often confuse voltage, current, and power relationships",
+      "prerequisites": "Understanding of electric potential, current, and power",
+      "year": 2020,
+      "question_image": false,
+      "options_image": false
+    }
+            ]
+        };
+
+        // Initialize variables
+        let currentQuestionIndex = 0;
+        let timeLeft = 60;
+        let timerInterval;
+        let savedTimes = {};
+
+        // Get DOM elements
+        const timeDisplay = document.getElementById('time-display');
+        const questionNumber = document.getElementById('question-number');
+        const subjectBadge = document.getElementById('subject-badge');
+        const typeBadge = document.getElementById('type-badge');
+        const questionContent = document.getElementById('question-content');
+        const solutionBtn = document.getElementById('solution-btn');
+        const solutionContent = document.getElementById('solution-content');
+        const solutionText = document.getElementById('solution-text');
+        const formulaBox = document.getElementById('formula-box');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const dots = document.getElementById('dots');
+        const timer = document.querySelector('.timer-card');
+        const chapterName = document.getElementById('chapter-name');
+
+        // Helper function to format time
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Timer update function
+function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timeDisplay.textContent = formatTime(timeLeft);
+                // Add warning class when time is running low (5 seconds or less)
+                if (timeLeft <= 5) {
+                    timer.classList.add('timer-warning');
+                }
+            }
+        }
+
+        // Main function to update question content and related elements
+        function updateQuestion() {
+            const question = questions.exam_questions[currentQuestionIndex];
+            
+            // Update header information
+            questionNumber.textContent = `Question ${question.question_number}`;
+            subjectBadge.textContent = question.subject;
+            typeBadge.textContent = question.type;
+            chapterName.textContent = question.chapter;
+            
+            // Build question content with text and image if present
+            let content = `<p>${question.question}</p>`;
+            
+            // Add question image if available
+            if (question.question_image) {
+                content += `
+                    <div class="question-image-container">
+                        <img src="${question.question_image.url}" 
+                             alt="${question.question_image.alt}" 
+                             class="question-image">
+                        ${question.question_image.caption ? 
+                          `<p class="image-caption">${question.question_image.caption}</p>` : ''}
+                    </div>`;
+}
+            
+            // Add MCQ options if present
+            if (question.options) {
+                content += '<div class="mcq-options">';
+                Object.entries(question.options).forEach(([key, value]) => {
+                    content += `
+                        <div class="option" data-id="${key}">
+                            ${key}. ${value}
+                        </div>
+                    `;
+                });
+                content += '</div>';
+            }
+         
+            questionContent.innerHTML = content;
+
+            // Update solution content with step-by-step explanation and image
+            let solutionHtml = question.solution_step;
+            
+            // Add solution image if present
+            if (question.solution_image) {
+                solutionHtml += `
+                    <div class="solution-image-container">
+                        <img src="${question.solution_image.url}" 
+                             alt="${question.solution_image.alt}" 
+                             class="solution-image">
+                        <p class="image-caption">${question.solution_image.caption}</p>
+                    </div>`;
+            }
+
+            // Update solution and formula content
+            solutionText.innerHTML = solutionHtml;
+            formulaBox.innerHTML = question.formula_box ? 
+                `<strong>Formulas:</strong><br>${question.formula_box}` : '';
+
+// Update video link visibility and URL
+    const videoLink = document.getElementById('video-link');
+    if (question.video_url) {
+        videoLink.href = question.video_url;
+        videoLink.style.display = 'inline-flex';
+    } else {
+        videoLink.style.display = 'none';
+    }
+            
+            // Update navigation buttons state
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = currentQuestionIndex === questions.exam_questions.length - 1;
+            
+            // Update progress dots
+            dots.innerHTML = questions.exam_questions.map((_, index) => `
+                <span class="dot ${index === currentQuestionIndex ? 'active' : ''}"></span>
+            `).join('');
+
+            // Reset solution visibility
+            solutionContent.style.display = 'none';
+            solutionBtn.innerHTML = '<span>Show Solution</span>';
+
+            // Reset and start timer for new question
+            clearInterval(timerInterval);
+            timer.classList.remove('timer-warning');
+            timeLeft = savedTimes[currentQuestionIndex] || question.time;
+            timeDisplay.textContent = formatTime(timeLeft);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Event handler for MCQ option selection
+        questionContent.addEventListener('click', (e) => {
+            const optionElement = e.target.closest('.option');
+            if (!optionElement) return;
+            
+            const question = questions.exam_questions[currentQuestionIndex];
+            if (!question.options) return;
+
+            // Remove previous selection and result classes
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            // Add selected class to clicked option
+            optionElement.classList.add('selected');
+            
+            // If solution is visible, show correct/incorrect indicators
+            if (solutionContent.style.display === 'block') {
+                const selectedOptionId = optionElement.dataset.id;
+                
+                document.querySelectorAll('.option').forEach(opt => {
+                    const optionId = opt.dataset.id;
+                    if (optionId === question.correct_option) {
+                        opt.classList.add('correct');
+                    } else if (optionId === selectedOptionId) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            }
+        });
+
+        // Event handler for solution button
+        solutionBtn.addEventListener('click', () => {
+            const isShowing = solutionContent.style.display === 'block';
+            solutionContent.style.display = isShowing ? 'none' : 'block';
+            solutionBtn.innerHTML = isShowing ? 
+                '<span>Show Solution</span>' : '<span>Hide Solution</span>';
+
+            // Show correct/incorrect indicators for MCQ when solution is displayed
+            const question = questions.exam_questions[currentQuestionIndex];
+            if (question.options) {
+                const selectedOption = document.querySelector('.option.selected');
+                
+                document.querySelectorAll('.option').forEach(opt => {
+                    if (opt.dataset.id === question.correct_option) {
+                        opt.classList.add('correct');
+                    } else if (selectedOption && opt === selectedOption) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            }
+        });
+
+        // Event handlers for navigation buttons
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                savedTimes[currentQuestionIndex] = timeLeft;
+                currentQuestionIndex--;
+                updateQuestion();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.exam_questions.length - 1) {
+                savedTimes[currentQuestionIndex] = timeLeft;
+                currentQuestionIndex++;
+                updateQuestion();
+            }
+        });
+
+        // Initialize the quiz with the first question
+        updateQuestion();
+</script>
+</body>
+</html>

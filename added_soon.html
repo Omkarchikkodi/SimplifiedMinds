@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Website Launch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #FF9933 0%, #FFFFFF 50%, #138808 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" x="50" text-anchor="middle" fill="rgba(0,0,0,0.05)" style="font-size: 20px;">॥ विद्या धनं सर्व धनं प्रधानम् ॥</text></svg>') repeat;
+            opacity: 0.1;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 40px;
+            color: #333;
+            position: relative;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            line-height: 1.2;
+            margin-bottom: 40px;
+            color: #000080;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .countdown {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .countdown-box {
+            background: linear-gradient(145deg, #FF9933, #138808);
+            padding: 20px;
+            border-radius: 10px;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .countdown-box .number {
+            font-size: 2.5rem;
+            color: #FFFFFF;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .countdown-box .label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 5px;
+            color: #FFFFFF;
+        }
+
+        .signup-btn {
+            background: #000080;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .signup-btn:hover {
+            transform: scale(1.05);
+            background: #000066;
+        }
+
+        .school-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" x="50" text-anchor="middle" fill="%23000" style="font-size: 20px;">📚 🎨 ✏️</text></svg>') repeat;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                text-align: center;
+            }
+
+            .countdown {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="school-elements"></div>
+    <div class="container">
+        <h1 class="title">Solutions will be<br>Added Soon</h1>
+        <div class="countdown">
+            <div class="countdown-box">
+                <div class="number" id="days">00</div>
+                <div class="label">Days</div>
+            </div>
+            <div class="countdown-box">
+                <div class="number" id="hours">00</div>
+                <div class="label">Hours</div>
+            </div>
+            <div class="countdown-box">
+                <div class="number" id="minutes">00</div>
+                <div class="label">Minutes</div>
+            </div>
+            <div class="countdown-box">
+                <div class="number" id="seconds">00</div>
+                <div class="label">Seconds</div>
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="signup-btn youtube-btn">Subscribe to YouTube</button>
+            <button class="signup-btn whatsapp-btn">Join WhatsApp Channel</button>
+        </div>
+    </div>
+
+    <style>
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .youtube-btn {
+            background: #FF0000;
+        }
+        
+        .youtube-btn:hover {
+            background: #CC0000;
+        }
+        
+        .whatsapp-btn {
+            background: #25D366;
+        }
+        
+        .whatsapp-btn:hover {
+            background: #128C7E;
+        }
+    </style>
+
+    <script>
+        // Set launch date to January 24, 2025, 5 PM IST
+        const launchDate = new Date('2025-01-27T17:00:00+05:30');
+
+        function updateCountdown() {
+            const now = new Date();
+            const difference = launchDate - now;
+
+            if (difference <= 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        document.querySelector('.youtube-btn').addEventListener('click', () => {
+            window.open('https://www.youtube.com/@simplifiedmindssslc', '_blank');
+        });
+
+        document.querySelector('.whatsapp-btn').addEventListener('click', () => {
+            window.open('https://www.whatsapp.com/channel/0029Vb3QDu17YSd1brABFi1d', '_blank');
+        });
+    </script>
+</body>
+</html>

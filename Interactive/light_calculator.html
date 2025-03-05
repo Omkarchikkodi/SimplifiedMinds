@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 64rem;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo a {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: inherit;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .logo .yellow {
+            color: #facc15;
+        }
+
+        .logo .red {
+            color: #dc2626;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            color: #1d4ed8;
+            margin-bottom: 1.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem 0.5rem 0 0;
+            cursor: pointer;
+            background: #f3f4f6;
+            transition: background-color 0.2s;
+        }
+
+        .tab.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .calculator-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .input-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        select, input {
+            padding: 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+        }
+
+        select {
+            width: 6rem;
+        }
+
+        input {
+            flex: 1;
+        }
+
+        .results {
+            background: #eff6ff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .results-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .result-card {
+            background: white;
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            color: #4b5563;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-param {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-value {
+            font-size: 1.125rem;
+            font-weight: bold;
+        }
+
+        .info-section {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .resource-buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .resource-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .resource-button svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .whatsapp-button {
+            background-color: #22c55e;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #16a34a;
+        }
+
+        .youtube-button {
+            background-color: #dc2626;
+        }
+
+        .youtube-button:hover {
+            background-color: #b91c1c;
+        }
+
+        .mirror-lens-type {
+            margin-top: 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <a href="../index.html">
+                <span>🏠</span>
+                <span class="yellow">Simplified</span>
+                <span class="red">Minds</span>
+            </a>
+        </div>
+
+        <div class="card">
+            <h1 class="card-title">Light - Reflection and Refraction Calculator</h1>
+
+            <div class="tabs">
+                <button class="tab active" data-tab="mirror">Mirror Formula</button>
+                <button class="tab" data-tab="lens">Lens Formula</button>
+            </div>
+
+            <div class="calculator-section" id="calculator">
+                <div class="input-grid">
+                    <div class="input-group">
+                        <select name="firstParameter">
+                            <option value="u">u</option>
+                            <option value="v">v</option>
+                            <option value="f">f</option>
+                        </select>
+                        <input type="number" name="firstValue" value="20">
+                        <span>cm</span>
+                    </div>
+
+                    <div class="input-group">
+                        <select name="secondParameter">
+                            <option value="u">u</option>
+                            <option value="v">v</option>
+                            <option value="f" selected>f</option>
+                        </select>
+                        <input type="number" name="secondValue" value="10">
+                        <span>cm</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Object Height (h)</label>
+                        <input type="number" name="objectHeight" value="5">
+                        <span>cm</span>
+                    </div>
+                </div>
+
+                <div class="results" id="results">
+                    <h3 class="results-title">Results:</h3>
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <div class="result-label">Parameter</div>
+                            <div class="result-param" id="parameterLabel">Focal Length (f)</div>
+                            <div class="result-value" id="thirdParam">0.00 cm</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Magnification (m)</div>
+                            <div class="result-value" id="magnification">0.00</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Image Height (h')</div>
+                            <div class="result-value" id="imageHeight">0.00 cm</div>
+                        </div>
+                    </div>
+                    <div class="mirror-lens-type" id="mirrorLensType"></div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3 class="info-title">Laws of reflection of light</h3>
+                <div>
+                    (i) The angle of incidence is equal to the angle of reflection<br>
+                    (ii) The incident ray, the normal to the mirror at the point of incidence and the reflected ray, all lie in the same plane
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3 class="info-title">Laws of refraction of light</h3>
+                <div>
+                    (i) The incident ray, the refracted ray and the normal to the interface of two transparent media at the point of incidence, all lie in the same plane.<br>
+                    (ii) The ratio of sine of angle of incidence to the sine of angle of refraction is a constant, for the light of a given colour and for the given pair of media. This law is also known as Snell's law of refraction<br>
+                    sin(i)/sin(r) = constant
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3 class="info-title">Mirror Formula and Magnification</h3>
+                <div>
+                    R = 2f<br>
+                    Radius of curvature = 2 * focal length<br>
+                    (1/v) + (1/u) = (1/f)<br>
+                    m = (h'/h) = -(v/u)
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3 class="info-title">Lens Formula and Magnification</h3>
+                <div>
+                    (1/v) - (1/u) = (1/f)<br>
+                    m = (h'/h) = (v/u)
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3 class="info-title">Uses of concave mirrors</h3>
+                <div>
+                    torches, search-lights and vehicles headlights<br>
+                    shaving mirrors, with dentist, solar furnaces
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3 class="info-title">Uses of convex mirrors</h3>
+                <div>
+                    rear-view
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3 class="info-title">Refractive Index</h3>
+                <div class="property-grid">
+                    <div class="property-item">
+                        <div class="property-label">Water</div>
+                        <div class="property-value">1.33</div>
+                    </div>
+                    <div class="property-item">
+                        <div class="property-label">Benzene</div>
+                        <div class="property-value">1.5</div>
+                    </div>
+                    <div class="property-item">
+                        <div class="property-label">Kerosene</div>
+                        <div class="property-value">1.44</div>
+                    </div>
+                    <div class="property-item">
+                        <div class="property-label">Diamond</div>
+                        <div class="property-value">2.42</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3 class="info-title">Power of a Lens</h3>
+                <div class="info-content">
+                    <p>P = 1/f</p>
+                    <p>SI unit of power of a lens is 'dioptre'</p>
+                    <p>Power of a convex lens is positive and that of a concave lens is negative.</p>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3 class="info-title">Speed of Light</h3>
+                <div class="info-content">
+                    <p>Speed of light in vacuum = 3x10^8 m/s</p>
+                </div>
+            </div>
+
+            <div class="learning-resources">
+                <h2 class="info-title">Learning Resources</h2>
+                <div class="resource-buttons">
+                    <a href="https://www.whatsapp.com/channel/0029Vb3QDu17YSd1brABFi1d" class="resource-button whatsapp-button">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                        </svg>
+                        Join WhatsApp Channel
+                    </a>
+                    <a href="https://www.youtube.com/@simplifiedmindssslc" class="resource-button youtube-button">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 4-8 4z"/>
+                        </svg>
+                        Video Lectures
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let activeType = 'mirror';
+        const mirrorInputs = {
+            firstValue: 20,
+            secondValue: 10,
+            firstParameter: 'u',
+            secondParameter: 'f',
+            objectHeight: 5
+        };
+        const lensInputs = {
+            firstValue: 20,
+            secondValue: 10,
+            firstParameter: 'u',
+            secondParameter: 'f',
+            objectHeight: 5
+        };
+
+        function getParameterLabel(param) {
+            switch(param) {
+                case 'u': return 'Object Distance (u)';
+                case 'v': return 'Image Distance (v)';
+                case 'f': return 'Focal Length (f)';
+                default: return 'Parameter';
+            }
+        }
+
+        function calculateThirdParameter(inputs) {
+            const { firstValue: val1, secondValue: val2, firstParameter: param1, secondParameter: param2 } = inputs;
+            
+            try {
+                if ((param1 === 'u' && param2 === 'v') || (param1 === 'v' && param2 === 'u')) {
+                    const f = 1 / (1/val1 + 1/val2);
+                    return { value: f, parameter: 'f' };
+                } else if ((param1 === 'v' && param2 === 'f') || (param1 === 'f' && param2 === 'v')) {
+                    const u = 1 / (1/val2 - 1/val1);
+                    return { value: u, parameter: 'u' };
+                }
+            } catch (error) {
+                console.error('Calculation error:', error);
+            }
+            return { value: 0, parameter: '' };
+        }
+
+        function calculateMagnification(inputs, thirdParam) {
+            let u = 0, v = 0;
+            const { firstValue, secondValue, firstParameter, secondParameter } = inputs;
+            
+            if (firstParameter === 'u') u = firstValue;
+            if (secondParameter === 'u') u = secondValue;
+            if (firstParameter === 'v') v = firstValue;
+            if (secondParameter === 'v') v = secondValue;
+            if (thirdParam?.parameter === 'u') u = thirdParam.value;
+            if (thirdParam?.parameter === 'v') v = thirdParam.value;
+
+            return -v/u;
+        }
+
+        function getMirrorLensType(focalLength) {
+            if (activeType === 'mirror') {
+                return focalLength > 0 ? 'Concave Mirror' : 'Convex Mirror';
+            } else {
+                return focalLength > 0 ? 'Convex Lens' : 'Concave Lens';
+            }
+        }
+
+        function updateResults() {
+            const inputs = activeType === 'mirror' ? mirrorInputs : lensInputs;
+            const thirdParam = calculateThirdParameter(inputs);
+            const magnification = thirdParam ? calculateMagnification(inputs, thirdParam) : null;
+            const imageHeight = magnification ? Math.abs(magnification * inputs.objectHeight) : null;
+            const mirrorLensType = getMirrorLensType(thirdParam.value);
+
+            // Update the parameter label
+            document.getElementById('parameterLabel').textContent = getParameterLabel(thirdParam.parameter);
+
+            // Update the results display
+            document.getElementById('thirdParam').textContent = `${thirdParam.value.toFixed(2)} cm`;
+            document.getElementById('magnification').textContent = magnification.toFixed(2);
+            document.getElementById('imageHeight').textContent = `${imageHeight.toFixed(2)} cm`;
+            document.getElementById('mirrorLensType').textContent = `Type: ${mirrorLensType}`;
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                activeType = e.target.dataset.tab;
+                const inputs = activeType === 'mirror' ? mirrorInputs : lensInputs;
+                document.querySelector('[name="firstParameter"]').value = inputs.firstParameter;
+                document.querySelector('[name="secondParameter"]').value = inputs.secondParameter;
+                document.querySelector('[name="firstValue"]').value = inputs.firstValue;
+                document.querySelector('[name="secondValue"]').value = inputs.secondValue;
+                document.querySelector('[name="objectHeight"]').value = inputs.objectHeight;
+                updateResults();
+            });
+        });
+
+        // Input change handlers
+        const inputElements = document.querySelectorAll('select, input');
+        inputElements.forEach(input => {
+            input.addEventListener('change', (e) => {
+                const inputs = activeType === 'mirror' ? mirrorInputs : lensInputs;
+                const name = e.target.name;
+                const value = e.target.type === 'number' ? parseFloat(e.target.value) || 0 : e.target.value;
+                inputs[name] = value;
+                updateResults();
+            });
+        });
+
+        // Initial calculation
+        updateResults();
+    </script>
+</body>
+</html>

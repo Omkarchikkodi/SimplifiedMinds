@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Paper Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .heading {
+            background-color: #2f7532;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th {
+            background-color: #2f7532;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        .score-low {
+            background-color: #86efac;
+        }
+
+        .score-medium {
+            background-color: #fef08a;
+        }
+
+        .score-high {
+            background-color: #fca5a5;
+        }
+
+        .grand-total {
+            font-weight: bold;
+            background-color: #f3f4f6;
+        }
+
+        td:not(:first-child) {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            th, td {
+                padding: 8px;
+                font-size: 14px;
+            }
+
+            .container {
+                border-radius: 4px;
+            }
+            
+            .heading {
+                font-size: 1.2rem;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+<div class="heading">Mock Test 1 Analysis</div>
+        <div class="table-wrapper">
+            <table id="analysisTable">
+                <thead>
+                    <tr>
+                        <th>Chapters</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                        <th>Grand Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table body will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const data = [
+            { chapter: 'Areas Related to Circles', m3: 3, total: 3 },
+            { chapter: 'Arithmetic Progressions', m1: 1, m2: 2, m4: 4, total: 7 },
+            { chapter: 'Circles', m2: 2, m3: 3, total: 5 },
+            { chapter: 'Coordinate Geometry', m1: 1, m3: 3, total: 4 },
+            { chapter: 'Introduction to Trigonometry', m1: 2, m3: 3, total: 5 },
+            { chapter: 'Pair of Linear Equations in Two Variables', m1: 2, m2: 2, m4: 4, total: 8 },
+            { chapter: 'Polynomials', m2: 2, m3: 3, total: 5 },
+            { chapter: 'Probability', m1: 1, m3: 3, total: 4 },
+            { chapter: 'Quadratic Equations', m1: 2, m2: 2, m3: 3, total: 7 },
+            { chapter: 'Real Numbers', m1: 1, m4: 4, total: 5 },
+            { chapter: 'Some Applications of Trigonometry', m5: 5, total: 5 },
+            { chapter: 'Statistics', m1: 1, m3: 3, total: 4 },
+            { chapter: 'Surface Areas and Volumes', m1: 1, m2: 2, m4: 4, total: 7 },
+            { chapter: 'Triangles', m1: 2, m3: 3, m4: 4, total: 9 }
+        ];
+
+        const grandTotal = {
+            m1: 16,
+            m2: 16,
+            m3: 27,
+            m4: 16,
+            m5: 5,
+            total: 80
+        };
+
+        function getScoreClass(total) {
+            if (total <= 4) return 'score-low';
+            if (total <= 6) return 'score-medium';
+            return 'score-high';
+        }
+
+        function populateTable() {
+            const tbody = document.querySelector('#analysisTable tbody');
+            
+            // Add data rows
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = getScoreClass(row.total);
+                
+                tr.innerHTML = `
+                    <td>${row.chapter}</td>
+                    <td>${row.m1 || ''}</td>
+                    <td>${row.m2 || ''}</td>
+                    <td>${row.m3 || ''}</td>
+                    <td>${row.m4 || ''}</td>
+                    <td>${row.m5 || ''}</td>
+                    <td>${row.total}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Add grand total row
+            const totalRow = document.createElement('tr');
+            totalRow.className = 'grand-total';
+            totalRow.innerHTML = `
+                <td>Grand Total</td>
+                <td>${grandTotal.m1}</td>
+                <td>${grandTotal.m2}</td>
+                <td>${grandTotal.m3}</td>
+                <td>${grandTotal.m4}</td>
+                <td>${grandTotal.m5}</td>
+                <td>${grandTotal.total}</td>
+            `;
+            tbody.appendChild(totalRow);
+        }
+
+        // Initialize table when DOM is loaded
+        document.addEventListener('DOMContentLoaded', populateTable);
+    </script>
+</body>
+</html>

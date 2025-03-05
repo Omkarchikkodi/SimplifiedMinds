@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light Reflection and Refraction MCQs</title>
+
+    <!-- Google Analytics Script -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q0HGP73J9J"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-Q0HGP73J9J', {
+            custom_map: {
+                'dimension1': 'question_subject',
+                'dimension2': 'question_type',
+                'dimension3': 'mark_value',
+                'dimension4': 'success_rate'
+            }
+        });
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .header-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .chapter-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        body {
+            background-color: #f0fdf4;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .timer-card {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .timer-warning {
+            background: #fee2e2;
+            animation: pulse 1s infinite;
+        }
+
+        .timer-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .question-card {
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .question-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .badge-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .subject-badge {
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 14px;
+            background: #4338ca;
+            color: white;
+        }
+
+        .marks-badge {
+            background: #f3f4f6;
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .question-content {
+            font-size: 18px;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .mcq-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            font-size: 16px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .option:hover:not(.selected):not(.correct):not(.incorrect) {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.selected {
+            border-color: #4338ca;
+            background: #eef2ff;
+        }
+
+        .option.correct {
+            border-color: #059669;
+            background: #d1fae5;
+        }
+
+        .option.incorrect {
+            border-color: #dc2626;
+            background: #fee2e2;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            background: #4338ca;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .solution {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 16px;
+            display: none;
+            background: #eef2ff;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #4338ca;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .badge-container {
+                flex-wrap: wrap;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .mcq-options {
+                grid-template-columns: 1fr;
+            }
+        }
+/* Add these to your existing styles */
+.question-image-container,
+.solution-image-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.question-image-container img,
+.solution-image-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.question-image-container img:hover,
+.solution-image-container img:hover {
+    transform: scale(1.02);
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-section">
+            <div class="logo-container">
+                <img src="../SimplifiedMinds_App_icon.jpg" alt="Logo" class="logo">
+                <span class="chapter-name">Light Reflection and Refraction</span>
+            </div>
+        </div>
+
+        <div class="timer-card">
+            <div class="timer-text">
+                ⏰ Time Left: <span id="time-display">1:00</span>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-header">
+                <h2 class="question-number" id="question-number">Question 1</h2>
+                <div class="badge-container">
+                    <span id="subject-badge" class="subject-badge">Physics</span>
+                    <span id="marks-badge" class="marks-badge">1 Mark</span>
+                    <span id="exam-year-badge" class="marks-badge">2020 Mains</span>
+                </div>
+            </div>
+
+            <div id="question-content" class="question-content"></div>
+
+            <button id="solution-btn" class="btn">Show Solution</button>
+
+            <div id="solution-content" class="solution">
+                <div id="solution-text"></div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button id="prev-btn" class="btn" disabled>← Previous</button>
+            <div id="dots" class="dots"></div>
+            <button id="next-btn" class="btn">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        // Questions Array
+        const questions = [
+            {
+                subject: 'physics',
+                type: 'mcq_light',
+                question: 'To obtain a diminished image of an object from a concave mirror, position of the object should be <br>(F = principal focus, C= centre of curvature, P = pole)',
+                options: [
+                    { id: 'a', text: 'between C and F', correct: false },
+                    { id: 'b', text: 'beyond C', correct: true },
+                    { id: 'c', text: 'between P and F', correct: false },
+                    { id: 'd', text: 'at F', correct: false }
+                ],
+                examYear: '2019 Mains',
+                marks: 1,
+                timeAllowed: 60,
+                solution: `For a concave mirror to form a diminished image:<br>
+- Object must be placed beyond C (center of curvature)<br>
+- Image will form between F and C<br>
+- Image will be:<br>
+  • Real<br>
+  • Inverted<br>
+  • Smaller than object (diminished)<br>
+<br>
+Other positions give different results:<br>
+- At C: same size image<br>
+- Between C and F: enlarged image<br>
+- At F: image at infinity<br>
+- Between P and F: virtual enlarged image<br>
+<br>
+Therefore, option (b) is correct.`
+            },
+{
+    subject: 'physics',
+    type: 'mcq_light',
+    question: 'Identify the emergent ray in the given figure.<br><img src="../2019/2019_S_P_Q7.jpg" class="my-4 mx-auto max-w-full rounded-lg w-96">',
+    options: [
+        { id: 'a', text: 'CD', correct: true },
+        { id: 'b', text: 'BC', correct: false },
+        { id: 'c', text: 'AB', correct: false },
+        { id: 'd', text: 'IJ', correct: false }
+    ],
+    examYear: '2023 Main',
+    marks: 1,
+    timeAllowed: 60,
+    solution: `In this refraction diagram:<br>
+- AB is the incident ray<br>
+- BC is the refracted ray inside glass<br>
+- CD is the emergent ray<br>
+- IJ is the extended path<br><br>
+The emergent ray is CD as it emerges from the glass block into air.<br>
+Therefore, option (a) is correct.`
+},
+{
+                subject: 'physics',
+                type: 'mcq_light',
+                question: 'To obtain a diminished image of an object from a concave mirror, position of the object should be <br>(F = principal focus, C= centre of curvature, P = pole)',
+                options: [
+                    { id: 'a', text: 'between C and F', correct: false },
+                    { id: 'b', text: 'beyond C', correct: true },
+                    { id: 'c', text: 'between P and F', correct: false },
+                    { id: 'd', text: 'at F', correct: false }
+                ],
+                examYear: '2019 Mains',
+                marks: 1,
+                timeAllowed: 60,
+                solution: `To obtain a diminished image of an object from a concave mirror, position of the object should be beyond C<br>
+Therefore, option (b) is correct.`
+            },
+{
+                subject: 'physics',
+                type: 'mcq_light',
+                question: 'An object is kept at the centre of curvature of a concave mirror. The position and nature of the image formed is',
+                options: [
+                    { id: 'a', text: 'between F and C and inverted', correct: false },
+                    { id: 'b', text: 'behind the mirror and erect', correct: false },
+                    { id: 'c', text: 'between F and P and erect', correct: false },
+                    { id: 'd', text: 'at the centre of curvature and inverted', correct: true }
+                ],
+                examYear: '2020 Mains',
+                marks: 1,
+                timeAllowed: 60,
+                solution: `The image is formed at C (centre of curvature) when object is at C.<br>
+When object is at C:<br>
+- Image distance = Object distance = Radius of curvature<br>
+- Image is real and inverted<br>
+- Same size as object<br>
+Therefore, option (d) is correct.`
+            },
+            {
+                subject: 'physics',
+                type: 'mcq_light',
+                question: 'The focal length of a lens is + 0.50 m. The power of the lens and type are',
+                options: [
+                    { id: 'a', text: '+ 2.0 D and convex lens', correct: true },
+                    { id: 'b', text: '+ 2.0 D and concave lens', correct: false },
+                    { id: 'c', text: '-- 2.0 D and concave lens', correct: false },
+                    { id: 'd', text: '-- 2.0 D and convex lens', correct: false }
+                ],
+                examYear: '2021 Mains',
+                marks: 1,
+                timeAllowed: 60,
+                solution: `Given: f = +0.50 m<br>
+Power P = 1/f = 1/0.50 = +2.0 D<br>
+- Positive focal length indicates convex lens<br>
+- Positive power confirms it's a convex lens<br>
+Therefore, option (a) is correct.`
+            }
+        ];
+
+        // Initialize variables
+        let currentQuestionIndex = 0;
+        let timeLeft = questions[0].timeAllowed;
+        let timerInterval;
+        let savedTimes = {};
+
+        // Get DOM elements
+        const timeDisplay = document.getElementById('time-display');
+        const questionNumber = document.getElementById('question-number');
+        const questionContent = document.getElementById('question-content');
+        const solutionBtn = document.getElementById('solution-btn');
+        const solutionContent = document.getElementById('solution-content');
+        const solutionText = document.getElementById('solution-text');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const dots = document.getElementById('dots');
+        const timer = document.querySelector('.timer-card');
+
+        // Helper functions
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timeDisplay.textContent = formatTime(timeLeft);
+                if (timeLeft <= 5) {
+                    timer.classList.add('timer-warning');
+                }
+            }
+        }
+
+        function updateQuestion() {
+            const question = questions[currentQuestionIndex];
+            
+            questionNumber.textContent = `Question ${currentQuestionIndex + 1}`;
+            document.getElementById('exam-year-badge').textContent = question.examYear;
+
+            let content = `<p>${question.question}</p>`;
+            
+            if (question.options) {
+                content += '<div class="mcq-options">';
+                question.options.forEach(option => {
+                    content += `
+                        <div class="option" data-id="${option.id}">
+                            ${option.id.toUpperCase()}. ${option.text}
+                        </div>
+                    `;
+                });
+                content += '</div>';
+            }
+            
+            questionContent.innerHTML = content;
+            solutionText.innerHTML = question.solution;
+            
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = currentQuestionIndex === questions.length - 1;
+
+            dots.innerHTML = questions.map((_, index) => `
+                <span class="dot ${index === currentQuestionIndex ? 'active' : ''}"></span>
+            `).join('');
+
+            solutionContent.style.display = 'none';
+            solutionBtn.textContent = 'Show Solution';
+
+            clearInterval(timerInterval);
+            timer.classList.remove('timer-warning');
+            timeLeft = savedTimes[currentQuestionIndex] || question.timeAllowed;
+            timeDisplay.textContent = formatTime(timeLeft);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Event Listeners
+        questionContent.addEventListener('click', (e) => {
+            const optionElement = e.target.closest('.option');
+            if (!optionElement) return;
+
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            optionElement.classList.add('selected');
+            
+            if (solutionContent.style.display === 'block') {
+                const selectedOptionId = optionElement.dataset.id;
+                const question = questions[currentQuestionIndex];
+                const correctOption = question.options.find(opt => opt.correct);
+                
+                document.querySelectorAll('.option').forEach(opt => {
+                    const optionId = opt.dataset.id;
+                    if (optionId === correctOption.id) {
+                        opt.classList.add('correct');
+                    } else if (optionId === selectedOptionId) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            }
+        });
+
+        solutionBtn.addEventListener('click', () => {
+            const isShowing = solutionContent.style.display === 'block';
+            solutionContent.style.display = isShowing ? 'none' : 'block';
+            solutionBtn.textContent = isShowing ? 'Show Solution' : 'Hide Solution';
+
+            const question = questions[currentQuestionIndex];
+            const selectedOption = document.querySelector('.option.selected');
+            
+            if (!isShowing && question.options) {
+                const correctOption = question.options.find(opt => opt.correct);
+                
+                document.querySelectorAll('.option').forEach(opt => {
+                    if (opt.dataset.id === correctOption.id) {
+                        opt.classList.add('correct');
+                    } else if (selectedOption && opt === selectedOption) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                savedTimes[currentQuestionIndex] = timeLeft;
+                currentQuestionIndex--;
+                updateQuestion();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.length - 1) {
+                savedTimes[currentQuestionIndex] = timeLeft;
+                currentQuestionIndex++;
+                updateQuestion();
+            }
+        });
+
+        // Function to add more questions
+        function addQuestions() {
+            questions.push(
+                {
+        subject: 'physics',
+        type: 'mcq_light',
+        question: 'An object is kept at the centre of curvature of a concave mirror. The position and nature of the image formed is',
+        options: [
+            { id: 'a', text: 'between F and C and inverted', correct: false },
+            { id: 'b', text: 'behind the mirror and erect', correct: false },
+            { id: 'c', text: 'between F and P and erect', correct: false },
+            { id: 'd', text: 'at the centre of curvature and inverted', correct: true }
+        ],
+        examYear: '2020 Mains',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `The image is formed at C (centre of curvature) when object is at C.<br>
+When object is at C:<br>
+- Image distance = Object distance = Radius of curvature<br>
+- Image is real and inverted<br>
+- Same size as object<br>
+Therefore, option (d) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_light',
+        question: 'The focal length of a lens is + 0.50 m. The power of the lens and type are',
+        options: [
+            { id: 'a', text: '+ 2.0 D and convex lens', correct: true },
+            { id: 'b', text: '+ 2.0 D and concave lens', correct: false },
+            { id: 'c', text: '-- 2.0 D and concave lens', correct: false },
+            { id: 'd', text: '-- 2.0 D and convex lens', correct: false }
+        ],
+        examYear: '2021 Mains',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `Given: f = +0.50 m<br>
+Power P = 1/f = 1/0.50 = +2.0 D<br>
+- Positive focal length indicates convex lens<br>
+- Positive power confirms it's a convex lens<br>
+Therefore, option (a) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_light',
+        question: 'The nature and the size of the image formed when an object is kept between the principal focus F and optical centre O of a convex lens are',
+        options: [
+            { id: 'a', text: 'virtual, erect and enlarged', correct: true },
+            { id: 'b', text: 'real, inverted and small size', correct: false },
+            { id: 'c', text: 'virtual, inverted and small size', correct: false },
+            { id: 'd', text: 'real, inverted and enlarged', correct: false }
+        ],
+        examYear: '2021 Mains',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `When object is between F and O in convex lens:<br>
+- Image is virtual (formed on same side as object)<br>
+- Image is erect (upright)<br>
+- Image is enlarged (magnified)<br>
+Therefore, option (a) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_light',
+        question: 'One property of a convex lens among the following is that it',
+        options: [
+            { id: 'a', text: 'diverges the light rays', correct: false },
+            { id: 'b', text: 'is thicker at the edges and thinner at the middle', correct: false },
+            { id: 'c', text: 'forms real and erect image', correct: false },
+            { id: 'd', text: 'is thinner at the edges and thicker at the middle', correct: true }
+        ],
+        examYear: '2021 Mains',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `Properties of convex lens:<br>
+- Converges light rays<br>
+- Thicker at center, thinner at edges<br>
+- Can form both real and virtual images<br>
+- Real images are always inverted<br>
+Therefore, option (d) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_light',
+        question: 'If the power of a lens is -- 2.5 D, the focal length of the lens and type is',
+        options: [
+            { id: 'a', text: '+ 0.40 m and convex lens', correct: false },
+            { id: 'b', text: '-- 0.40 m and convex lens', correct: false },
+            { id: 'c', text: '+ 0.40 m and concave lens', correct: false },
+            { id: 'd', text: '-- 0.40 m and concave lens', correct: true }
+        ],
+        examYear: '2021 Sup',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `Given: P = -2.5 D<br>
+f = 1/P = 1/(-2.5) = -0.4 m<br>
+- Negative power indicates concave lens<br>
+- Negative focal length confirms concave lens<br>
+Therefore, option (d) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_light',
+        question: 'One property of concave lens among the following is, that',
+        options: [
+            { id: 'a', text: 'it converges the light rays', correct: false },
+            { id: 'b', text: 'is thicker at the edges and thinner at the middle', correct: true },
+            { id: 'c', text: 'is thinner at the edges and thicker at the middle', correct: false },
+            { id: 'd', text: 'it forms real and inverted image', correct: false }
+        ],
+        examYear: '2021 Sup',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `Properties of concave lens:<br>
+- Diverges light rays<br>
+- Thicker at edges, thinner at middle<br>
+- Only forms virtual images<br>
+- Images are always erect<br>
+Therefore, option (b) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_light',
+        question: 'If an image is to be formed between F₂ and 2F₂ in a convex lens, then the object should be placed',
+        options: [
+            { id: 'a', text: 'beyond 2F₁', correct: false },
+            { id: 'b', text: 'at 2F₁', correct: false },
+            { id: 'c', text: 'between F₁ and 2F₁', correct: true },
+            { id: 'd', text: 'at focus F₁', correct: false }
+        ],
+        examYear: '2021 Sup',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `For image between F₂ and 2F₂:<br>
+- Object must be between F₁ and 2F₁<br>
+- Image will be real, inverted and enlarged<br>
+Therefore, option (c) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_light',
+        question: 'The distance between the principal focus and the optical centre of a lens is',
+        options: [
+            { id: 'a', text: 'principal axis', correct: false },
+            { id: 'b', text: 'object distance', correct: false },
+            { id: 'c', text: 'image distance', correct: false },
+            { id: 'd', text: 'focal length', correct: true }
+        ],
+        examYear: '2021 Sup',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `The focal length of a lens is:<br>
+- Distance between principal focus and optical center<br>
+- Denoted by 'f'<br>
+- Can be positive (convex) or negative (concave)<br>
+Therefore, option (d) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_light',
+        question: 'To get diminished and real image of an object from a convex lens, the object should be placed',
+        options: [
+            { id: 'a', text: 'at principal focus F₁', correct: false },
+            { id: 'b', text: 'between principal focus F₁ & 2F₁', correct: false },
+            { id: 'c', text: 'beyond 2F₁', correct: true },
+            { id: 'd', text: 'between principal focus F₁ and optical centre O', correct: false }
+        ],
+        examYear: '2022 Main',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `For diminished and real image in convex lens:<br>
+- Object must be beyond 2F₁<br>
+- Image will be real and inverted<br>
+- Image will be smaller than object<br>
+Therefore, option (c) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_light',
+        question: 'The correct statement among the following related to the concave lens is',
+        options: [
+            { id: 'a', text: 'converges the light rays', correct: false },
+            { id: 'b', text: 'diverges the light rays', correct: true },
+            { id: 'c', text: 'forms inverted image', correct: false },
+            { id: 'd', text: 'forms real image', correct: false }
+        ],
+        examYear: '2022 Sup',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `Properties of concave lens:<br>
+- Always diverges light rays<br>
+- Forms only virtual images<br>
+- Images are always erect<br>
+- Images are always diminished<br>
+Therefore, option (b) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_light',
+        question: 'A light ray enters to rarer medium from a denser medium. Then the speed of that light ray',
+        options: [
+            { id: 'a', text: 'decreases and bends towards the normal', correct: false },
+            { id: 'b', text: 'increases and bends away from the normal', correct: true },
+            { id: 'c', text: 'decreases and bends away from the normal', correct: false },
+            { id: 'd', text: 'increases and bends towards the normal', correct: false }
+        ],
+        examYear: '2023 Main',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `When light travels from denser to rarer medium:<br>
+- Speed increases (speed is higher in rarer medium)<br>
+- Ray bends away from normal<br>
+- Angle of refraction > Angle of incidence<br>
+Therefore, option (b) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_light',
+        question: 'A mirror forms an erect and enlarged image of an object. Then the type of the mirror and the nature of the image respectively are',
+        options: [
+            { id: 'a', text: 'convex mirror and virtual image', correct: false },
+            { id: 'b', text: 'concave mirror and real image', correct: false },
+            { id: 'c', text: 'plane mirror and real image', correct: false },
+            { id: 'd', text: 'concave mirror and virtual image', correct: true }
+        ],
+        examYear: '2023 Sup',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `For erect and enlarged image:<br>
+- Must be formed by concave mirror<br>
+- Object must be between F and P<br>
+- Image will be virtual<br>
+- Image will be erect and enlarged<br>
+Therefore, option (d) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_light',
+        question: 'To get virtual and erect image by a convex lens, an object is to be placed',
+        options: [
+            { id: 'a', text: 'beyond 2F₁', correct: false },
+            { id: 'b', text: 'between F₁ and 2F₁', correct: false },
+            { id: 'c', text: 'at focus F₁', correct: false },
+            { id: 'd', text: 'between focus F₁ and optical centre O', correct: true }
+        ],
+        examYear: '2024 Exam 2',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `For virtual and erect image in convex lens:<br>
+- Object must be between F₁ and O<br>
+- Image will be virtual and erect<br>
+- Image will be enlarged<br>
+Therefore, option (d) is correct.`
+    },
+    {
+        subject: 'physics',
+        type: 'mcq_light',
+        question: 'Type of the mirror used in vehicles as rear view mirror is',
+        options: [
+            { id: 'a', text: 'plane mirror', correct: false },
+            { id: 'b', text: 'concave mirror', correct: false },
+            { id: 'c', text: 'convex mirror', correct: true },
+            { id: 'd', text: 'planoconcave mirror', correct: false }
+        ],
+        examYear: '2024 Exam 3',
+        marks: 1,
+        timeAllowed: 60,
+        solution: `Convex mirror is used as rear view mirror because:<br>
+- Always gives erect image<br>
+- Image is diminished (smaller than object)<br>
+- Provides wider field of view<br>
+- Virtual image is formed<br>
+Therefore, option (c) is correct.`
+    }
+                // Add more questions here as needed
+            );
+        }
+
+        // Call addQuestions to add more questions
+        addQuestions();
+
+        // Initialize the first question
+        updateQuestion();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            if (width < 640) {
+                document.querySelectorAll('.mcq-options').forEach(grid => {
+                    grid.style.gridTemplateColumns = '1fr';
+                });
+            } else {
+                document.querySelectorAll('.mcq-options').forEach(grid => {
+                    grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(240px, 1fr))';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

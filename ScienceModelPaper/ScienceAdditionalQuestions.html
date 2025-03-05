@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science Questions Bank</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .question-card {
+            transition: all 0.3s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .solution {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .solution.show {
+            max-height: 1000px;
+            transition: max-height 0.5s ease-in;
+        }
+        .dark-mode {
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+        .dark-mode .question-card {
+            background-color: #2d3748;
+            color: #e2e8f0;
+        }
+        .dark-mode .filter-btn {
+            background-color: #4a5568;
+            color: #e2e8f0;
+        }
+        .dark-mode .solution {
+            border-color: white;
+        }
+        .dark-mode .question-card .solution p {
+            color: white !important;
+        }
+        /* Logo Styles */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            font-size: 2.5rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .logo:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .logo .simplified {
+            color: #ffd700;
+        }
+
+        .logo .minds {
+            color: #ff0000;
+        }
+
+        .home-icon {
+            font-size: 1.2rem;
+            margin-right: 10px;
+            color: #718096;
+            transition: color 0.3s ease;
+        }
+
+        .logo:hover .home-icon {
+            color: #2d3748;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3748;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .logo:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* Learning Resources Styles */
+        .learning-resources {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .resources-title {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .resources-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .resource-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            min-width: 200px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .whatsapp-button {
+            background-color: #25D366;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #22c55e;
+        }
+
+        .video-button {
+            background-color: #FF0000;
+        }
+
+        .video-button:hover {
+            background-color: #ef4444;
+        }
+
+        .button-icon {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .button-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .resources-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .resource-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen dark:bg-gray-900">
+    <!-- Image Modal -->
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-90 hidden z-50" onclick="closeModal()">
+        <span class="absolute top-4 right-4 text-white text-3xl cursor-pointer">&times;</span>
+        <img id="modalImage" class="max-w-full max-h-full m-auto" alt="Modal Image">
+    </div>
+
+    <header class="bg-white shadow-sm dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Science Questions Bank</h1>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">Model Question Paper 2025</p>
+                </div>
+                <button id="darkModeToggle" class="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-800 dark:bg-gray-200 rounded-full transition-all duration-300 shadow-lg text-white dark:text-gray-800">
+                    <span class="flex items-center gap-2">
+                        🌙 Switch to Dark
+                    </span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="logo-container">
+        <a href="../index.html" class="logo">
+            <span class="home-icon">🏠</span>
+            <span class="simplified">Simplified</span><span class="minds">Minds</span>
+            <span class="tooltip">Go to Homepage</span>
+        </a>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Search Bar -->
+        <div class="mb-8">
+            <input type="text" id="searchInput" placeholder="Search questions..." 
+                   class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        </div>
+
+        <!-- Filters -->
+        <div class="mb-8 space-y-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div class="w-full md:w-auto">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Filter by Marks</h2>
+                    <div class="flex flex-wrap gap-2" id="marksFilter">
+                        <button class="filter-btn marks-filter active px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600">All</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="1">1M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="2">2M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="3">3M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="4">4M</button>
+                        <button class="filter-btn marks-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-marks="5">5M</button>
+                    </div>
+                </div>
+                <div class="w-full md:w-auto">
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-3">Filter by Chapter</h2>
+                    <div class="flex flex-wrap gap-2" id="chapterFilter">
+                        <button class="filter-btn chapter-filter active px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600">All</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Chemical Reactions and Equations">Chemical Reactions</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Acids, Bases and Salts">Acids & Bases</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Metals and Non-metals">Metals & Non-metals</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Carbon and its Compounds">Carbon Compounds</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Life Processes">Life Processes</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Control and Coordination">Control & Coordination</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="How do Organisms Reproduce?">Reproduction</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Heredity">Heredity</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Light – Reflection and Refraction">Light</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="The Human Eye and the Colourful World">Human Eye</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Electricity">Electricity</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Magnetic Effects of Electric Current">Magnetism</button>
+                        <button class="filter-btn chapter-filter px-4 py-2 rounded-full border text-sm font-medium dark:border-gray-600" data-chapter="Our Environment">Environment</button>
+                    </div>
+                </div>
+                <button onclick="resetViewedQuestions()" 
+                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
+                    Reset Progress
+                </button>
+            </div>
+        </div>
+
+        <!-- Questions Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="questionsContainer">
+            <!-- Questions will be dynamically inserted here -->
+        </div>
+
+        <!-- Learning Resources Section -->
+        <div class="learning-resources dark:bg-gray-800">
+            <h2 class="resources-title dark:text-white">Learning Resources</h2>
+            <div class="resources-buttons">
+                <a href="https://www.whatsapp.com/channel/0029Vb3QDu17YSd1brABFi1d" class="resource-button whatsapp-button">
+                    <span class="button-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                        </svg>
+                    </span>
+                    Join WhatsApp Channel
+                </a>
+                <a href="https://www.youtube.com/@simplifiedmindssslc" class="resource-button video-button">
+                    <span class="button-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 4-8 4z"/>
+                        </svg>
+                    </span>
+                    Video Lectures
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // You'll need to define your questions array here
+        const questions = [
+    // 1 MARK QUESTIONS
+    {
+        id: 1,
+        question: "Define 1C of charge.",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 2,
+        question: "What is the charge of 1 electron?",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 3,
+        question: "1 mA = ___ A, 1 μA = ___ A",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 4,
+        question: "Define 1 kWh or 1 unit.",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 5,
+        question: "What is the conventional direction of electric current?",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 6,
+        question: "What is Ohm's law?",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 7,
+        question: "What is heating effect of current?",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 8,
+        question: "What is Joule's law of heating?",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 9,
+        question: "Why alloys are used in electric heating devices?",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 10,
+        question: "In an electric circuit to get an equivalent resistance Rs four resistors of 2Ω each are first connected in series. Later to get an equivalent resistance of Rp the same resistors are connected in parallel. Then the ratio of Rs/Rp, is",
+        options: ["(A) 16:1", "(B) 4:1", "(C) 2:1", "(D) 8:1"],
+        marks: 1,
+        chapter: "Electricity",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 11,
+        question: "What is solenoid?",
+        marks: 1,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 12,
+        question: "What is an electromagnet?",
+        marks: 1,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 13,
+        question: "What is short circuit?",
+        marks: 1,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 14,
+        question: "What are spherical mirrors?",
+        marks: 1,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 15,
+        question: "What are concave and convex mirrors?",
+        marks: 1,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 16,
+        question: "What is focal length?",
+        marks: 1,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 17,
+        question: "Name a mirror that can give an erect and enlarged image of an object.",
+        marks: 1,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 18,
+        question: "What will be the magnification when the image height is equal to object height?",
+        marks: 1,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 19,
+        question: "What will be the sign of magnification if the image is real and inverted?",
+        marks: 1,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 20,
+        question: "What is refraction of light?",
+        marks: 1,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 21,
+        question: "What is power of accommodation?",
+        marks: 1,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 22,
+        question: "What is dispersion of light?",
+        marks: 1,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 23,
+        question: "What is Tyndall effect?",
+        marks: 1,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 24,
+        question: "Which color bends the least and which colour bends to most when travelling through prism?",
+        marks: 1,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 25,
+        question: "What is angle of deviation in a prism?",
+        marks: 1,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    
+    // 2 MARKS QUESTIONS
+    {
+        id: 26,
+        question: "What is current? Define 1 ampere.",
+        marks: 2,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 27,
+        question: "What is electric potential difference? Define 1 volt.",
+        marks: 2,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 28,
+        question: "What is electric power? Define 1W of electric power.",
+        marks: 2,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 29,
+        question: "On what factors does resistance of a conductor depend?",
+        marks: 2,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 30,
+        question: "What are the advantages of connecting electrical devices in parallel over series?",
+        marks: 2,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 31,
+        question: "What is voltmeter and ammeter? How are they connected in the circuit?",
+        marks: 2,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 32,
+        question: "Explain the working of filament bulb.",
+        marks: 2,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 33,
+        question: "Explain the working of fuse.",
+        marks: 2,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 34,
+        question: "Will current flow easily though a thick wire or thin wire of the same material when connected to the same source? Why?",
+        marks: 2,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 35,
+        question: "What are the reasons for overloading?",
+        marks: 2,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 36,
+        question: "What happens to the deflection of a compass needle when it is moved far away from a current carrying conductor?",
+        marks: 2,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 37,
+        question: "Why is the light laterally shifted when it travels through a glass slab?",
+        marks: 2,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 38,
+        question: "Define principal focus of convex and concave mirrors.",
+        marks: 2,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 39,
+        question: "\"The refractive index of diamond is 2.42.\" What is the meaning of this statement?",
+        marks: 2,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 40,
+        question: "State laws of refraction.",
+        marks: 2,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 41,
+        question: "The radius of curvature of a spherical mirror is 20 cm. What is its focal length?",
+        marks: 2,
+        chapter: "Light – Reflection and Refraction",
+        type: "Problem Solving",
+        section: "Section III"
+    },
+    {
+        id: 42,
+        question: "Refractive index of material A is 1.7 and of material B is 1.3. In which medium speed of light is higher?",
+        marks: 2,
+        chapter: "Light – Reflection and Refraction",
+        type: "Problem Solving",
+        section: "Section III"
+    },
+    {
+        id: 43,
+        question: "What is meant by far point and near point of the eye?",
+        marks: 2,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 44,
+        question: "How is the colour of scattered light dependent on size of scattering particle?",
+        marks: 2,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 45,
+        question: "Why is the colour of sky blue?",
+        marks: 2,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 46,
+        question: "Why are 'danger' signal lights red in colour?",
+        marks: 2,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    
+    // 3 MARKS QUESTIONS
+    {
+        id: 47,
+        question: "Calculate the total resistance in the circuit and the total current flowing in the circuit.",
+        marks: 3,
+        chapter: "Electricity",
+        type: "Problem Solving",
+        section: "Section IV"
+    },
+    {
+        id: 48,
+        question: "The resistivity of manganese wire of length 1m is 1.84 × 10−6Ωm at 20°C. If the diameter of the wire is 3x10-4 m, what will be the resistance of the wire at that temperature?",
+        marks: 3,
+        chapter: "Electricity",
+        type: "Problem Solving",
+        section: "Section IV"
+    },
+    {
+        id: 49,
+        question: "Which uses more energy, a 250 W TV set in 1 hr, or a 1200 W toaster in 10 minutes?",
+        marks: 3,
+        chapter: "Electricity",
+        type: "Problem Solving",
+        section: "Section IV"
+    },
+    {
+        id: 50,
+        question: "An electric heater of resistance 8Ω draws 15A from the service mains 2 hours. Calculate the rate at which heat is developed in the heater.",
+        marks: 3,
+        chapter: "Electricity",
+        type: "Problem Solving",
+        section: "Section IV"
+    },
+    {
+        id: 51,
+        question: "Describe an experiment to verify Ohm's law.",
+        marks: 3,
+        chapter: "Electricity",
+        type: "Experimental",
+        section: "Section IV"
+    },
+    {
+        id: 52,
+        question: "Will there be any change in ammeter reading if it is placed in between the resistors in a series circuit? What is the relationship between voltages across individual resistors and the supply voltage?",
+        marks: 3,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 53,
+        question: "What is the relationship between the current through each resistor and the total current in a parallel circuit? What is the relationship between voltage across each resistor and the source voltage?",
+        marks: 3,
+        chapter: "Electricity",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 54,
+        question: "In the experiment of electromagnetic induction, mention 3 ways by which we can increase the displacement of the rod.",
+        marks: 3,
+        chapter: "Magnetic Effects of Electric Current",
+        type: "Experimental",
+        section: "Section IV"
+    },
+    {
+        id: 55,
+        question: "Define the following: Pole, centre of curvature, radius of curvature, principal axis, aperture of a spherical mirror.",
+        marks: 3,
+        chapter: "Light – Reflection and Refraction",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 56,
+        question: "Light enters from air to glass having refractive index 1.50. What is the speed of light in the glass? The speed of light in vacuum is 3 x 108 ms-1.",
+        marks: 3,
+        chapter: "Light – Reflection and Refraction",
+        type: "Problem Solving",
+        section: "Section IV"
+    },
+    {
+        id: 57,
+        question: "Draw the ray diagram when the object is kept between F1 and 2F1 of the convex lens. With the help of the diagram mention the position and nature of the image formed. [F1: Principal focus of the lens]",
+        marks: 3,
+        chapter: "Light – Reflection and Refraction",
+        type: "Drawing",
+        section: "Section IV"
+    },
+    {
+        id: 58,
+        question: "How does the eye lens accommodate to see the distant objects and nearby objects? Explain.",
+        marks: 3,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 59,
+        question: "Explain the experiment conducted by Newton to show that white light contains seven colours.",
+        marks: 3,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Experimental",
+        section: "Section IV"
+    },
+    {
+        id: 60,
+        question: "Explain the formation of rainbow.",
+        marks: 3,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 61,
+        question: "Why do stars twinkle? Why don't planets twinkle?",
+        marks: 3,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 62,
+        question: "Explain the phenomenon of advance sunrise and delayed sunset.",
+        marks: 3,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    
+    // 4 MARKS QUESTIONS
+    {
+        id: 63,
+        question: "Describe the following eye defects: Myopia, hypermetropia, presbyopia, cataract.",
+        marks: 4,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section V"
+    },
+    {
+        id: 64,
+        question: "Write the functions of each of the following parts of the eye: Cornea, iris, pupil, ciliary muscles, crystalline lens, retina, optic nerve.",
+        marks: 4,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section V"
+    },
+    {
+        id: 65,
+        question: "Write the reasons for the following eye defects and how can they be corrected? Myopia, hypermetropia, presbyopia, cataract.",
+        marks: 4,
+        chapter: "The Human Eye and the Colourful World",
+        type: "Short Answer",
+        section: "Section V"
+    },
+    {
+        id: 1,
+        question: "The chemical reaction between sodium carbonate and dilute hydrochloric acid produces which gas?",
+        marks: 1,
+        chapter: "Chemical Reactions and Equations",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 2,
+        question: "Why is cellular respiration considered as an exothermic reaction?",
+        marks: 1,
+        chapter: "Chemical Reactions and Equations",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 3,
+        question: "Why should a magnesium ribbon be cleaned before burning in air?",
+        marks: 1,
+        chapter: "Chemical Reactions and Equations",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 4,
+        question: "In the chemical reaction CuSO₄ + X → XSO₄ + Cu, the metal X is:",
+        options: ["(A) Ag", "(B) Au", "(C) Fe", "(D) Hg"],
+        marks: 1,
+        chapter: "Chemical Reactions and Equations",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 5,
+        question: "The gas liberated when sodium carbonate reacts with dilute hydrochloric acid is:",
+        options: ["(A) carbon dioxide", "(B) nitrogen dioxide", "(C) hydrogen", "(D) chlorine"],
+        marks: 1,
+        chapter: "Acids, Bases and Salts",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 6,
+        question: "As the pH value of a neutral solution increases:",
+        options: ["(A) basic property decreases and number of OH⁻ ions increases", "(B) acidic property increases and number of H⁺ ions decreases", "(C) basic property increases and number of OH⁻ ions increases", "(D) acidic property decreases and number of H⁺ ions increases"],
+        marks: 1,
+        chapter: "Acids, Bases and Salts",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 7,
+        question: "An acid present in the stinging hair of nettle plant leaves is:",
+        options: ["(A) methanoic acid", "(B) oxalic acid", "(C) citric acid", "(D) lactic acid"],
+        marks: 1,
+        chapter: "Acids, Bases and Salts",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 8,
+        question: "A non-metallic oxide reacts with base and produces salt and water. Then the property of this non-metallic oxide is:",
+        options: ["(A) acidic", "(B) basic", "(C) neutral", "(D) amphoteric"],
+        marks: 1,
+        chapter: "Acids, Bases and Salts",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 9,
+        question: "The stages followed during the extraction of zinc from zinc sulphide ore respectively are:",
+        options: ["(A) Calcination, Reduction, Refining", "(B) Roasting, Calcination, Refining", "(C) Roasting, Reduction, Refining", "(D) Calcination, Oxidation, Refining"],
+        marks: 1,
+        chapter: "Metals and Non-metals",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 10,
+        question: "What are amphoteric oxides?",
+        marks: 1,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 11,
+        question: "Name the metal which is liquid at room temperature.",
+        marks: 1,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 12,
+        question: "Name the metal which can be cut with knife.",
+        marks: 1,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 13,
+        question: "Name the non-metal which is a good conductor of electricity.",
+        marks: 1,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 14,
+        question: "Name the non-metal which is liquid at room temperature.",
+        marks: 1,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 15,
+        question: "Name the non-metal which is lustrous.",
+        marks: 1,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 16,
+        question: "What is catenation and tetravalency?",
+        marks: 1,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 17,
+        question: "What are structural isomers?",
+        marks: 1,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 18,
+        question: "What are covalent bonds?",
+        marks: 1,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 19,
+        question: "What is colour of flame when saturated and unsaturated hydrocarbons are burnt?",
+        marks: 1,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 20,
+        question: "How will ethanol be oxidised?",
+        marks: 1,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 21,
+        question: "What is hydrogenation? Where is it used?",
+        marks: 1,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    {
+        id: 22,
+        question: "What are detergents?",
+        marks: 1,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section II"
+    },
+    
+    // 2 MARKS QUESTIONS
+    {
+        id: 23,
+        question: "Write one equation each for decomposition reactions where energy is supplied in the form of heat, light or electricity.",
+        marks: 2,
+        chapter: "Chemical Reactions and Equations",
+        type: "Problem Solving",
+        section: "Section III"
+    },
+    {
+        id: 24,
+        question: "What do you mean by a precipitation reaction? Explain by giving examples.",
+        marks: 2,
+        chapter: "Chemical Reactions and Equations",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 25,
+        question: "Oil and fat-containing food items are flushed with nitrogen. Why?",
+        marks: 2,
+        chapter: "Chemical Reactions and Equations",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 26,
+        question: "In the reaction CuO + H₂ → Cu + H₂O, name the reactant that is (i) oxidized (ii) reduced.",
+        marks: 2,
+        chapter: "Chemical Reactions and Equations",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 27,
+        question: "Why do acids not show acidic behavior in the absence of water?",
+        marks: 2,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 28,
+        question: "Why does distilled water not conduct electricity, whereas rain water does?",
+        marks: 2,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 29,
+        question: "What causes tooth decay? Explain.",
+        marks: 2,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 30,
+        question: "The pH values of A, B and C solutions are 5, 6 and 7 respectively. Which of these solutions is more acidic in nature and why?",
+        marks: 2,
+        chapter: "Acids, Bases and Salts",
+        type: "Problem Solving",
+        section: "Section III"
+    },
+    {
+        id: 31,
+        question: "Do aqueous solutions of acids conduct electricity? Why? Give examples.",
+        marks: 2,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 32,
+        question: "What are ores? Write the respective methods used to convert sulphide and carbonate ores of metals into their oxides.",
+        marks: 2,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 33,
+        question: "What are alloys? Name the constituent elements present in bronze and solder metal.",
+        marks: 2,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 34,
+        question: "Write any two differences between the physical properties of metals and non-metals.",
+        marks: 2,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 35,
+        question: "An iron nail is dropped into a test tube having copper sulphate solution. The iron nail gradually turns to brownish color. Why?",
+        marks: 2,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 36,
+        question: "Give reason: a) Metals are used in making cooking vessels. b) Sodium metal is stored in kerosene.",
+        marks: 2,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 37,
+        question: "Hydrogen gas is not liberated when a metal like zinc reacts with nitric acid. Why?",
+        marks: 2,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 38,
+        question: "Carbon atom does not form C⁴⁻ anion and C⁴⁺ cation. Why?",
+        marks: 2,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 39,
+        question: "How are covalent bonds different from ionic bonds?",
+        marks: 2,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 40,
+        question: "What are saturated and unsaturated hydrocarbons? Give one example each. Mention a test to differentiate between them.",
+        marks: 2,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 41,
+        question: "What are the characteristics of homologous series?",
+        marks: 2,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 42,
+        question: "Write the difference between esterification and saponification.",
+        marks: 2,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    {
+        id: 43,
+        question: "Which are the salts responsible for hardness of water? Detergents are effective even in hard water. Why?",
+        marks: 2,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section III"
+    },
+    
+    // 3 MARKS QUESTIONS
+    {
+        id: 44,
+        question: "Give an example for each of the following reactions: Combination reaction, Displacement reaction, Double displacement reaction, Decomposition reaction, Endothermic reaction, Exothermic reaction, Redox reaction",
+        marks: 3,
+        chapter: "Chemical Reactions and Equations",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 45,
+        question: "Explain the following terms with one example each: Corrosion, Rancidity",
+        marks: 3,
+        chapter: "Chemical Reactions and Equations",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 46,
+        question: "Observe the following chemical equations and determine the increasing order of reactivity of metals: Fe + CuSO₄ → FeSO₄ + Cu, Zn + FeSO₄ → ZnSO₄ + Fe, Cu + 2AgNO₃ → Cu(NO₃)₂ + 2Ag",
+        marks: 3,
+        chapter: "Chemical Reactions and Equations",
+        type: "Problem Solving",
+        section: "Section IV"
+    },
+    {
+        id: 47,
+        question: "Draw the diagram of the apparatus used in electrolysis of water and label the parts.",
+        marks: 3,
+        chapter: "Chemical Reactions and Equations",
+        type: "Drawing",
+        section: "Section IV"
+    },
+    {
+        id: 48,
+        question: "How can you differentiate between acids and bases using the following indicators: Turmeric, Litmus paper, Phenolphthalein, Methyl orange",
+        marks: 3,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 49,
+        question: "The chemical equation that represents neutralization reaction among the following is:",
+        options: ["(A) BaCl₂ + H₂SO₄ → BaSO₄ + 2HCl", "(B) MnO₂ + 4HCl → MnCl₂ + 2H₂O + Cl₂", "(C) 2NaOH + H₂SO₄ → Na₂SO₄ + 2H₂O", "(D) AgNO₃ + HCl → AgCl + HNO₃"],
+        marks: 3,
+        chapter: "Acids, Bases and Salts",
+        type: "MCQ",
+        section: "Section I"
+    },
+    {
+        id: 50,
+        question: "Give scientific reason: (i) While diluting an acid, the acid should be added to water. (ii) Plaster of Paris should be stored in a moisture-proof container.",
+        marks: 3,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 51,
+        question: "Mention the precautionary measures to be taken while diluting concentrated acid.",
+        marks: 3,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 52,
+        question: "There is no change in the color of red litmus and blue litmus paper when introduced into an aqueous solution of sodium chloride. After passing direct current through the same solution, red litmus changes to blue color. Which product is responsible for this change? Mention any two uses of this product.",
+        marks: 3,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 53,
+        question: "Name the products of chlor-alkali process. Write one use of each.",
+        marks: 3,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 54,
+        question: "Write the properties of ionic compounds.",
+        marks: 3,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 55,
+        question: "What is corrosion? How can it be prevented?",
+        marks: 3,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 56,
+        question: "Show the formation of NaCl and MgCl2 with the help of electron dot structures.",
+        marks: 3,
+        chapter: "Metals and Non-metals",
+        type: "Problem Solving",
+        section: "Section IV"
+    },
+    {
+        id: 57,
+        question: "How are metals in the middle of the reactivity series extracted from their ores? Explain.",
+        marks: 3,
+        chapter: "Metals and Non-metals",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    {
+        id: 58,
+        question: "Write the electron dot structure of the following: i) Nitrogen gas molecule ii) Oxygen gas molecule iii) Hydrogen gas molecule",
+        marks: 3,
+        chapter: "Carbon and its Compounds",
+        type: "Problem Solving",
+        section: "Section IV"
+    },
+    {
+        id: 59,
+        question: "Write the electron dot structure of the following: i) Methane ii) Ethene iii) CO₂",
+        marks: 3,
+        chapter: "Carbon and its Compounds",
+        type: "Problem Solving",
+        section: "Section IV"
+    },
+    {
+        id: 60,
+        question: "Write the structural isomers of butane and pentane.",
+        marks: 3,
+        chapter: "Carbon and its Compounds",
+        type: "Problem Solving",
+        section: "Section IV"
+    },
+    {
+        id: 61,
+        question: "Draw the structure of following compounds: i. Benzene ii. Cyclohexane iii. Cyclopropane",
+        marks: 3,
+        chapter: "Carbon and its Compounds",
+        type: "Drawing",
+        section: "Section IV"
+    },
+    {
+        id: 62,
+        question: "Draw the structure of following compounds: i. Propene ii. Ethanoic acid iii. Bromopentane",
+        marks: 3,
+        chapter: "Carbon and its Compounds",
+        type: "Drawing",
+        section: "Section IV"
+    },
+    {
+        id: 63,
+        question: "Draw the structure of following compounds: i. Butanone ii. Hexanal",
+        marks: 3,
+        chapter: "Carbon and its Compounds",
+        type: "Drawing",
+        section: "Section IV"
+    },
+    {
+        id: 64,
+        question: "Explain the mechanism of cleaning action of soaps.",
+        marks: 3,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section IV"
+    },
+    
+    // 4 MARKS QUESTIONS
+    {
+        id: 65,
+        question: "Mention two uses of each of the following: Baking soda, Sodium hydroxide, Bleaching powder, Plaster of Paris, Washing soda",
+        marks: 4,
+        chapter: "Acids, Bases and Salts",
+        type: "Short Answer",
+        section: "Section V"
+    },
+    {
+        id: 66,
+        question: "Strips of zinc, iron, magnesium and copper are taken in the test tubes A, B, C and D respectively. Same quantity of ferrous sulphate solution is added to these test tubes. In which test tubes chemical reaction will occur? Why? Write the chemical equations for the reactions taking place here.",
+        marks: 4,
+        chapter: "Metals and Non-metals",
+        type: "Problem Solving",
+        section: "Section V"
+    },
+    {
+        id: 67,
+        question: "Explain the addition and substitution reaction with the help of examples. C₂H₆ undergoes substitution reaction but not addition reaction. Why?",
+        marks: 4,
+        chapter: "Carbon and its Compounds",
+        type: "Short Answer",
+        section: "Section V"
+    }
+
+];
+        let viewedQuestions = new Set(JSON.parse(localStorage.getItem('viewedQuestions') || '[]'));
+        let bookmarkedQuestions = new Set(JSON.parse(localStorage.getItem('bookmarkedQuestions') || '[]'));
+
+        function createQuestionCard(question) {
+            const hasQuestionImage = question.questionImage ? true : false;
+            const hasSolutionImage = question.solutionImage ? true : false;
+            const isBookmarked = bookmarkedQuestions.has(question.id);
+            const options = question.options ? question.options.map(opt => `<p class="mb-1">${opt}</p>`).join('') : '';
+
+            return `
+                <div class="question-card bg-white rounded-lg shadow p-6 question dark:bg-gray-800 dark:text-white" 
+                     data-marks="${question.marks}" 
+                     data-chapter="${question.chapter}"
+                     data-keywords="${question.question.toLowerCase()}">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-200">
+                            ${question.marks}M
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                            ${question.chapter}
+                        </span>
+                        <button onclick="toggleBookmark(${question.id})" 
+                                class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                            ${isBookmarked ? '🔖' : '📌'}
+                        </button>
+                    </div>
+                    <h3 class="text-lg font-medium mb-4">${question.question}</h3>
+                    ${options ? `<div class="mb-4">${options}</div>` : ''}
+                    ${hasQuestionImage ? `
+                        <div class="mb-4">
+                            <img src="${question.questionImage}" 
+                                 alt="Question Image" 
+                                 class="question-image rounded-lg cursor-pointer"
+                                 onclick="openModal(this.src)">
+                        </div>
+                    ` : ''}
+                                        <div id="solution-${question.id}" class="solution mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                        <p class="text-gray-600 dark:text-gray-400">${question.answer || "Solution will be provided here."}</p>
+                        ${hasSolutionImage ? `
+                            <div class="mt-4">
+                                <img src="${question.solutionImage}" 
+                                     alt="Solution Image" 
+                                     class="solution-image rounded-lg cursor-pointer"
+                                     onclick="openModal(this.src)">
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function isQuestionViewed(id) {
+            return viewedQuestions.has(id);
+        }
+
+        function markQuestionAsViewed(id) {
+            viewedQuestions.add(id);
+            localStorage.setItem('viewedQuestions', JSON.stringify([...viewedQuestions]));
+        }
+
+        function toggleSolution(id) {
+            const solution = document.getElementById(`solution-${id}`);
+            const button = document.getElementById(`solution-btn-${id}`);
+            const isShowing = solution.classList.toggle('show');
+            
+            if (isShowing) {
+                button.classList.add('viewed');
+                markQuestionAsViewed(id);
+                button.textContent = 'Hide Solution (Viewed)';
+            } else {
+                button.textContent = 'Show Solution (Viewed)';
+            }
+        }
+
+        function toggleBookmark(id) {
+            if (bookmarkedQuestions.has(id)) {
+                bookmarkedQuestions.delete(id);
+            } else {
+                bookmarkedQuestions.add(id);
+            }
+            localStorage.setItem('bookmarkedQuestions', JSON.stringify([...bookmarkedQuestions]));
+            initializeQuestions();
+        }
+
+        function resetViewedQuestions() {
+            viewedQuestions.clear();
+            localStorage.removeItem('viewedQuestions');
+            document.querySelectorAll('.solution-btn').forEach(btn => {
+                btn.classList.remove('viewed');
+                btn.textContent = 'Show Solution';
+            });
+        }
+
+        function openModal(imgSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = "block";
+            modalImg.src = imgSrc;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
+
+        function initializeQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            questions.forEach(question => {
+                container.innerHTML += createQuestionCard(question);
+            });
+        }
+
+        function filterQuestions() {
+            const activeMarksFilter = document.querySelector('.marks-filter.active').dataset.marks || 'All';
+            const activeChapterFilter = document.querySelector('.chapter-filter.active').dataset.chapter || 'All';
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            
+            document.querySelectorAll('.question').forEach(question => {
+                const matchesMarks = activeMarksFilter === 'All' || question.dataset.marks === activeMarksFilter;
+                const matchesChapter = activeChapterFilter === 'All' || question.dataset.chapter === activeChapterFilter;
+                const matchesSearch = question.dataset.keywords.includes(searchQuery);
+                
+                question.classList.toggle('hidden', !(matchesMarks && matchesChapter && matchesSearch));
+            });
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.marks-filter').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.marks-filter').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                filterQuestions();
+            });
+        });
+
+        document.querySelectorAll('.chapter-filter').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.chapter-filter').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                filterQuestions();
+            });
+        });
+
+        document.getElementById('searchInput').addEventListener('input', filterQuestions);
+
+        document.getElementById('darkModeToggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            // Update the text based on dark mode state
+            if (document.body.classList.contains('dark-mode')) {
+                document.getElementById('darkModeToggle').innerHTML = `
+                    <span class="flex items-center gap-2">
+                        ☀️ Switch to Light
+                    </span>`;
+            } else {
+                document.getElementById('darkModeToggle').innerHTML = `
+                    <span class="flex items-center gap-2">
+                        🌙 Switch to Dark
+                    </span>`;
+            }
+        });
+
+        // Initialize
+        initializeQuestions();
+    </script>
+</body>
+</html>
