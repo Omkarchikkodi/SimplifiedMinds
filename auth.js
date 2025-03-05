@@ -172,7 +172,7 @@ window.signup = function () {
 
                     // ✅ Redirect to home page
                     setTimeout(() => {
-                        window.location.href = "home.html";
+                        window.location.href = "index.html";
                     }, 1000);
                 })
                 .catch((error) => {
@@ -201,7 +201,7 @@ window.logout = function () {
         localStorage.removeItem("userEmail");
         showToast("✅ Logged out successfully!", true);
         setTimeout(() => {
-            window.location.href = "home.html";
+            window.location.href = "index.html";
         }, 1000);
     }).catch((error) => {
         console.error("Logout Error:", error);
