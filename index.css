@@ -56,33 +56,55 @@ body {
     align-items: center;
 }
 
-/* Media Query for Small Screens */
 @media (max-width: 600px) {
     .brand-header {
-        flex-direction: column;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
         align-items: center;
         padding: 10px;
         text-align: center;
+        flex-wrap: nowrap;
     }
 
-    #auth-section, #user-info {
-        flex-direction: column;
+    #auth-section {
+        display: flex;
         align-items: center;
-        text-align: center;
-        width: 100%;
+        justify-content: flex-start;
+        flex: 1;
+    }
+
+    .brand-container {
+        display: flex;
+        justify-content: center;
+        flex: 2;
+    }
+
+    #dark-mode-toggle {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
     }
 
     #user-info {
-        max-width: 100%; /* Ensures it fits within the screen */
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 5px;
+        flex-wrap: nowrap;
     }
 
     #user-info span {
         font-size: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100px;
     }
 
     #auth-button, #dark-mode-toggle, #user-info button {
-        width: 90%; /* Makes buttons more mobile-friendly */
-        margin-top: 5px;
+        font-size: 12px;
+        padding: 6px 10px;
     }
 }
 
